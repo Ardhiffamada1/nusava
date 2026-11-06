@@ -211,7 +211,7 @@ function ShopcartCatalogContent() {
                     >
                       {product.title}
                     </Link>
-                    <span className="text-xs font-bold text-gray-900 font-mono whitespace-nowrap">
+                    <span className="text-sm font-bold text-gray-900 whitespace-nowrap">
                       {formatCurrency(price)}
                     </span>
                   </div>

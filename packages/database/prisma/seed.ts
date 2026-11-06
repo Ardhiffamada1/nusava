@@ -4,7 +4,7 @@ import * as bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding CommerceOS database...');
+  console.log('Seeding CommerceOS Indonesian Oleh-oleh database...');
 
   // Clean existing records in reverse dependency order
   await prisma.auditLog.deleteMany();
@@ -34,8 +34,8 @@ async function main() {
     data: {
       email: 'admin@commerceos.dev',
       passwordHash: adminPasswordHash,
-      firstName: 'Alex',
-      lastName: 'Vance',
+      firstName: 'Bambang',
+      lastName: 'Suryono',
       role: UserRole.ADMIN,
     },
   });
@@ -45,19 +45,19 @@ async function main() {
     data: {
       email: 'customer@commerceos.dev',
       passwordHash: customerPasswordHash,
-      firstName: 'Elena',
-      lastName: 'Rostova',
+      firstName: 'Budi',
+      lastName: 'Santoso',
       role: UserRole.CUSTOMER,
       cart: { create: {} },
       addresses: {
         create: {
-          fullName: 'Elena Rostova',
-          phone: '+1 555-019-2831',
-          streetAddress: '742 Evergreen Terrace',
-          city: 'Portland',
-          state: 'OR',
-          postalCode: '97201',
-          country: 'US',
+          fullName: 'Budi Santoso',
+          phone: '081234567890',
+          streetAddress: 'Jl. Malioboro No. 45, RT 02/RW 03, Sosromenduran',
+          city: 'Kota Yogyakarta',
+          state: 'DI Yogyakarta',
+          postalCode: '55271',
+          country: 'ID',
           isDefaultShipping: true,
           isDefaultBilling: true,
         },
@@ -68,21 +68,21 @@ async function main() {
 
   const customer2 = await prisma.user.create({
     data: {
-      email: 'marcus.chen@example.com',
+      email: 'siti.aminah@contoh.id',
       passwordHash: customerPasswordHash,
-      firstName: 'Marcus',
-      lastName: 'Chen',
+      firstName: 'Siti',
+      lastName: 'Aminah',
       role: UserRole.CUSTOMER,
       cart: { create: {} },
       addresses: {
         create: {
-          fullName: 'Marcus Chen',
-          phone: '+1 415-882-9012',
-          streetAddress: '450 Mission Street, Suite 1200',
-          city: 'San Francisco',
-          state: 'CA',
-          postalCode: '94105',
-          country: 'US',
+          fullName: 'Siti Aminah',
+          phone: '082198765432',
+          streetAddress: 'Jl. Riau No. 88, Citarum, Kec. Bandung Wetan',
+          city: 'Kota Bandung',
+          state: 'Jawa Barat',
+          postalCode: '40115',
+          country: 'ID',
           isDefaultShipping: true,
           isDefaultBilling: true,
         },
@@ -91,468 +91,573 @@ async function main() {
     include: { addresses: true },
   });
 
-  console.log('Created Admin and Customer accounts.');
+  console.log('Created Admin and Indonesian Customer accounts.');
 
   // 3. Create Categories
-  const apparel = await prisma.category.create({
+  const catKudapan = await prisma.category.create({
     data: {
-      name: 'Apparel',
-      slug: 'apparel',
-      description: 'Understated silhouettes tailored from Japanese and Italian fabrics.',
-      displayOrder: 1,
+      name: 'Kudapan & Makanan Khas',
+      slug: 'kudapan-khas',
+      description: 'Aneka kudapan lezat, bolu, bakpia, dan keripik gurih khas berbagai daerah di Indonesia.',
     },
   });
 
-  const leatherGoods = await prisma.category.create({
+  const catKopi = await prisma.category.create({
     data: {
-      name: 'Leather Goods',
-      slug: 'leather-goods',
-      description: 'Vegetable-tanned full-grain leather essentials made to age gracefully.',
-      displayOrder: 2,
+      name: 'Kopi & Minuman Tradisional',
+      slug: 'kopi-minuman',
+      description: 'Biji kopi single origin Nusantara, wedang herbal, dan sirup buah segar khas daerah.',
     },
   });
 
-  const workspace = await prisma.category.create({
+  const catBatik = await prisma.category.create({
     data: {
-      name: 'Workspace',
-      slug: 'workspace',
-      description: 'Machined aluminum, solid walnut, and tactile desktop objects.',
-      displayOrder: 3,
+      name: 'Batik & Wastra Nusantara',
+      slug: 'batik-wastra',
+      description: 'Kain batik tulis otentik, tenun ikat tradisional, dan songket pusaka warisan budaya.',
     },
   });
 
-  const audio = await prisma.category.create({
+  const catKriya = await prisma.category.create({
     data: {
-      name: 'Audio',
-      slug: 'audio',
-      description: 'Precision acoustics, tuned drivers, and monolithic industrial design.',
-      displayOrder: 4,
+      name: 'Kriya & Kerajinan Kayu/Gerabah',
+      slug: 'kriya-kerajinan',
+      description: 'Peralatan makan kayu jati food-grade, anyaman rotan, dan kerajinan gerabah tanah liat.',
     },
   });
 
-  const objects = await prisma.category.create({
+  const catSambal = await prisma.category.create({
     data: {
-      name: 'Living & Ceramics',
-      slug: 'living-ceramics',
-      description: 'Tactile stoneware, hand-poured candle vessels, and sculptural homeware.',
-      displayOrder: 5,
+      name: 'Sambal & Bumbu Dapur Tradisional',
+      slug: 'sambal-bumbu',
+      description: 'Sambal ulek khas daerah, rendang siap santap, abon sapi gurih, dan terasi udang rebon asli.',
     },
   });
 
-  console.log('Created Categories.');
+  console.log('Created Indonesian categories.');
 
-  // 4. Products Data (32 distinct, high-craft editorial products)
-  const productsData = [
-    // Apparel
-    {
-      category: apparel.id,
-      title: 'Heavyweight Raw Denim Jacket',
-      slug: 'heavyweight-raw-denim-jacket',
-      description: '14.5oz Japanese selvedge denim woven on vintage Toyoda shuttle looms. Unwashed and rigid, tailored to develop bespoke patina with wear.',
-      basePrice: 285.0,
-      image: 'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=1000&q=80',
-      variants: [
-        { sku: 'DEN-JCK-S', title: 'Small / Indigo', priceOverride: 285.0, attributes: { size: 'S', color: 'Indigo' }, stock: 12 },
-        { sku: 'DEN-JCK-M', title: 'Medium / Indigo', priceOverride: 285.0, attributes: { size: 'M', color: 'Indigo' }, stock: 18 },
-        { sku: 'DEN-JCK-L', title: 'Large / Indigo', priceOverride: 285.0, attributes: { size: 'L', color: 'Indigo' }, stock: 4 }, // low stock
-      ],
-    },
-    {
-      category: apparel.id,
-      title: 'Merino Wool Mockneck Sweater',
-      slug: 'merino-wool-mockneck-sweater',
-      description: 'Superfine 19.5-micron extrafine merino wool from Zegna Baruffa. Naturally temperature-regulating and silky against the skin.',
-      basePrice: 195.0,
-      image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=1000&q=80',
-      variants: [
-        { sku: 'MRN-MCK-BLK-M', title: 'Medium / Charcoal Black', priceOverride: 195.0, attributes: { size: 'M', color: 'Charcoal Black' }, stock: 25 },
-        { sku: 'MRN-MCK-BLK-L', title: 'Large / Charcoal Black', priceOverride: 195.0, attributes: { size: 'L', color: 'Charcoal Black' }, stock: 15 },
-        { sku: 'MRN-MCK-OAT-M', title: 'Medium / Oat', priceOverride: 195.0, attributes: { size: 'M', color: 'Oat' }, stock: 8 },
-      ],
-    },
-    {
-      category: apparel.id,
-      title: 'Relaxed Tailored Wool Trouser',
-      slug: 'relaxed-tailored-wool-trouser',
-      description: 'Pleated high-rise trousers cut from 100% tropical wool. Internal waistband curtain, horn buttons, and clean drape.',
-      basePrice: 220.0,
-      image: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=1000&q=80',
-      variants: [
-        { sku: 'TRS-WOL-30', title: 'Size 30 / Olive', priceOverride: 220.0, attributes: { waist: '30', color: 'Olive' }, stock: 10 },
-        { sku: 'TRS-WOL-32', title: 'Size 32 / Olive', priceOverride: 220.0, attributes: { waist: '32', color: 'Olive' }, stock: 14 },
-        { sku: 'TRS-WOL-34', title: 'Size 34 / Olive', priceOverride: 220.0, attributes: { waist: '34', color: 'Olive' }, stock: 3 }, // low stock
-      ],
-    },
-    {
-      category: apparel.id,
-      title: 'Heavyweight Boxy Crewneck Tee',
-      slug: 'heavyweight-boxy-crewneck-tee',
-      description: '280 GSM combed organic cotton jersey with reinforced binding. Drop-shoulder cut designed for longevity.',
-      basePrice: 65.0,
-      image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1000&q=80',
-      variants: [
-        { sku: 'TEE-WHT-S', title: 'Small / Chalk White', priceOverride: 65.0, attributes: { size: 'S', color: 'Chalk White' }, stock: 40 },
-        { sku: 'TEE-WHT-M', title: 'Medium / Chalk White', priceOverride: 65.0, attributes: { size: 'M', color: 'Chalk White' }, stock: 35 },
-        { sku: 'TEE-WHT-L', title: 'Large / Chalk White', priceOverride: 65.0, attributes: { size: 'L', color: 'Chalk White' }, stock: 22 },
-        { sku: 'TEE-BLK-M', title: 'Medium / Ink Black', priceOverride: 65.0, attributes: { size: 'M', color: 'Ink Black' }, stock: 50 },
-      ],
-    },
-    {
-      category: apparel.id,
-      title: 'Structured Canvas Chore Coat',
-      slug: 'structured-canvas-chore-coat',
-      description: 'Tough 12oz duck canvas with triple-needle stitching and copper shank hardware. Three patch pockets and inner chest pocket.',
-      basePrice: 240.0,
-      image: 'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=1000&q=80',
-      variants: [
-        { sku: 'CHR-CAN-TAN-M', title: 'Medium / British Tan', priceOverride: 240.0, attributes: { size: 'M', color: 'British Tan' }, stock: 15 },
-        { sku: 'CHR-CAN-TAN-L', title: 'Large / British Tan', priceOverride: 240.0, attributes: { size: 'L', color: 'British Tan' }, stock: 11 },
-      ],
-    },
-    {
-      category: apparel.id,
-      title: 'Fine Poplin Buttondown Shirt',
-      slug: 'fine-poplin-buttondown-shirt',
-      description: '100s 2-ply Egyptian cotton poplin with a mother-of-pearl button closure and soft rolled collar roll.',
-      basePrice: 145.0,
-      image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1000&q=80',
-      variants: [
-        { sku: 'SHR-POP-SKY-S', title: 'Small / Sky Blue', priceOverride: 145.0, attributes: { size: 'S', color: 'Sky Blue' }, stock: 19 },
-        { sku: 'SHR-POP-SKY-M', title: 'Medium / Sky Blue', priceOverride: 145.0, attributes: { size: 'M', color: 'Sky Blue' }, stock: 21 },
-      ],
-    },
+  // Helper product creator
+  type ProductSeedInput = {
+    title: string;
+    slug: string;
+    description: string;
+    categoryId: string;
+    basePrice: number;
+    images: string[];
+    variants: Array<{
+      title: string;
+      sku: string;
+      priceOverride?: number;
+      attributes: Record<string, string>;
+      stock: number;
+    }>;
+  };
 
-    // Leather Goods
+  const seedProducts: ProductSeedInput[] = [
+    // --- KUDAPAN & MAKANAN KHAS ---
     {
-      category: leatherGoods.id,
-      title: 'Minimalist Bifold Cardholder',
-      slug: 'minimalist-bifold-cardholder',
-      description: 'Full-grain Tuscan bridle leather saddle-stitched with waxed linen thread. Holds 8 cards and folded currency with zero bulk.',
-      basePrice: 85.0,
-      image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=1000&q=80',
+      title: 'Bakpia Kukus Tugu Jogja Original',
+      slug: 'bakpia-kukus-tugu-jogja',
+      description: 'Kudapan khas Yogyakarta bertekstur lembut dengan isian pasta cokelat dan keju melimpah yang lumer di mulut. Isi 10 pcs per kotak.',
+      categoryId: catKudapan.id,
+      basePrice: 45000,
+      images: [
+        'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'LTH-CRD-BLK', title: 'Onyx Black', priceOverride: 85.0, attributes: { color: 'Onyx Black' }, stock: 30 },
-        { sku: 'LTH-CRD-COGNAC', title: 'Cognac Brown', priceOverride: 85.0, attributes: { color: 'Cognac Brown' }, stock: 2 }, // low stock alert
+        { title: 'Rasa Cokelat Lumer (10 pcs)', sku: 'BKTJ-COK-10', attributes: { rasa: 'Cokelat', isi: '10 pcs' }, stock: 65 },
+        { title: 'Rasa Keju Gurih (10 pcs)', sku: 'BKTJ-KEJ-10', attributes: { rasa: 'Keju', isi: '10 pcs' }, stock: 50 },
+        { title: 'Rasa Kacang Merah (10 pcs)', sku: 'BKTJ-KCR-10', attributes: { rasa: 'Kacang Merah', isi: '10 pcs' }, stock: 40 },
       ],
     },
     {
-      category: leatherGoods.id,
-      title: 'Structured Leather Briefcase',
-      slug: 'structured-leather-briefcase',
-      description: 'Architectural silhouette engineered to accommodate a 16-inch laptop. Solid brass hardware with brushed nickel finish.',
-      basePrice: 620.0,
-      image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1000&q=80',
+      title: 'Bakpia Pathok 25 Khas Yogyakarta Asli',
+      slug: 'bakpia-pathok-25-jogja',
+      description: 'Bakpia legendaris basah dan kering khas Pathuk Jogja. Dibuat fresh setiap hari dengan resep tradisional sejak 1948. Isi 15 pcs.',
+      categoryId: catKudapan.id,
+      basePrice: 55000,
+      images: [
+        'https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'LTH-BRF-ESP', title: 'Espresso', priceOverride: 620.0, attributes: { color: 'Espresso' }, stock: 8 },
-        { sku: 'LTH-BRF-BLK', title: 'Matte Black', priceOverride: 620.0, attributes: { color: 'Matte Black' }, stock: 12 },
+        { title: 'Kacang Hijau Klasik (Isi 15)', sku: 'BP25-KCH-15', attributes: { varian: 'Kacang Hijau', kemasan: 'Kotak' }, stock: 80 },
+        { title: 'Keju Special (Isi 15)', sku: 'BP25-KEJ-15', priceOverride: 60000, attributes: { varian: 'Keju', kemasan: 'Kotak' }, stock: 45 },
+        { title: 'Cokelat Manis (Isi 15)', sku: 'BP25-COK-15', attributes: { varian: 'Cokelat', kemasan: 'Kotak' }, stock: 55 },
       ],
     },
     {
-      category: leatherGoods.id,
-      title: 'Weekender Duffle Bag',
-      slug: 'weekender-duffle-bag',
-      description: 'Heavy duty military-grade 18oz canvas body flanked by 3mm harness leather straps and YKK Excella zippers.',
-      basePrice: 450.0,
-      image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1000&q=80',
+      title: 'Bika Ambon Zulaikha Khas Medan Asli',
+      slug: 'bika-ambon-zulaikha-medan',
+      description: 'Kue basah bersarang kenyal dan harum daun jeruk purut asli dari Jl. Mojopahit Medan. Tanpa bahan pengawet buatan.',
+      categoryId: catKudapan.id,
+      basePrice: 85000,
+      images: [
+        'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'BAG-WKD-OLV', title: 'Olive & Tan', priceOverride: 450.0, attributes: { color: 'Olive/Tan' }, stock: 9 },
+        { title: 'Rasa Original Pandan (Besar)', sku: 'BAZ-ORI-L', attributes: { rasa: 'Pandan Original', ukuran: 'Besar' }, stock: 35 },
+        { title: 'Rasa Keju Gurih (Besar)', sku: 'BAZ-KEJ-L', priceOverride: 90000, attributes: { rasa: 'Keju', ukuran: 'Besar' }, stock: 30 },
       ],
     },
     {
-      category: leatherGoods.id,
-      title: 'Beveled Edge Leather Belt',
-      slug: 'beveled-edge-leather-belt',
-      description: 'Single piece of 10oz English bridle leather with hand-burnished edges and a sand-cast solid brass buckle.',
-      basePrice: 110.0,
-      image: 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=1000&q=80',
+      title: 'Bolu Gulung Meranti Medan Special Keju',
+      slug: 'bolu-gulung-meranti-medan',
+      description: 'Bolu gulung terpopuler se-Kota Medan dengan parutan keju cheddar melimpah ruah di luar dan dalam kue.',
+      categoryId: catKudapan.id,
+      basePrice: 95000,
+      images: [
+        'https://images.unsplash.com/photo-1535141192574-5d4897c13136?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'BLT-32-BLK', title: 'Size 32 / Black', priceOverride: 110.0, attributes: { size: '32', color: 'Black' }, stock: 15 },
-        { sku: 'BLT-34-BLK', title: 'Size 34 / Black', priceOverride: 110.0, attributes: { size: '34', color: 'Black' }, stock: 18 },
-        { sku: 'BLT-36-BLK', title: 'Size 36 / Black', priceOverride: 110.0, attributes: { size: '36', color: 'Black' }, stock: 7 },
+        { title: 'Bolu Gulung Standard Keju', sku: 'BGM-STD-KEJ', attributes: { rasa: 'Keju', varian: 'Standard' }, stock: 40 },
+        { title: 'Bolu Gulung Double Keju Spesial', sku: 'BGM-DBL-KEJ', priceOverride: 110000, attributes: { rasa: 'Double Keju', varian: 'Spesial' }, stock: 25 },
+        { title: 'Bolu Gulung Rasa Moka Meses', sku: 'BGM-STD-MOK', attributes: { rasa: 'Moka Meses', varian: 'Standard' }, stock: 30 },
       ],
     },
     {
-      category: leatherGoods.id,
-      title: 'Passport Folio & Travel Wallet',
-      slug: 'passport-folio-travel-wallet',
-      description: 'Engineered for seamless transit. Dedicated slots for passport, boarding cards, pen, and SIM ejector tool.',
-      basePrice: 125.0,
-      image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1000&q=80',
-      variants: [
-        { sku: 'LTH-TRV-COGNAC', title: 'Cognac', priceOverride: 125.0, attributes: { color: 'Cognac' }, stock: 14 },
+      title: 'Lapis Talas Sangkuriang Khas Bogor',
+      slug: 'lapis-talas-sangkuriang-bogor',
+      description: 'Kue lapis berbahan dasar talas asli Bogor dengan taburan keju gurih di atasnya. Tekstur sangat lembut dan wangi.',
+      categoryId: catKudapan.id,
+      basePrice: 42000,
+      images: [
+        'https://images.unsplash.com/photo-1549590143-d5855148a9d5?w=800&auto=format&fit=crop&q=80',
       ],
-    },
-
-    // Workspace
-    {
-      category: workspace.id,
-      title: 'Precision Machined Desk Pad',
-      slug: 'precision-machined-desk-pad',
-      description: 'Micro-textured matte vegan leather surface bonded to an anti-slip natural cork base. Optimized for optical sensors.',
-      basePrice: 75.0,
-      image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1000&q=80',
       variants: [
-        { sku: 'DSK-PAD-GRY', title: 'Slate Grey / 90x40cm', priceOverride: 75.0, attributes: { size: 'Large', color: 'Slate Grey' }, stock: 45 },
-        { sku: 'DSK-PAD-BLK', title: 'Midnight Black / 90x40cm', priceOverride: 75.0, attributes: { size: 'Large', color: 'Midnight Black' }, stock: 50 },
+        { title: 'Original Keju (500g)', sku: 'LTS-ORI-500', attributes: { rasa: 'Original Keju', berat: '500g' }, stock: 75 },
+        { title: 'Full Talas Keju (500g)', sku: 'LTS-FUL-500', attributes: { rasa: 'Full Talas Keju', berat: '500g' }, stock: 60 },
+        { title: 'Chocovilla Keju (500g)', sku: 'LTS-CHO-500', attributes: { rasa: 'Chocovilla', berat: '500g' }, stock: 50 },
       ],
     },
     {
-      category: workspace.id,
-      title: 'Solid Walnut Monitor Riser',
-      slug: 'solid-walnut-monitor-riser',
-      description: 'Continuous grain American black walnut shelf elevated on CNC-machined 6061 bead-blasted aluminum feet.',
-      basePrice: 160.0,
-      image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=80',
+      title: 'Lapis Legit Wisman Batavia Premium',
+      slug: 'lapis-legit-wisman-batavia',
+      description: 'Lapis legit panggang selapis demi selapis menggunakan 100% mentega Wijsman Belanda asli, telur segar, dan rempah spekuk harum.',
+      categoryId: catKudapan.id,
+      basePrice: 185000,
+      images: [
+        'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'DSK-RSR-WLN', title: 'American Walnut', priceOverride: 160.0, attributes: { wood: 'Walnut' }, stock: 16 },
-        { sku: 'DSK-RSR-OAK', title: 'White Oak', priceOverride: 160.0, attributes: { wood: 'Oak' }, stock: 11 },
+        { title: 'Ukuran 20x10 cm (Original Spekuk)', sku: 'LLW-ORI-2010', attributes: { ukuran: '20x10 cm', varian: 'Spekuk' }, stock: 20 },
+        { title: 'Ukuran 20x10 cm (Prunes Plum)', sku: 'LLW-PRU-2010', priceOverride: 210000, attributes: { ukuran: '20x10 cm', varian: 'Prunes' }, stock: 15 },
       ],
     },
     {
-      category: workspace.id,
-      title: 'Rotary Aluminum Desk Dial',
-      slug: 'rotary-aluminum-desk-dial',
-      description: 'Weighted rotary control knob for volume, track scrubber, and precision workflow switching with tactile magnetic haptics.',
-      basePrice: 135.0,
-      image: 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=1000&q=80',
+      title: 'Keripik Tempe Rohani Sanan Khas Malang',
+      slug: 'keripik-tempe-rohani-malang',
+      description: 'Keripik tempe renyah gurih khas kampung Sanan Malang. Diiris tipis dengan balutan tepung rempah bawang putih sedap. Netto 250g.',
+      categoryId: catKudapan.id,
+      basePrice: 28000,
+      images: [
+        'https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'ROT-DIL-SLV', title: 'Anodized Silver', priceOverride: 135.0, attributes: { finish: 'Silver' }, stock: 22 },
-        { sku: 'ROT-DIL-BLK', title: 'Space Grey', priceOverride: 135.0, attributes: { finish: 'Space Grey' }, stock: 18 },
+        { title: 'Rasa Original Bawang (250g)', sku: 'KTR-ORI-250', attributes: { rasa: 'Original Bawang', berat: '250g' }, stock: 120 },
+        { title: 'Rasa Pedas Manis (250g)', sku: 'KTR-PDS-250', attributes: { rasa: 'Pedas Manis', berat: '250g' }, stock: 90 },
+        { title: 'Rasa Daun Jeruk (250g)', sku: 'KTR-DNJ-250', attributes: { rasa: 'Daun Jeruk', berat: '250g' }, stock: 85 },
       ],
     },
     {
-      category: workspace.id,
-      title: 'Magnetic Cable Management Block',
-      slug: 'magnetic-cable-management-block',
-      description: 'Solid billet brass block holding braided cables firmly anchored via internal neodymium magnetic collars.',
-      basePrice: 55.0,
-      image: 'https://images.unsplash.com/photo-1595303526913-c7037797ebe7?auto=format&fit=crop&w=1000&q=80',
+      title: 'Keripik Apel Manalagi Asli Batu Malang',
+      slug: 'keripik-apel-manalagi-batu',
+      description: 'Keripik buah apel segar dari lereng Gunung Panderman Batu Malang yang digoreng vacuum frying tanpa pemanis buatan. Netto 100g.',
+      categoryId: catKudapan.id,
+      basePrice: 25000,
+      images: [
+        'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'MAG-CBL-BRS', title: 'Raw Brass', priceOverride: 55.0, attributes: { material: 'Brass' }, stock: 28 },
+        { title: 'Kemasan Stand Up Pouch 100g', sku: 'KAM-PCH-100', attributes: { berat: '100g', kemasan: 'Pouch' }, stock: 110 },
+        { title: 'Kemasan Paket Hemat 250g', sku: 'KAM-PCH-250', priceOverride: 55000, attributes: { berat: '250g', kemasan: 'Pouch' }, stock: 70 },
       ],
     },
     {
-      category: workspace.id,
-      title: 'Mechanical Number Pad',
-      slug: 'mechanical-number-pad',
-      description: 'Gasket-mounted mechanical keypad with Lubed Gateron Oil King linear switches, PBT dye-sub keycaps, and USB-C connectivity.',
-      basePrice: 115.0,
-      image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=80',
+      title: 'Pie Susu Dhian Khas Bali Asli (Isi 50 Pcs)',
+      slug: 'pie-susu-dhian-bali-50',
+      description: 'Oleh-oleh wajib pulau dewata Bali. Pinggiran pastry renyah gurih dengan fla susu vanila legit yang harum. Isi 50 keping higienis.',
+      categoryId: catKudapan.id,
+      basePrice: 80000,
+      images: [
+        'https://images.unsplash.com/photo-1519869325930-281384150729?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'KBD-NUM-WHT', title: 'Retro Beige', priceOverride: 115.0, attributes: { color: 'Retro Beige' }, stock: 19 },
+        { title: 'Isi 50 pcs Rasa Original Susu', sku: 'PSD-ORI-50', attributes: { rasa: 'Original Susu', isi: '50 pcs' }, stock: 85 },
+        { title: 'Isi 50 pcs Rasa Cokelat', sku: 'PSD-COK-50', attributes: { rasa: 'Cokelat', isi: '50 pcs' }, stock: 60 },
+        { title: 'Isi 50 pcs Rasa Keju', sku: 'PSD-KEJ-50', priceOverride: 85000, attributes: { rasa: 'Keju', isi: '50 pcs' }, stock: 55 },
       ],
     },
     {
-      category: workspace.id,
-      title: 'Architectural Task Lamp',
-      slug: 'architectural-task-lamp',
-      description: 'Balanced arm desk lamp with high-CRI (98+) flicker-free illumination and stepless touch-sensitive dimmer.',
-      basePrice: 290.0,
-      image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1000&q=80',
-      variants: [
-        { sku: 'LMP-TSK-BLK', title: 'Matte Charcoal', priceOverride: 290.0, attributes: { color: 'Matte Charcoal' }, stock: 8 },
+      title: 'Kacang Disco Tari Bali Cap Dewata',
+      slug: 'kacang-disco-tari-bali',
+      description: 'Kacang tanah pilihan dibalut adonan rempah tepung krispi pedas gurih. Renyah tahan lama dan cocok sebagai camilan keluarga. Netto 400g.',
+      categoryId: catKudapan.id,
+      basePrice: 38000,
+      images: [
+        'https://images.unsplash.com/photo-1528750997573-59b89d56f4f7?w=800&auto=format&fit=crop&q=80',
       ],
-    },
-
-    // Audio
-    {
-      category: audio.id,
-      title: 'Monolithic Active Bookshelf Monitors',
-      slug: 'monolithic-active-bookshelf-monitors',
-      description: 'Pair of bi-amplified studio speakers with 5.25-inch woven Kevlar woofers and silk dome tweeters. Balanced XLR & Optical inputs.',
-      basePrice: 480.0,
-      image: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=1000&q=80',
       variants: [
-        { sku: 'AUD-MNR-MATTE', title: 'Matte Black (Pair)', priceOverride: 480.0, attributes: { finish: 'Matte Black' }, stock: 10 },
-        { sku: 'AUD-MNR-WHT', title: 'Arctic White (Pair)', priceOverride: 480.0, attributes: { finish: 'Arctic White' }, stock: 5 },
+        { title: 'Rasa Original Bawang (400g)', sku: 'KDT-ORI-400', attributes: { rasa: 'Original', berat: '400g' }, stock: 95 },
+        { title: 'Rasa Ekstra Pedas (400g)', sku: 'KDT-PDS-400', attributes: { rasa: 'Pedas', berat: '400g' }, stock: 80 },
       ],
     },
     {
-      category: audio.id,
-      title: 'Planar Magnetic Over-Ear Headphones',
-      slug: 'planar-magnetic-over-ear-headphones',
-      description: 'Open-back audiophile headphones featuring ultra-thin 90mm planar transducers, genuine lambskin pads, and CNC milled aluminum yokes.',
-      basePrice: 590.0,
-      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=80',
+      title: 'Dodol Picnic Garut Klasik Aneka Rasa',
+      slug: 'dodol-picnic-garut-klasik',
+      description: 'Dodol Garut legendaris warisan sejak 1949 dengan tekstur kenyal legit berbahan gula aren murni, beras ketan, dan santan kelapa pilihan.',
+      categoryId: catKudapan.id,
+      basePrice: 35000,
+      images: [
+        'https://images.unsplash.com/photo-1582293041079-7814c2f12063?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'AUD-HDP-PLN', title: 'Gunmetal & Black', priceOverride: 590.0, attributes: { color: 'Gunmetal' }, stock: 12 },
+        { title: 'Kotak Klasik Campur 500g', sku: 'DPG-MIX-500', attributes: { rasa: 'Campur Aneka Rasa', berat: '500g' }, stock: 100 },
+        { title: 'Kotak Rasa Wijen 500g', sku: 'DPG-WIJ-500', attributes: { rasa: 'Wijen', berat: '500g' }, stock: 65 },
       ],
     },
     {
-      category: audio.id,
-      title: 'Portable Solid Aluminum Bluetooth Speaker',
-      slug: 'portable-solid-aluminum-bluetooth-speaker',
-      description: 'Machined from an extruded unibody aluminum block with IPX7 water resistance and 24-hour battery reserve.',
-      basePrice: 195.0,
-      image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=1000&q=80',
+      title: 'Amplang Kuku Macan Ikan Tenggiri Samarinda',
+      slug: 'amplang-kuku-macan-samarinda',
+      description: 'Kerupuk amplang khas Kalimantan Timur terbuat dari 100% daging ikan tenggiri segar Sungai Mahakam. Renyah, gurih, dan tidak amis.',
+      categoryId: catKudapan.id,
+      basePrice: 48000,
+      images: [
+        'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'AUD-SPK-SLV', title: 'Raw Silver', priceOverride: 195.0, attributes: { finish: 'Silver' }, stock: 24 },
-        { sku: 'AUD-SPK-BLK', title: 'Anodized Black', priceOverride: 195.0, attributes: { finish: 'Black' }, stock: 19 },
+        { title: 'Kemasan Plastik Tebal 250g', sku: 'AKM-TNG-250', attributes: { bahan: 'Ikan Tenggiri', berat: '250g' }, stock: 70 },
+        { title: 'Kemasan Dus Oleh-oleh 500g', sku: 'AKM-TNG-500', priceOverride: 90000, attributes: { bahan: 'Ikan Tenggiri', berat: '500g' }, stock: 40 },
       ],
     },
     {
-      category: audio.id,
-      title: 'True Wireless Earphones with ANC',
-      slug: 'true-wireless-earphones-with-anc',
-      description: 'Dual hybrid drivers with active noise cancellation, transparency mode, and a sandblasted charging capsule.',
-      basePrice: 220.0,
-      image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1000&q=80',
+      title: 'Brownies Panggang Prima Rasa Bandung',
+      slug: 'brownies-panggang-prima-rasa-bandung',
+      description: 'Brownies panggang renyah berkerak shiny crust di atas dan fudgy cokelat pekat di dalam. Oleh-oleh legendaris Jl. Kemuning Bandung.',
+      categoryId: catKudapan.id,
+      basePrice: 70000,
+      images: [
+        'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'AUD-EAR-BLK', title: 'Graphite', priceOverride: 220.0, attributes: { color: 'Graphite' }, stock: 35 },
+        { title: 'Brownies Panggang Almond', sku: 'BPR-ALM-1', attributes: { topping: 'Almond', jenis: 'Panggang' }, stock: 50 },
+        { title: 'Brownies Panggang Tiramisu Keju', sku: 'BPR-TIR-1', priceOverride: 75000, attributes: { topping: 'Keju Tiramisu', jenis: 'Panggang' }, stock: 40 },
       ],
     },
     {
-      category: audio.id,
-      title: 'Cast Iron Headphone Stand',
-      slug: 'cast-iron-headphone-stand',
-      description: 'Heavy 1.8kg cast iron pedestal with vegetable-tanned leather headrest cushion to prevent band deformation.',
-      basePrice: 85.0,
-      image: 'https://images.unsplash.com/photo-1584679109597-c656b19974c9?auto=format&fit=crop&w=1000&q=80',
+      title: 'Pempek Candy Palembang Paket Komplit 25 Pcs',
+      slug: 'pempek-candy-palembang-25',
+      description: 'Paket pempek asli Palembang vacuum pack beku: 10 kapal selam kecil, 5 lenjer kecil, 5 adaan, 5 kulit, lengkap dengan Cuko Palembang sedap pedas.',
+      categoryId: catKudapan.id,
+      basePrice: 165000,
+      images: [
+        'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'AUD-STD-IRN', title: 'Raw Cast Iron', priceOverride: 85.0, attributes: { finish: 'Cast Iron' }, stock: 30 },
+        { title: 'Paket Campur 25 Pcs + Cuko 500ml', sku: 'PCP-CMP-25', attributes: { isi: '25 Pcs', cuko: 'Pedas Sedang' }, stock: 45 },
+        { title: 'Paket Campur 25 Pcs Cuko Ekstra Pedas', sku: 'PCP-PDS-25', attributes: { isi: '25 Pcs', cuko: 'Ekstra Pedas' }, stock: 35 },
+      ],
+    },
+    {
+      title: 'Otak-otak Ikan Tenggiri Bakar Bangka Belitung',
+      slug: 'otak-otak-ikan-tenggiri-bangka',
+      description: 'Otak-otak bakar daun pisang asli Bangka dari ikan tenggiri segar. Lengkap dengan sambal tauco dan sambal terasi asam pedas khas.',
+      categoryId: catKudapan.id,
+      basePrice: 65000,
+      images: [
+        'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop&q=80',
+      ],
+      variants: [
+        { title: 'Isi 10 Pcs Vacuum + 2 Sambal Khas', sku: 'OOB-TNG-10', attributes: { isi: '10 pcs', kemasan: 'Frozen Vacuum' }, stock: 40 },
+        { title: 'Isi 20 Pcs Vacuum + 2 Sambal Khas', sku: 'OOB-TNG-20', priceOverride: 125000, attributes: { isi: '20 pcs', kemasan: 'Frozen Vacuum' }, stock: 30 },
       ],
     },
 
-    // Living & Ceramics
+    // --- KOPI & MINUMAN TRADISIONAL ---
     {
-      category: objects.id,
-      title: 'Stoneware Pour-Over Dripper & Carafe',
-      slug: 'stoneware-pour-over-dripper-carafe',
-      description: 'Wheel-thrown Japanese Hasami clay coffee server with a ribbed dripper designed for precise extraction flow rates.',
-      basePrice: 95.0,
-      image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1000&q=80',
+      title: 'Kopi Arabika Gayo Aceh Single Origin 250g',
+      slug: 'kopi-arabika-gayo-aceh',
+      description: 'Biji kopi arabika organik ditanam di dataran tinggi Takengon Aceh Tengah (1.400 mdpl). Notes karamel manis, acidity seimbang, dan aroma rempah harum.',
+      categoryId: catKopi.id,
+      basePrice: 75000,
+      images: [
+        'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'CRM-COF-ASH', title: 'Ash Glaze / 600ml', priceOverride: 95.0, attributes: { glaze: 'Ash Glaze' }, stock: 18 },
-        { sku: 'CRM-COF-MATTE', title: 'Matte Chalk / 600ml', priceOverride: 95.0, attributes: { glaze: 'Matte Chalk' }, stock: 14 },
+        { title: 'Biji Kopi Sangrai (Whole Bean) 250g', sku: 'KGA-WHL-250', attributes: { bentuk: 'Biji Kopi Utuh', berat: '250g' }, stock: 90 },
+        { title: 'Bubuk Halus (Fine Grind) 250g', sku: 'KGA-FIN-250', attributes: { bentuk: 'Bubuk Halus', berat: '250g' }, stock: 85 },
+        { title: 'Bubuk Sedang (Medium Grind) 250g', sku: 'KGA-MED-250', attributes: { bentuk: 'Bubuk Sedang (V60)', berat: '250g' }, stock: 70 },
       ],
     },
     {
-      category: objects.id,
-      title: 'Hand-Poured Soy Wax Scented Candle',
-      slug: 'hand-poured-soy-wax-scented-candle',
-      description: 'Notes of Hinoki cedar, smoky vetiver, and black pepper. Poured into a reusable matte black ceramic vessel.',
-      basePrice: 48.0,
-      image: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=80',
+      title: 'Kopi Toraja Kalosi Sulawesi Grade 1 250g',
+      slug: 'kopi-toraja-kalosi-250g',
+      description: 'Kopi arabika dataran tinggi Toraja Kalosi Sulawesi Selatan. Karakter full body mantap dengan aroma herbal rempah dan dark chocolate note.',
+      categoryId: catKopi.id,
+      basePrice: 80000,
+      images: [
+        'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'CDL-HNK-300G', title: 'Hinoki & Cedar / 300g', priceOverride: 48.0, attributes: { scent: 'Hinoki' }, stock: 45 },
-        { sku: 'CDL-VTV-300G', title: 'Smoked Vetiver / 300g', priceOverride: 48.0, attributes: { scent: 'Vetiver' }, stock: 38 },
+        { title: 'Biji Kopi Sangrai (Whole Bean) 250g', sku: 'KTK-WHL-250', attributes: { bentuk: 'Biji Utuh', berat: '250g' }, stock: 75 },
+        { title: 'Bubuk Medium (Medium Grind) 250g', sku: 'KTK-MED-250', attributes: { bentuk: 'Bubuk Sedang', berat: '250g' }, stock: 65 },
       ],
     },
     {
-      category: objects.id,
-      title: 'Cast Bronze Incense Burner',
-      slug: 'cast-bronze-incense-burner',
-      description: 'Solid lost-wax cast bronze receptacle designed to collect ash cleanly from traditional Japanese bamboo-core sticks.',
-      basePrice: 110.0,
-      image: 'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?auto=format&fit=crop&w=1000&q=80',
+      title: 'Kopi Robusta Lampung Tanggamus 250g',
+      slug: 'kopi-robusta-lampung-tanggamus',
+      description: 'Kopi robusta petik merah dari kaki Gunung Tanggamus Lampung. Tingkat kepekatan kental beraroma cokelat panggang alami tanpa rasa asam.',
+      categoryId: catKopi.id,
+      basePrice: 45000,
+      images: [
+        'https://images.unsplash.com/photo-1559525839-8f8ec320b924?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'BRZ-INC-RAW', title: 'Unlacquered Bronze', priceOverride: 110.0, attributes: { material: 'Bronze' }, stock: 15 },
+        { title: 'Bubuk Halus Khas Tubruk 250g', sku: 'KRL-TBR-250', attributes: { bentuk: 'Bubuk Halus', berat: '250g' }, stock: 100 },
+        { title: 'Biji Kopi Sangrai Medium Dark 250g', sku: 'KRL-WHL-250', attributes: { bentuk: 'Biji Utuh', berat: '250g' }, stock: 80 },
       ],
     },
     {
-      category: objects.id,
-      title: 'Brushed Stainless Water Pitcher',
-      slug: 'brushed-stainless-water-pitcher',
-      description: 'Double-walled insulated 18/8 stainless steel carafe with drip-free pouring spout and internal ice guard.',
-      basePrice: 80.0,
-      image: 'https://images.unsplash.com/photo-1577741314755-048d8525d31e?auto=format&fit=crop&w=1000&q=80',
+      title: 'Sirup Markisa Asli Brastagi Noerlen Medan',
+      slug: 'sirup-markisa-brastagi-noerlen',
+      description: 'Sirup buah markisa murni dari perkebunan Brastagi Tanah Karo. Kental manis segar alami tanpa pewarna dan pengawet kimia. Botol kaca 1000ml.',
+      categoryId: catKopi.id,
+      basePrice: 65000,
+      images: [
+        'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'KTC-PTC-15L', title: '1.5 Liters / Brushed Steel', priceOverride: 80.0, attributes: { capacity: '1.5L' }, stock: 22 },
+        { title: 'Botol Kaca Segel 1000ml', sku: 'SMN-BTL-1000', attributes: { kemasan: 'Botol 1 Liter', varian: 'Markisa Asli' }, stock: 55 },
+        { title: 'Paket Hemat 2 Botol (2000ml)', sku: 'SMN-PKT-2000', priceOverride: 120000, attributes: { kemasan: '2 Botol', varian: 'Markisa Asli' }, stock: 30 },
       ],
     },
     {
-      category: objects.id,
-      title: 'Minimalist Wall Clock in Slate',
-      slug: 'minimalist-wall-clock-in-slate',
-      description: 'Natural quarried slate disc dial with brushed brass silent sweep hands and German quartz movement.',
-      basePrice: 165.0,
-      image: 'https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?auto=format&fit=crop&w=1000&q=80',
+      title: 'Wedang Uwuh Asli Imogiri Jogja (Isi 10 Pcs)',
+      slug: 'wedang-uwuh-asli-imogiri',
+      description: 'Minuman herbal rempah khas raja-raja Mataram Yogyakarta: kayu secang merah, cengkeh, kayu manis, jahe kering, dan gula batu kristal.',
+      categoryId: catKopi.id,
+      basePrice: 25000,
+      images: [
+        'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'CLK-SLT-30CM', title: '30cm Diameter / Dark Slate', priceOverride: 165.0, attributes: { diameter: '30cm' }, stock: 12 },
+        { title: 'Paket Isi 10 Kantong Seduh Komplit', sku: 'WUI-PKT-10', attributes: { isi: '10 Pcs', gula: 'Termasuk Gula Batu' }, stock: 150 },
+        { title: 'Paket Jumbo Isi 25 Kantong Seduh', sku: 'WUI-PKT-25', priceOverride: 55000, attributes: { isi: '25 Pcs', gula: 'Termasuk Gula Batu' }, stock: 90 },
+      ],
+    },
+
+    // --- BATIK & WASTRA NUSANTARA ---
+    {
+      title: 'Kain Batik Tulis Motif Parang Khas Solo',
+      slug: 'kain-batik-tulis-parang-solo',
+      description: 'Kain batik tulis canting malam asli karya pengrajin Laweyan Solo di atas mori katun primissima super halus. Ukuran 2.4 x 1.15 meter.',
+      categoryId: catBatik.id,
+      basePrice: 280000,
+      images: [
+        'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?w=800&auto=format&fit=crop&q=80',
+      ],
+      variants: [
+        { title: 'Motif Parang Rusak Cokelat Sogan (2.4m)', sku: 'BTS-PRS-24', attributes: { motif: 'Parang Rusak', warna: 'Cokelat Sogan' }, stock: 20 },
+        { title: 'Motif Parang Barong Hitam Klasik (2.4m)', sku: 'BTS-PRB-24', priceOverride: 310000, attributes: { motif: 'Parang Barong', warna: 'Hitam Emas' }, stock: 15 },
       ],
     },
     {
-      category: objects.id,
-      title: 'Woven Linen Throw Blanket',
-      slug: 'woven-linen-throw-blanket',
-      description: 'Stone-washed European flax linen throw with subtle eyelash fringes. Pre-shrunk and exceptionally breathable.',
-      basePrice: 130.0,
-      image: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=1000&q=80',
+      title: 'Kain Tenun Ikat Asli Troso Jepara Tradisional',
+      slug: 'kain-tenun-ikat-troso-jepara',
+      description: 'Kain tenun ATBM (Alat Tenun Bukan Mesin) asli dari desa Troso Jepara. Ditenun helai demi helai menggunakan benang katun combed berkualitas tinggi.',
+      categoryId: catBatik.id,
+      basePrice: 195000,
+      images: [
+        'https://images.unsplash.com/photo-1590736969955-71cc94801759?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'LNN-TRW-OAT', title: 'Oatmeal / 140x200cm', priceOverride: 130.0, attributes: { color: 'Oatmeal' }, stock: 17 },
+        { title: 'Motif Etnik Dayak Merah Marun (2.2m)', sku: 'TIT-ETN-MRH', attributes: { motif: 'Etnik Dayak', warna: 'Marun' }, stock: 25 },
+        { title: 'Motif Toraja Biru Navy (2.2m)', sku: 'TIT-TOR-BRU', attributes: { motif: 'Toraja', warna: 'Navy' }, stock: 20 },
       ],
     },
     {
-      category: objects.id,
-      title: 'Concrete Planter Vessel',
-      slug: 'concrete-planter-vessel',
-      description: 'Hand-cast architectural concrete pot with internal drainage saucer and rubber protective pads.',
-      basePrice: 55.0,
-      image: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=1000&q=80',
+      title: 'Kain Songket Tradisional Khas Palembang',
+      slug: 'kain-songket-tradisional-palembang',
+      description: 'Kain songket tenun tangan benang tembaga berlapis emas khas Palembang. Berkarakter megah dan biasa digunakan pada upacara adat kebesaran.',
+      categoryId: catBatik.id,
+      basePrice: 350000,
+      images: [
+        'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'PLT-CNC-MED', title: 'Medium / Basalt Grey', priceOverride: 55.0, attributes: { size: 'Medium' }, stock: 26 },
+        { title: 'Set Kain + Selendang Songket Merah Emas', sku: 'SKP-ST-MRH', attributes: { warna: 'Merah Emas', set: 'Kain + Selendang' }, stock: 12 },
+        { title: 'Set Kain + Selendang Songket Hijau Zamrud', sku: 'SKP-ST-HJU', attributes: { warna: 'Hijau Zamrud', set: 'Kain + Selendang' }, stock: 10 },
       ],
     },
     {
-      category: objects.id,
-      title: 'Solid Brass Tray',
-      slug: 'solid-brass-tray',
-      description: 'Spun solid brass catchall tray for keys, daily carry objects, or cocktail glassware. Left unlacquered.',
-      basePrice: 70.0,
-      image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1000&q=80',
+      title: 'Sarung Sutra Sengkang Tenun Wajo Sulawesi',
+      slug: 'sarung-sutra-sengkang-wajo',
+      description: 'Sarung sutra asli dari kota sutra Sengkang Kabupaten Wajo Sulawesi Selatan. Berkilau alami, lembut dan sejuk dipakai sepanjang hari.',
+      categoryId: catBatik.id,
+      basePrice: 220000,
+      images: [
+        'https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'TRY-BRS-20', title: '20cm Diameter / Spun Brass', priceOverride: 70.0, attributes: { size: '20cm' }, stock: 20 },
+        { title: 'Motif Lagosi Tradisional Hitam Emas', sku: 'SSW-LAG-01', attributes: { motif: 'Lagosi', warna: 'Hitam Emas' }, stock: 18 },
+        { title: 'Motif Kotak Bugis Marun', sku: 'SSW-KTK-02', attributes: { motif: 'Kotak Bugis', warna: 'Marun' }, stock: 16 },
+      ],
+    },
+
+    // --- KRIYA & KERAJINAN KAYU/GERABAH ---
+    {
+      title: 'Piring Kayu Jati Jepara Food Grade Set Isi 3',
+      slug: 'piring-kayu-jati-jepara-set',
+      description: 'Satu set piring makan berbahan 100% kayu jati solid TPK Perhutani Jepara. Finishing natural beeswax bersertifikasi food-grade aman untuk santapan.',
+      categoryId: catKriya.id,
+      basePrice: 95000,
+      images: [
+        'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=800&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1584365685547-9a5fb6f3a70c?w=800&auto=format&fit=crop&q=80',
+      ],
+      variants: [
+        { title: 'Set 3 Piring Diameter 20cm Natural Teak', sku: 'PKJ-SET-20', attributes: { diameter: '20 cm', isi: '3 pcs' }, stock: 45 },
+        { title: 'Set 3 Piring Diameter 25cm Natural Teak', sku: 'PKJ-SET-25', priceOverride: 135000, attributes: { diameter: '25 cm', isi: '3 pcs' }, stock: 30 },
       ],
     },
     {
-      category: objects.id,
-      title: 'Tactile Ceramic Espresso Cups (Set of 2)',
-      slug: 'tactile-ceramic-espresso-cups-set-of-2',
-      description: 'Unglazed textured exterior with gloss glazed interior rim. Holds 80ml of espresso with optimum crema retention.',
-      basePrice: 42.0,
-      image: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=1000&q=80',
+      title: 'Cangkir Gerabah Tanah Liat Kasongan Bantul',
+      slug: 'cangkir-gerabah-tanah-liat-kasongan',
+      description: 'Cangkir tembikar tradisional buatan tangan pengrajin desa wisata Kasongan Yogyakarta. Memberikan sensasi minum teh tubruk yang lebih nikmat dan wangi.',
+      categoryId: catKriya.id,
+      basePrice: 45000,
+      images: [
+        'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop&q=80',
+      ],
       variants: [
-        { sku: 'CRM-ESP-SET2', title: 'Charcoal Stoneware / Pair', priceOverride: 42.0, attributes: { set: '2 cups' }, stock: 35 },
+        { title: 'Set Cangkir + Tatakan + Tutup Tanah Liat', sku: 'CGK-SET-01', attributes: { isi: 'Cangkir + Tatakan + Tutup', bahan: 'Terracotta' }, stock: 60 },
+        { title: 'Teko Gerabah Mini 500ml', sku: 'CGK-TEK-500', priceOverride: 65000, attributes: { isi: 'Teko 500ml', bahan: 'Terracotta' }, stock: 40 },
+      ],
+    },
+    {
+      title: 'Tas Anyaman Rotan Bulat Khas Lombok',
+      slug: 'tas-anyaman-rotan-bulat-lombok',
+      description: 'Tas selempang anyaman rotan bulat ata asli buatan pengrajin desa Beleka Lombok Tengah. Tali kulit sapi asli dengan lapisan kain batik di bagian dalam.',
+      categoryId: catKriya.id,
+      basePrice: 120000,
+      images: [
+        'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&auto=format&fit=crop&q=80',
+      ],
+      variants: [
+        { title: 'Diameter 20cm Motif Polos Bintang', sku: 'TRL-PLS-20', attributes: { diameter: '20 cm', motif: 'Bintang' }, stock: 35 },
+        { title: 'Diameter 20cm Motif Bunga Warna', sku: 'TRL-BNG-20', priceOverride: 135000, attributes: { diameter: '20 cm', motif: 'Bunga' }, stock: 25 },
+      ],
+    },
+    {
+      title: 'Cobek Batu Kali Pori Halus Muntilan Asli',
+      slug: 'cobek-batu-kali-muntilan-asli',
+      description: 'Cobek dan ulekan batu kali asli Gunung Merapi Muntilan Magelang. Tidak berpasir, tidak luntur, dan kokoh untuk mengulek bumbu sambal.',
+      categoryId: catKriya.id,
+      basePrice: 85000,
+      images: [
+        'https://images.unsplash.com/photo-1590736969955-71cc94801759?w=800&auto=format&fit=crop&q=80',
+      ],
+      variants: [
+        { title: 'Cobek Diameter 20cm + Ulekan Munthu', sku: 'CBM-20-SET', attributes: { diameter: '20 cm', kelengkapan: 'Termasuk Ulekan' }, stock: 40 },
+        { title: 'Cobek Jumbo Diameter 24cm + Ulekan', sku: 'CBM-24-SET', priceOverride: 110000, attributes: { diameter: '24 cm', kelengkapan: 'Termasuk Ulekan' }, stock: 25 },
+      ],
+    },
+
+    // --- SAMBAL & BUMBU DAPUR TRADISIONAL ---
+    {
+      title: 'Sambal Bu Rudy Khas Surabaya Set 3 Varian',
+      slug: 'sambal-bu-rudy-surabaya-set3',
+      description: 'Paket sambal terpopuler khas Surabaya: Sambal Bawang pedas nendang, Sambal Bajak manis gurih, dan Sambal Terasi harum. Botol segel rapat.',
+      categoryId: catSambal.id,
+      basePrice: 85000,
+      images: [
+        'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&auto=format&fit=crop&q=80',
+      ],
+      variants: [
+        { title: 'Paket 3 Botol (Bawang, Bajak, Terasi)', sku: 'SBR-SET-3', attributes: { isi: '3 Botol', varian: 'Mix 3 Varian' }, stock: 95 },
+        { title: 'Paket 3 Botol Khusus Sambal Bawang', sku: 'SBR-BWG-3', attributes: { isi: '3 Botol', varian: 'Full Bawang' }, stock: 110 },
+      ],
+    },
+    {
+      title: 'Rendang Daging Sapi Payakumbuh Padang Asli',
+      slug: 'rendang-daging-sapi-payakumbuh',
+      description: 'Rendang daging sapi khas Minangkabau dimasak lambat 8 jam di atas kayu bakar dengan rempah kelapa gongseng hitam medok. Siap saji kemasan retort pouch.',
+      categoryId: catSambal.id,
+      basePrice: 110000,
+      images: [
+        'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop&q=80',
+      ],
+      variants: [
+        { title: 'Rendang Daging Sapi 250g (Isi 5 Potong)', sku: 'RDP-DGS-250', attributes: { berat: '250g', jenis: 'Daging Sapi' }, stock: 65 },
+        { title: 'Rendang Paru Kering Krispi 200g', sku: 'RDP-PRU-200', priceOverride: 95000, attributes: { berat: '200g', jenis: 'Paru Sapi' }, stock: 45 },
+      ],
+    },
+    {
+      title: 'Abon Sapi Gurih Renyah Mesran Solo',
+      slug: 'abon-sapi-mesran-solo',
+      description: 'Abon sapi legendaris khas Solo dengan serat daging sapi murni tanpa campuran kelapa parut. Gurih renyah tanpa minyak berlebih. Netto 250g.',
+      categoryId: catSambal.id,
+      basePrice: 75000,
+      images: [
+        'https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=800&auto=format&fit=crop&q=80',
+      ],
+      variants: [
+        { title: 'Abon Sapi Rasa Manis Gurih (250g)', sku: 'ASM-MNS-250', attributes: { rasa: 'Manis Gurih', berat: '250g' }, stock: 70 },
+        { title: 'Abon Sapi Rasa Pedas Sedap (250g)', sku: 'ASM-PDS-250', attributes: { rasa: 'Pedas Sedap', berat: '250g' }, stock: 60 },
+      ],
+    },
+    {
+      title: 'Terasi Udang Rebon Asli Cirebon Super',
+      slug: 'terasi-udang-rebon-cirebon',
+      description: 'Terasi kualitas nomor satu terbuat dari 100% udang rebon segar laut Cirebon. Wangi sedap gurih tanpa pewarna sintetis. Kemasan kotak isi 10 batang.',
+      categoryId: catSambal.id,
+      basePrice: 35000,
+      images: [
+        'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop&q=80',
+      ],
+      variants: [
+        { title: 'Kotak Isi 10 Batang Terasi Matang (250g)', sku: 'TRC-SUP-250', attributes: { isi: '10 Batang', berat: '250g' }, stock: 85 },
       ],
     },
   ];
 
-  console.log(`Inserting ${productsData.length} products with variants and stock ledger records...`);
+  console.log(`Creating ${seedProducts.length} authentic Indonesian products with variants & inventory...`);
 
-  const createdVariants: { id: string; price: number; name: string; sku: string }[] = [];
+  const createdVariants: any[] = [];
 
-  for (const item of productsData) {
+  for (const p of seedProducts) {
     const product = await prisma.product.create({
       data: {
-        categoryId: item.category,
-        title: item.title,
-        slug: item.slug,
-        description: item.description,
-        basePrice: item.basePrice,
+        title: p.title,
+        slug: p.slug,
+        description: p.description,
+        categoryId: p.categoryId,
+        basePrice: p.basePrice,
         status: ProductStatus.ACTIVE,
         images: {
-          create: {
-            url: item.image,
-            altText: item.title,
-            displayOrder: 0,
-            isThumbnail: true,
-          },
+          create: p.images.map((url, idx) => ({
+            url,
+            isThumbnail: idx === 0,
+            displayOrder: idx,
+            altText: p.title,
+          })),
         },
       },
     });
 
-    for (const v of item.variants) {
+    for (const v of p.variants) {
       const variant = await prisma.productVariant.create({
         data: {
           productId: product.id,
-          sku: v.sku,
           title: v.title,
-          priceOverride: v.priceOverride,
+          sku: v.sku,
+          priceOverride: v.priceOverride ?? null,
           attributes: v.attributes,
           inventory: {
             create: {
               quantityOnHand: v.stock,
-              reservedQuantity: 0,
               safetyStockLevel: 5,
             },
           },
@@ -560,69 +665,99 @@ async function main() {
         include: { inventory: true },
       });
 
-      if (variant.inventory) {
-        await prisma.stockMovement.create({
-          data: {
-            inventoryId: variant.inventory.id,
-            actorId: admin.id,
-            quantityDelta: v.stock,
-            balanceAfter: v.stock,
-            reason: StockMovementReason.INITIAL,
-            notes: 'Initial warehouse opening inventory balance',
-          },
-        });
-      }
-
-      createdVariants.push({
-        id: variant.id,
-        price: v.priceOverride || item.basePrice,
-        name: product.title,
-        sku: v.sku,
+      // Initial stock ledger entry
+      await prisma.stockMovement.create({
+        data: {
+          inventoryId: variant.inventory!.id,
+          actorId: admin.id,
+          quantityDelta: v.stock,
+          balanceAfter: v.stock,
+          reason: StockMovementReason.INITIAL,
+          notes: `Stok awal produk: ${p.title} (${v.title})`,
+        },
       });
+
+      createdVariants.push({ ...variant, product });
     }
   }
 
-  console.log(`Generated ${createdVariants.length} total product variants.`);
+  console.log(`Created ${seedProducts.length} products with ${createdVariants.length} total variants & initial stock movements.`);
 
-  // 5. Create Realistic Historical Demo Orders
-  const sampleAddress = customer1.addresses[0];
+  // 4. Create Demo Orders for Customer 1 (Budi Santoso)
+  const vBakpia = createdVariants.find((v) => v.sku === 'BKTJ-COK-10') || createdVariants[0];
+  const vKopi = createdVariants.find((v) => v.sku === 'KGA-FIN-250') || createdVariants[1];
+  const vSambal = createdVariants.find((v) => v.sku === 'SBR-SET-3') || createdVariants[2];
 
-  // Order 1: Delivered order
-  const order1VariantA = createdVariants[0]; // Raw Denim Jacket
-  const order1VariantB = createdVariants[8]; // Bifold Cardholder
-  const order1Subtotal = order1VariantA.price * 1 + order1VariantB.price * 1;
-  const order1GrandTotal = order1Subtotal + 15.0; // $15 shipping
-
+  // Order 1: Completed & Delivered (COD Paid)
+  const order1GrandTotal = 45000 * 2 + 75000 + 0; // Rp 165.000 (with Rp 20.000 shipping -> 185.000)
   const order1 = await prisma.order.create({
     data: {
-      orderNumber: 'ORD-2026-1001',
+      orderNumber: 'ORD-20261105-8812',
       userId: customer1.id,
-      shippingAddressId: sampleAddress.id,
+      shippingAddressId: customer1.addresses[0].id,
       status: OrderStatus.DELIVERED,
-      subtotal: order1Subtotal,
-      shippingCost: 15.0,
-      taxTotal: 0.0,
-      grandTotal: order1GrandTotal,
-      currency: 'USD',
-      notes: 'Please leave at front porch.',
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5), // 5 days ago
+      subtotal: 165000,
+      shippingCost: 20000,
+      taxTotal: 0,
+      grandTotal: 185000,
+      currency: 'IDR',
+      notes: 'Titipkan ke pos satpam cluster jika rumah kosong.',
       items: {
         create: [
           {
-            variantId: order1VariantA.id,
-            productNameSnapshot: order1VariantA.name,
-            variantSkuSnapshot: order1VariantA.sku,
-            unitPriceSnapshot: order1VariantA.price,
-            quantity: 1,
-            lineTotal: order1VariantA.price,
+            variantId: vBakpia.id,
+            productNameSnapshot: vBakpia.product.title,
+            variantSkuSnapshot: vBakpia.sku,
+            variantAttributesSnapshot: vBakpia.attributes,
+            unitPriceSnapshot: 45000,
+            quantity: 2,
+            lineTotal: 90000,
           },
           {
-            variantId: order1VariantB.id,
-            productNameSnapshot: order1VariantB.name,
-            variantSkuSnapshot: order1VariantB.sku,
-            unitPriceSnapshot: order1VariantB.price,
+            variantId: vKopi.id,
+            productNameSnapshot: vKopi.product.title,
+            variantSkuSnapshot: vKopi.sku,
+            variantAttributesSnapshot: vKopi.attributes,
+            unitPriceSnapshot: 75000,
             quantity: 1,
-            lineTotal: order1VariantB.price,
+            lineTotal: 75000,
+          },
+        ],
+      },
+      payment: {
+        create: {
+          method: PaymentMethod.CASH_ON_DELIVERY,
+          status: PaymentStatus.PAID,
+          amount: 185000,
+          paidAt: new Date(Date.now() - 86400000 * 2),
+        },
+      },
+    },
+  });
+
+  // Order 2: Processing (Manual Bank Transfer Paid)
+  const order2 = await prisma.order.create({
+    data: {
+      orderNumber: 'ORD-20261106-9214',
+      userId: customer1.id,
+      shippingAddressId: customer1.addresses[0].id,
+      status: OrderStatus.PROCESSING,
+      subtotal: 85000 * 2,
+      shippingCost: 20000,
+      taxTotal: 0,
+      grandTotal: 190000,
+      currency: 'IDR',
+      notes: 'Mohon dibungkus bubble wrap ekstra tebal agar botol tidak pecah.',
+      items: {
+        create: [
+          {
+            variantId: vSambal.id,
+            productNameSnapshot: vSambal.product.title,
+            variantSkuSnapshot: vSambal.sku,
+            variantAttributesSnapshot: vSambal.attributes,
+            unitPriceSnapshot: 85000,
+            quantity: 2,
+            lineTotal: 170000,
           },
         ],
       },
@@ -630,60 +765,22 @@ async function main() {
         create: {
           method: PaymentMethod.MANUAL_BANK_TRANSFER,
           status: PaymentStatus.PAID,
-          amount: order1GrandTotal,
-          transactionReference: 'WIRE-TX-984128',
-          paidAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 4),
+          amount: 190000,
+          transactionReference: 'TRX-BCA-981726354',
+          paidAt: new Date(Date.now() - 3600000 * 4),
         },
       },
     },
   });
 
-  // Order 2: Processing order
-  const order2Variant = createdVariants[12]; // Precision Desk Pad
-  const order2Subtotal = order2Variant.price * 2;
-  const order2GrandTotal = order2Subtotal + 0.0; // free shipping
+  console.log('Created realistic demo orders with Indonesian payment tracking.');
 
-  const order2 = await prisma.order.create({
-    data: {
-      orderNumber: 'ORD-2026-1002',
-      userId: customer2.id,
-      shippingAddressId: customer2.addresses[0].id,
-      status: OrderStatus.PROCESSING,
-      subtotal: order2Subtotal,
-      shippingCost: 0.0,
-      taxTotal: 0.0,
-      grandTotal: order2GrandTotal,
-      currency: 'USD',
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 12), // 12 hours ago
-      items: {
-        create: [
-          {
-            variantId: order2Variant.id,
-            productNameSnapshot: order2Variant.name,
-            variantSkuSnapshot: order2Variant.sku,
-            unitPriceSnapshot: order2Variant.price,
-            quantity: 2,
-            lineTotal: order2Subtotal,
-          },
-        ],
-      },
-      payment: {
-        create: {
-          method: PaymentMethod.CASH_ON_DELIVERY,
-          status: PaymentStatus.PENDING,
-          amount: order2GrandTotal,
-        },
-      },
-    },
-  });
-
-  console.log(`Generated demo orders: ${order1.orderNumber}, ${order2.orderNumber}`);
-  console.log('CommerceOS Seed completed successfully!');
+  console.log('Seeding completed successfully!');
 }
 
 main()
   .catch((e) => {
-    console.error(e);
+    console.error('Error during seeding:', e);
     process.exit(1);
   })
   .finally(async () => {

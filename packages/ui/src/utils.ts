@@ -5,12 +5,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(amount: number | string, currency = 'USD'): string {
+export function formatCurrency(amount: number | string, currency = 'IDR'): string {
   const numericAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('id-ID', {
     style: 'currency',
-    currency,
-    minimumFractionDigits: 2,
+    currency: 'IDR',
+    maximumFractionDigits: 0,
+    minimumFractionDigits: 0,
   }).format(numericAmount || 0);
 }
 

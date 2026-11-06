@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { Public } from '../../common/decorators/public.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import {
@@ -40,6 +41,21 @@ export class OrdersController {
       page: page ? parseInt(page, 10) : 1,
       limit: limit ? parseInt(limit, 10) : 20,
     });
+  }
+
+  @Public()
+  @Get('public/:orderNumber')
+  async getPublicOrder(@Param('orderNumber') orderNumber: string) {
+    return this.ordersService.getOrderByNumber(orderNumber);
+  }
+
+  @Public()
+  @Post('public/:orderNumber/confirm-payment')
+  async confirmPayment(
+    @Param('orderNumber') orderNumber: string,
+    @Body('transactionReference') transactionReference?: string,
+  ) {
+    return this.ordersService.confirmDemoPayment(orderNumber, transactionReference);
   }
 
   @Get(':id')

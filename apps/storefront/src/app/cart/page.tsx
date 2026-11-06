@@ -13,8 +13,8 @@ export default function CartPage() {
   const { language } = useLanguageStore();
   const isId = language === 'id';
 
-  const freeShippingThreshold = 250000;
-  const shippingCost = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : 25000;
+  const freeShippingThreshold = 200000;
+  const shippingCost = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : 20000;
   const grandTotal = subtotal + shippingCost;
 
   if (items.length === 0) {

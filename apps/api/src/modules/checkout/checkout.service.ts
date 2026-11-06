@@ -20,25 +20,28 @@ export class CheckoutService {
   async checkout(userId: string, dto: CheckoutDto) {
     return this.prisma.$transaction(
       async (tx) => {
-        // 1. Fetch user's active cart with all line items
-        const cart = await tx.cart.findUnique({
-          where: { userId },
-          include: {
-            items: {
-              include: {
-                variant: {
-                  include: {
-                    product: true,
-                    inventory: true,
-                  },
-                },
-              },
-            },
-          },
-        });
+        // 1. Resolve checkout items: from dto.items or from user's active database cart
+        let rawItems: Array<{ variantId: string; quantity: number }> = [];
 
-        if (!cart || cart.items.length === 0) {
-          throw new BadRequestException('Your shopping cart is empty.');
+        if (dto.items && dto.items.length > 0) {
+          rawItems = dto.items;
+        } else {
+          const cart = await tx.cart.findUnique({
+            where: { userId },
+            include: { items: true },
+          });
+
+          if (!cart || cart.items.length === 0) {
+            throw new BadRequestException('Keranjang belanja kamu masih kosong.');
+          }
+          rawItems = cart.items.map((it) => ({
+            variantId: it.variantId,
+            quantity: it.quantity,
+          }));
+        }
+
+        if (rawItems.length === 0) {
+          throw new BadRequestException('Keranjang belanja kamu masih kosong.');
         }
 
         // 2. Resolve Shipping Address
@@ -53,7 +56,7 @@ export class CheckoutService {
               city: dto.newAddress.city,
               state: dto.newAddress.state,
               postalCode: dto.newAddress.postalCode,
-              country: dto.newAddress.country || 'US',
+              country: dto.newAddress.country || 'ID',
               isDefaultShipping: true,
             },
           });
@@ -61,7 +64,7 @@ export class CheckoutService {
         }
 
         if (!shippingAddressId) {
-          throw new BadRequestException('A valid shipping address must be selected or provided.');
+          throw new BadRequestException('Alamat pengiriman wajib dipilih atau diisi.');
         }
 
         // 3. Atomically check and deduct stock for each item, creating line item snapshots
@@ -79,37 +82,40 @@ export class CheckoutService {
           newStock: number;
         }> = [];
 
-        for (const item of cart.items) {
-          const variant = item.variant;
-
-          // Acquire pessimistic row lock on inventory record to prevent concurrent race conditions
+        for (const item of rawItems) {
           const lockedRows = await tx.$queryRaw<Array<{ id: string; quantityOnHand: number; safetyStockLevel: number }>>`
             SELECT id, "quantityOnHand", "safetyStockLevel"
             FROM inventory
-            WHERE "variantId" = ${variant.id}
+            WHERE "variantId" = ${item.variantId}
             FOR UPDATE
           `;
 
           const inventory = lockedRows[0];
-
           if (!inventory) {
-            throw new NotFoundException(`Inventory record not found for variant ${variant.sku}`);
+            throw new NotFoundException(`Data inventaris tidak ditemukan untuk varian: ${item.variantId}`);
           }
 
           if (inventory.quantityOnHand < item.quantity) {
             throw new BadRequestException(
-              `Insufficient stock for '${variant.product.title} (${variant.title})'. Only ${inventory.quantityOnHand} available, requested ${item.quantity}.`,
+              `Stok tidak mencukupi untuk item pesanan. Tersisa ${inventory.quantityOnHand}, diminta ${item.quantity}.`
             );
           }
 
-          // Atomic deduction under exclusive lock
+          const variant = await tx.productVariant.findUnique({
+            where: { id: item.variantId },
+            include: { product: true },
+          });
+
+          if (!variant) {
+            throw new NotFoundException(`Produk tidak ditemukan untuk varian ${item.variantId}`);
+          }
+
           const newStock = inventory.quantityOnHand - item.quantity;
           await tx.inventory.update({
             where: { id: inventory.id },
             data: { quantityOnHand: newStock },
           });
 
-          // Price calculation based strictly on server data
           const unitPrice = variant.priceOverride
             ? Number(variant.priceOverride)
             : Number(variant.product.basePrice);
@@ -131,14 +137,14 @@ export class CheckoutService {
           });
         }
 
-        // 4. Calculate Financial Totals
-        // Free shipping on orders over $150
-        const shippingCostNumber = subtotalNumber >= 150 ? 0.0 : 15.0;
-        const taxTotalNumber = 0.0;
+        // 4. Calculate Financial Totals in IDR Rupiah
+        // Gratis ongkir untuk pembelian >= Rp 200.000, selain itu Rp 20.000
+        const shippingCostNumber = subtotalNumber >= 200000 ? 0 : 20000;
+        const taxTotalNumber = 0;
         const grandTotalNumber = subtotalNumber + shippingCostNumber + taxTotalNumber;
 
         // Generate Order Number: ORD-YYYYMMDD-XXXX
-        const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const dateStr = new Date().toISOString().slice(2, 10).replace(/-/g, '');
         const randomSuffix = Math.floor(1000 + Math.random() * 9000);
         const orderNumber = `ORD-${dateStr}-${randomSuffix}`;
 
@@ -153,7 +159,7 @@ export class CheckoutService {
             shippingCost: new Prisma.Decimal(shippingCostNumber),
             taxTotal: new Prisma.Decimal(taxTotalNumber),
             grandTotal: new Prisma.Decimal(grandTotalNumber),
-            currency: 'USD',
+            currency: 'IDR',
             notes: dto.notes || null,
             items: {
               create: orderItemInputs.map((it) => ({
@@ -191,15 +197,18 @@ export class CheckoutService {
               quantityDelta: -it.quantity,
               balanceAfter: it.newStock,
               reason: StockMovementReason.ORDER_PLACED,
-              notes: `Order placed: ${order.orderNumber} (-${it.quantity} units)`,
+              notes: `Order placed: ${order.orderNumber} (-${it.quantity} unit)`,
             },
           });
         }
 
-        // 7. Clear cart items
-        await tx.cartItem.deleteMany({
-          where: { cartId: cart.id },
-        });
+        // 7. Clear cart items if user has an active cart in database
+        const userCart = await tx.cart.findUnique({ where: { userId } });
+        if (userCart) {
+          await tx.cartItem.deleteMany({
+            where: { cartId: userCart.id },
+          });
+        }
 
         // 8. Create Audit Log
         await tx.auditLog.create({
@@ -212,6 +221,7 @@ export class CheckoutService {
               orderNumber: order.orderNumber,
               grandTotal: grandTotalNumber,
               itemsCount: orderItemInputs.length,
+              paymentMethod: dto.paymentMethod,
             },
           },
         });
@@ -288,7 +298,7 @@ export class CheckoutService {
 
           const inventory = lockedRows[0];
           if (!inventory) {
-            throw new NotFoundException(`Inventory record not found for variant ${item.variantId}`);
+            throw new NotFoundException(`Data inventaris tidak ditemukan untuk varian: ${item.variantId}`);
           }
 
           if (inventory.quantityOnHand < item.quantity) {
@@ -303,7 +313,7 @@ export class CheckoutService {
           });
 
           if (!variant) {
-            throw new NotFoundException(`Product variant not found: ${item.variantId}`);
+            throw new NotFoundException(`Produk tidak ditemukan untuk varian: ${item.variantId}`);
           }
 
           const newStock = inventory.quantityOnHand - item.quantity;
@@ -333,7 +343,8 @@ export class CheckoutService {
           });
         }
 
-        const shippingAmount = 15;
+        // 4. Calculate Financial Totals in IDR Rupiah
+        const shippingAmount = subtotalNumber >= 200000 ? 0 : 20000;
         const grandTotalNumber = subtotalNumber + shippingAmount;
 
         const dateStr = new Date().toISOString().slice(2, 10).replace(/-/g, '');
@@ -350,7 +361,7 @@ export class CheckoutService {
             shippingCost: new Prisma.Decimal(shippingAmount),
             taxTotal: new Prisma.Decimal(0),
             grandTotal: new Prisma.Decimal(grandTotalNumber),
-            currency: 'USD',
+            currency: 'IDR',
             notes: dto.notes,
             items: {
               create: orderItemInputs.map((i) => ({
@@ -378,20 +389,36 @@ export class CheckoutService {
           },
         });
 
-        // 6. Record immutable stock movements in ledger
-        for (const item of orderItemInputs) {
+        // 5. Stock Movements
+        for (const it of orderItemInputs) {
           await tx.stockMovement.create({
             data: {
-              inventoryId: item.inventoryId,
+              inventoryId: it.inventoryId,
               orderId: order.id,
               actorId: user.id,
+              quantityDelta: -it.quantity,
+              balanceAfter: it.newStock,
               reason: StockMovementReason.ORDER_PLACED,
-              quantityDelta: -item.quantity,
-              balanceAfter: item.newStock,
-              notes: `Guest Checkout: Order ${order.orderNumber} placed by ${dto.fullName}`,
+              notes: `Guest order: ${order.orderNumber} (-${it.quantity} unit)`,
             },
           });
         }
+
+        // 6. Audit Log
+        await tx.auditLog.create({
+          data: {
+            userId: user.id,
+            action: 'GUEST_ORDER_PLACED',
+            entityType: 'Order',
+            entityId: order.id,
+            metadata: {
+              orderNumber: order.orderNumber,
+              email: dto.email,
+              grandTotal: grandTotalNumber,
+              paymentMethod: dto.paymentMethod,
+            },
+          },
+        });
 
         return order;
       },

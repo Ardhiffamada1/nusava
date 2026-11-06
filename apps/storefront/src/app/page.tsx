@@ -59,45 +59,45 @@ export default function ShopcartStorefrontHome() {
   const popularCategories = [
     {
       title: 'Kudapan & Makanan Khas',
-      count: '240+ Produk Tersedia',
-      slug: 'living-ceramics',
+      count: 'Bakpia, Bolu, Keripik & Lapis',
+      slug: 'kudapan-khas',
       image:
-        'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=300&q=80',
+        'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=300&q=80',
     },
     {
-      title: 'Kerajinan Kayu Jati',
-      count: '180+ Produk Tersedia',
-      slug: 'living-ceramics',
+      title: 'Kopi & Minuman Daerah',
+      count: 'Gayo, Toraja & Wedang Uwuh',
+      slug: 'kopi-minuman',
       image:
         'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=300&q=80',
     },
     {
-      title: 'Gerabah & Tembikar',
-      count: '140+ Produk Tersedia',
-      slug: 'living-ceramics',
+      title: 'Batik & Wastra Nusantara',
+      count: 'Batik Tulis Solo & Tenun Troso',
+      slug: 'batik-wastra',
+      image:
+        'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=300&q=80',
+    },
+    {
+      title: 'Kriya Kayu & Gerabah',
+      count: 'Piring Jati & Tembikar Kasongan',
+      slug: 'kriya-kerajinan',
       image:
         'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=300&q=80',
     },
     {
-      title: 'Batik & Kain Nusantara',
-      count: '120+ Produk Tersedia',
-      slug: 'apparel',
+      title: 'Sambal & Bumbu Tradisional',
+      count: 'Sambal Bu Rudy & Rendang Padang',
+      slug: 'sambal-bumbu',
       image:
-        'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=300&q=80',
+        'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=300&q=80',
     },
     {
-      title: 'Kopi & Rempah Asli',
-      count: '95+ Produk Tersedia',
-      slug: 'workspace',
+      title: 'Pie Susu & Kacang Bali',
+      count: 'Pie Dhian & Kacang Disco Bali',
+      slug: 'kudapan-khas',
       image:
-        'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=300&q=80',
-    },
-    {
-      title: 'Kerajinan Kulit Nabati',
-      count: '80+ Produk Tersedia',
-      slug: 'leather-goods',
-      image:
-        'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=300&q=80',
+        'https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=300&q=80',
     },
   ];
 
@@ -154,21 +154,33 @@ export default function ShopcartStorefrontHome() {
           </button>
 
           <button
-            onClick={() => setActiveCategoryFilter('living-ceramics')}
+            onClick={() => setActiveCategoryFilter('kudapan-khas')}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
-              activeCategoryFilter === 'living-ceramics'
+              activeCategoryFilter === 'kudapan-khas'
                 ? 'bg-[#003d29] text-white border-[#003d29]'
                 : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
             }`}
           >
-            <span>Kudapan & Gerabah</span>
+            <span>Kudapan Khas</span>
             <ChevronDown className="w-3.5 h-3.5" />
           </button>
 
           <button
-            onClick={() => setActiveCategoryFilter('apparel')}
+            onClick={() => setActiveCategoryFilter('kopi-minuman')}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
-              activeCategoryFilter === 'apparel'
+              activeCategoryFilter === 'kopi-minuman'
+                ? 'bg-[#003d29] text-white border-[#003d29]'
+                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+            }`}
+          >
+            <span>Kopi & Minuman</span>
+            <ChevronDown className="w-3.5 h-3.5" />
+          </button>
+
+          <button
+            onClick={() => setActiveCategoryFilter('batik-wastra')}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+              activeCategoryFilter === 'batik-wastra'
                 ? 'bg-[#003d29] text-white border-[#003d29]'
                 : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
             }`}
@@ -178,26 +190,26 @@ export default function ShopcartStorefrontHome() {
           </button>
 
           <button
-            onClick={() => setActiveCategoryFilter('workspace')}
+            onClick={() => setActiveCategoryFilter('kriya-kerajinan')}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
-              activeCategoryFilter === 'workspace'
+              activeCategoryFilter === 'kriya-kerajinan'
                 ? 'bg-[#003d29] text-white border-[#003d29]'
                 : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
             }`}
           >
-            <span>Kopi & Rempah</span>
+            <span>Kriya Kayu & Gerabah</span>
             <ChevronDown className="w-3.5 h-3.5" />
           </button>
 
           <button
-            onClick={() => setActiveCategoryFilter('leather-goods')}
+            onClick={() => setActiveCategoryFilter('sambal-bumbu')}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
-              activeCategoryFilter === 'leather-goods'
+              activeCategoryFilter === 'sambal-bumbu'
                 ? 'bg-[#003d29] text-white border-[#003d29]'
                 : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
             }`}
           >
-            <span>Kerajinan Kulit</span>
+            <span>Sambal & Bumbu</span>
             <ChevronDown className="w-3.5 h-3.5" />
           </button>
 
@@ -295,7 +307,7 @@ export default function ShopcartStorefrontHome() {
                       >
                         {product.title}
                       </Link>
-                      <span className="text-xs font-bold text-gray-900 font-mono whitespace-nowrap">
+                      <span className="text-sm font-bold text-gray-900 whitespace-nowrap">
                         {formatCurrency(price)}
                       </span>
                     </div>

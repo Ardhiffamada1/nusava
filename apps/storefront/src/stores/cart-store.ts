@@ -28,6 +28,7 @@ interface CartStore {
   closeCart: () => void;
   toggleCart: () => void;
   fetchCart: () => Promise<void>;
+  clearCart: () => void;
   addItem: (variantId: string, quantity?: number) => Promise<void>;
   updateQuantity: (cartItemId: string, quantity: number) => Promise<void>;
   removeItem: (cartItemId: string) => Promise<void>;
@@ -57,6 +58,14 @@ export const useCartStore = create<CartStore>((set, get) => ({
     } catch {
       set({ isLoading: false });
     }
+  },
+
+  clearCart: () => {
+    set({
+      items: [],
+      itemCount: 0,
+      subtotal: 0,
+    });
   },
 
   addItem: async (variantId: string, quantity = 1) => {

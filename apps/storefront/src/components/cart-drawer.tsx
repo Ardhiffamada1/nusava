@@ -98,7 +98,7 @@ export function CartDrawer() {
                       >
                         {item.productTitle}
                       </Link>
-                      <span className="text-xs font-mono font-semibold text-gray-900">
+                      <span className="text-xs font-bold text-gray-900">
                         {formatCurrency(item.lineTotal)}
                       </span>
                     </div>
@@ -116,7 +116,7 @@ export function CartDrawer() {
                       >
                         <Minus className="w-3 h-3" />
                       </button>
-                      <span className="px-2 text-xs font-mono font-semibold text-gray-900 select-none">
+                      <span className="px-2 text-xs font-bold text-gray-900 select-none">
                         {item.quantity}
                       </span>
                       <button
@@ -147,7 +147,7 @@ export function CartDrawer() {
           <div className="p-6 border-t border-[#F0F0EE] bg-[#FAF9F5]">
             <div className="flex justify-between items-center mb-1">
               <span className="text-xs text-gray-500">{isId ? 'Subtotal' : 'Subtotal'}</span>
-              <span className="text-sm font-mono font-bold text-gray-900">
+              <span className="text-base font-bold text-gray-900">
                 {formatCurrency(subtotal)}
               </span>
             </div>

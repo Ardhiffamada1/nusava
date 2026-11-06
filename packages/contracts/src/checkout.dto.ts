@@ -13,12 +13,20 @@ export const AddressDtoSchema = z.object({
 
 export type AddressDto = z.infer<typeof AddressDtoSchema>;
 
+export const GuestCheckoutItemSchema = z.object({
+  variantId: z.string().uuid('Invalid variant ID'),
+  quantity: z.number().int().min(1, 'Quantity must be at least 1'),
+});
+
+export type GuestCheckoutItem = z.infer<typeof GuestCheckoutItemSchema>;
+
 export const CheckoutDtoSchema = z
   .object({
     shippingAddressId: z.string().uuid().optional(),
     newAddress: AddressDtoSchema.optional(),
     paymentMethod: z.nativeEnum(PaymentMethod),
     notes: z.string().max(500).optional(),
+    items: z.array(GuestCheckoutItemSchema).optional(),
   })
   .refine((data) => data.shippingAddressId || data.newAddress, {
     message: 'Either an existing address ID or new address details must be provided',
@@ -26,11 +34,6 @@ export const CheckoutDtoSchema = z
   });
 
 export type CheckoutDto = z.infer<typeof CheckoutDtoSchema>;
-
-export const GuestCheckoutItemSchema = z.object({
-  variantId: z.string().uuid('Invalid variant ID'),
-  quantity: z.number().int().min(1, 'Quantity must be at least 1'),
-});
 
 export const GuestCheckoutDtoSchema = z.object({
   email: z.string().email('Email tidak valid'),

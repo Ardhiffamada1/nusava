@@ -281,4 +281,64 @@ export class OrdersService {
 
     return updatedPayment;
   }
+
+  async getOrderByNumber(orderNumber: string) {
+    const order = await this.prisma.order.findUnique({
+      where: { orderNumber },
+      include: {
+        items: true,
+        payment: true,
+        shippingAddress: true,
+      },
+    });
+
+    if (!order) {
+      throw new NotFoundException(`Order ${orderNumber} not found`);
+    }
+
+    return order;
+  }
+
+  async confirmDemoPayment(orderNumber: string, transactionReference?: string) {
+    const order = await this.prisma.order.findUnique({
+      where: { orderNumber },
+      include: { payment: true },
+    });
+
+    if (!order || !order.payment) {
+      throw new NotFoundException(`Order or payment record not found for ${orderNumber}`);
+    }
+
+    const ref = transactionReference || `DEMO-TRX-${Math.floor(100000 + Math.random() * 900000)}`;
+
+    const updatedPayment = await this.prisma.payment.update({
+      where: { id: order.payment.id },
+      data: {
+        status: PaymentStatus.PAID,
+        transactionReference: ref,
+        paidAt: new Date(),
+      },
+    });
+
+    await this.prisma.auditLog.create({
+      data: {
+        userId: order.userId,
+        action: 'PAYMENT_DEMO_CONFIRMED',
+        entityType: 'Payment',
+        entityId: updatedPayment.id,
+        metadata: {
+          orderNumber,
+          reference: ref,
+          amount: updatedPayment.amount,
+        },
+      },
+    });
+
+    return {
+      orderNumber,
+      paymentStatus: PaymentStatus.PAID,
+      transactionReference: ref,
+      paidAt: updatedPayment.paidAt,
+    };
+  }
 }

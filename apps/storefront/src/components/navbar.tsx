@@ -32,12 +32,11 @@ export function Navbar() {
   };
 
   const categories = [
-    { name: 'Kudapan & Makanan Khas', slug: 'living-ceramics' },
-    { name: 'Kerajinan Kayu & Meja', slug: 'living-ceramics' },
-    { name: 'Gerabah & Tembikar Kasongan', slug: 'living-ceramics' },
-    { name: 'Batik & Kain Tradisional', slug: 'apparel' },
-    { name: 'Kopi & Rempah Nusantara', slug: 'workspace' },
-    { name: 'Kerajinan Kulit Asli', slug: 'leather-goods' },
+    { name: 'Kudapan & Makanan Khas', slug: 'kudapan-khas' },
+    { name: 'Kopi & Minuman Tradisional', slug: 'kopi-minuman' },
+    { name: 'Batik & Wastra Nusantara', slug: 'batik-wastra' },
+    { name: 'Kriya Kayu & Gerabah', slug: 'kriya-kerajinan' },
+    { name: 'Sambal & Bumbu Dapur', slug: 'sambal-bumbu' },
   ];
 
   return (

@@ -208,7 +208,7 @@ export default function ProductDetailPage() {
 
             {/* Price Headline */}
             <div className="flex items-baseline gap-3 mt-4 pt-4 border-t border-gray-100">
-              <span className="text-2xl font-black font-mono text-gray-900">
+              <span className="text-3xl font-extrabold text-gray-900">
                 {formatCurrency(currentPrice)}
               </span>
               <span className="text-xs text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full">
@@ -268,7 +268,7 @@ export default function ProductDetailPage() {
                 >
                   -
                 </button>
-                <span className="px-4 font-mono text-xs font-bold text-gray-900 select-none">
+                <span className="px-4 text-sm font-bold text-gray-900 select-none">
                   {quantity}
                 </span>
                 <button
