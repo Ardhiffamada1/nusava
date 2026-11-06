@@ -56,6 +56,19 @@ export class OrdersService {
           },
           shippingAddress: true,
           payment: true,
+          items: {
+            include: {
+              variant: {
+                include: {
+                  product: {
+                    include: {
+                      images: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
           _count: {
             select: { items: true },
           },
