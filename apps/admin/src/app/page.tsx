@@ -18,19 +18,18 @@ import {
 } from 'lucide-react';
 import { apiRequest } from '../lib/api';
 import { formatCurrency, formatDate } from '@commerceos/ui';
+import { useAdminLanguageStore, adminTranslations } from '../stores/language-store';
 
 export default function WiNkDashboardOverview() {
+  const { language } = useAdminLanguageStore();
+  const t = adminTranslations[language].dashboard;
+
   const [activeTimeframe, setActiveTimeframe] = useState<'Day' | 'Week' | 'Month' | 'Year'>('Week');
   const [showBanner, setShowBanner] = useState(true);
 
   const { data: overview, isLoading: isOverviewLoading } = useQuery({
     queryKey: ['admin-overview'],
     queryFn: () => apiRequest<any>('/analytics/overview'),
-  });
-
-  const { data: trend } = useQuery({
-    queryKey: ['sales-trend'],
-    queryFn: () => apiRequest<any[]>('/analytics/sales-trend?days=14'),
   });
 
   const { data: productsData } = useQuery({
@@ -95,17 +94,17 @@ export default function WiNkDashboardOverview() {
       {/* Top Bar: Greeting & Open Site Pill */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Hello, Orbix!</h1>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{t.greeting}</h1>
         </div>
 
         <a
           href="http://localhost:3000"
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-2 bg-black text-white hover:bg-gray-800 text-xs font-medium px-4 py-2 rounded-full transition-colors shadow-2xs"
+          className="inline-flex items-center gap-2 bg-black text-white hover:bg-gray-800 text-xs font-semibold px-4 py-2 rounded-full transition-colors shadow-2xs"
         >
           <Globe className="w-3.5 h-3.5" />
-          <span>Open Site</span>
+          <span>{t.openSite}</span>
         </a>
       </div>
 
@@ -114,16 +113,14 @@ export default function WiNkDashboardOverview() {
         <div className="flex items-center justify-between px-4 py-3 bg-[#EAEAF0]/60 border border-[#DCDCE2] rounded-2xl text-xs text-gray-800">
           <div className="flex items-center gap-2.5">
             <Crown className="w-4 h-4 text-amber-500" />
-            <span className="font-medium text-gray-700">
-              Upgrade your plan to unlock advanced features
-            </span>
+            <span className="font-semibold text-gray-800">{t.upgradeBanner}</span>
           </div>
           <div className="flex items-center gap-4">
             <button
               type="button"
-              className="inline-flex items-center gap-1 font-semibold text-gray-900 hover:underline"
+              className="inline-flex items-center gap-1 font-bold text-gray-900 hover:underline"
             >
-              <span>Select Plan</span>
+              <span>{t.selectPlan}</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
             <button
@@ -143,7 +140,7 @@ export default function WiNkDashboardOverview() {
           {/* 1. Overview Performance Card */}
           <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB] shadow-2xs">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-sm font-bold text-gray-900">Overview performance</h2>
+              <h2 className="text-sm font-bold text-gray-900">{t.overviewTitle}</h2>
 
               {/* Timeframe pill tabs */}
               <div className="inline-flex p-1 bg-[#F4F4F6] rounded-xl text-xs">
@@ -153,11 +150,11 @@ export default function WiNkDashboardOverview() {
                     onClick={() => setActiveTimeframe(tab)}
                     className={`px-3 py-1 rounded-lg font-medium transition-all ${
                       activeTimeframe === tab
-                        ? 'bg-white text-gray-900 shadow-2xs font-semibold'
+                        ? 'bg-white text-gray-900 shadow-2xs font-bold'
                         : 'text-gray-500 hover:text-gray-900'
                     }`}
                   >
-                    {tab}
+                    {t.timeframes[tab]}
                   </button>
                 ))}
               </div>
@@ -167,39 +164,39 @@ export default function WiNkDashboardOverview() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {/* Metric 1 */}
               <div>
-                <span className="text-xs text-gray-500 block mb-1">Total Views</span>
+                <span className="text-xs text-gray-500 block mb-1">{t.metrics.views}</span>
                 <span className="text-2xl font-bold text-gray-900 block tracking-tight">142,580</span>
                 <span className="text-[11px] text-gray-400 mt-1 block">
-                  From last 732 <span className="text-gray-400">(last 7 days)</span>
+                  {t.metrics.subtitle7Days}
                 </span>
               </div>
 
               {/* Metric 2 */}
               <div>
-                <span className="text-xs text-gray-500 block mb-1">Visits</span>
+                <span className="text-xs text-gray-500 block mb-1">{t.metrics.visits}</span>
                 <span className="text-2xl font-bold text-gray-900 block tracking-tight">98,420</span>
                 <span className="text-[11px] text-gray-400 mt-1 block">
-                  From last 732 <span className="text-gray-400">(last 7 days)</span>
+                  {t.metrics.subtitle7Days}
                 </span>
               </div>
 
               {/* Metric 3 */}
               <div>
-                <span className="text-xs text-gray-500 block mb-1">Orders</span>
+                <span className="text-xs text-gray-500 block mb-1">{t.metrics.orders}</span>
                 <span className="text-2xl font-bold text-gray-900 block tracking-tight">
                   {totalOrders}
                 </span>
                 <span className="text-[11px] text-gray-400 mt-1 block">
-                  From last 124 <span className="text-gray-400">(last 7 days)</span>
+                  {t.metrics.subtitle7Days}
                 </span>
               </div>
 
               {/* Metric 4 */}
               <div>
-                <span className="text-xs text-gray-500 block mb-1">Conversion Rate</span>
+                <span className="text-xs text-gray-500 block mb-1">{t.metrics.conversion}</span>
                 <span className="text-2xl font-bold text-gray-900 block tracking-tight">3.42%</span>
                 <span className="text-[11px] text-gray-400 mt-1 block">
-                  From last 732 <span className="text-gray-400">(last 7 days)</span>
+                  {t.metrics.subtitle7Days}
                 </span>
               </div>
             </div>
@@ -208,14 +205,14 @@ export default function WiNkDashboardOverview() {
           {/* 2. Revenue Card with Signature WiNk Area/Drop-pin Line Chart */}
           <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB] shadow-2xs">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-bold text-gray-900">Revenue</h2>
+              <h2 className="text-sm font-bold text-gray-900">{t.revenueTitle}</h2>
 
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  className="flex items-center gap-1.5 px-3 py-1 bg-white border border-[#E5E7EB] rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-50"
+                  className="flex items-center gap-1.5 px-3 py-1 bg-white border border-[#E5E7EB] rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-50"
                 >
-                  <span>Last Year</span>
+                  <span>2026</span>
                   <ChevronDown className="w-3 h-3 text-gray-400" />
                 </button>
                 <button
@@ -229,14 +226,14 @@ export default function WiNkDashboardOverview() {
 
             {/* Total Revenue Headline */}
             <div className="mb-6">
-              <span className="text-xs text-gray-500 block mb-0.5">Total Revenue</span>
+              <span className="text-xs text-gray-500 block mb-0.5">{t.revenueSubtitle}</span>
               <div className="flex items-baseline gap-3">
                 <span className="text-3xl font-extrabold text-gray-900 tracking-tight">
                   {formatCurrency(totalRevenue)}
                 </span>
               </div>
               <span className="text-xs text-gray-400 mt-0.5 block">
-                You gained <span className="text-gray-700 font-medium">+$420.00</span> this month
+                <span className="text-gray-700 font-semibold">+$420.00</span> {t.monthGain}
               </span>
             </div>
 
@@ -251,7 +248,7 @@ export default function WiNkDashboardOverview() {
                 }}
               >
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-gray-400">24 Sep 2024</span>
+                  <span className="text-[10px] text-gray-400">24 Sep 2026</span>
                   <span className="text-xs font-bold text-gray-900">$387.54</span>
                 </div>
                 <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
@@ -285,14 +282,13 @@ export default function WiNkDashboardOverview() {
                 {/* Vertical drop pin lines under the curve (signature WiNk design) */}
                 {Array.from({ length: 65 }).map((_, i) => {
                   const x = paddingX + (i * (svgWidth - paddingX * 2)) / 64;
-                  // Interpolate corresponding Y value roughly
                   const pct = i / 64;
                   const idxFloat = pct * (points.length - 1);
                   const lowerIdx = Math.floor(idxFloat);
                   const upperIdx = Math.min(points.length - 1, Math.ceil(idxFloat));
-                  const t = idxFloat - lowerIdx;
+                  const stepT = idxFloat - lowerIdx;
                   const val =
-                    points[lowerIdx].val * (1 - t) + points[upperIdx].val * t;
+                    points[lowerIdx].val * (1 - stepT) + points[upperIdx].val * stepT;
                   const y = getY(val);
                   const isHighlighted = Math.abs(x - highlightX) < 3;
 
@@ -344,12 +340,12 @@ export default function WiNkDashboardOverview() {
           {/* 1. Shop Advisor Card */}
           <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB] shadow-2xs">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-bold text-gray-900">Shop Advisor</h2>
+              <h2 className="text-sm font-bold text-gray-900">{t.shopAdvisor}</h2>
               <Link
                 href="/reports"
                 className="text-xs text-gray-500 hover:text-black font-medium flex items-center gap-1 transition-colors"
               >
-                <span>See All</span>
+                <span>Lihat</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
@@ -360,19 +356,14 @@ export default function WiNkDashboardOverview() {
                 <Lightbulb className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-gray-900 leading-snug">
-                  The Black Friday Starts Tomorrow
-                </h3>
-                <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">
-                  Find out how to take advantage of the upcoming seasonal volume spike with automated
-                  stock buffering.
-                </p>
+                <h3 className="text-xs font-bold text-gray-900 leading-snug">{t.advisorTitle}</h3>
+                <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">{t.advisorDesc}</p>
               </div>
               <button
                 type="button"
                 className="w-full text-center py-2 bg-white border border-[#E5E7EB] hover:bg-gray-50 text-xs font-semibold text-gray-800 rounded-lg transition-colors shadow-2xs"
               >
-                Learn More
+                {t.learnMore}
               </button>
             </div>
           </div>
@@ -380,27 +371,27 @@ export default function WiNkDashboardOverview() {
           {/* 2. Products Card */}
           <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB] shadow-2xs">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-bold text-gray-900">Products</h2>
+              <h2 className="text-sm font-bold text-gray-900">{t.productsTitle}</h2>
               <Link
                 href="/products"
                 className="text-xs text-gray-500 hover:text-black font-medium flex items-center gap-1 transition-colors"
               >
-                <span>See All</span>
+                <span>Lihat</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
 
             <div className="space-y-3 divide-y divide-gray-100">
               <div className="flex items-center justify-between pt-1">
-                <span className="text-xs text-gray-600">Active listings</span>
+                <span className="text-xs text-gray-600">{t.activeListings}</span>
                 <span className="text-xs font-bold text-gray-900 font-mono">{totalProducts}</span>
               </div>
               <div className="flex items-center justify-between pt-3">
-                <span className="text-xs text-gray-600">Expired</span>
+                <span className="text-xs text-gray-600">{t.expired}</span>
                 <span className="text-xs font-bold text-gray-900 font-mono">2</span>
               </div>
               <div className="flex items-center justify-between pt-3">
-                <span className="text-xs text-gray-600">Sold out / Low stock</span>
+                <span className="text-xs text-gray-600">{t.soldOut}</span>
                 <span className="text-xs font-bold text-gray-900 font-mono">{lowStockCount}</span>
               </div>
             </div>
@@ -409,12 +400,12 @@ export default function WiNkDashboardOverview() {
           {/* 3. Recent Activities Feed */}
           <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB] shadow-2xs">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-bold text-gray-900">Recent Activities</h2>
+              <h2 className="text-sm font-bold text-gray-900">{t.recentActivities}</h2>
               <Link
                 href="/audit"
                 className="text-xs text-gray-500 hover:text-black font-medium flex items-center gap-1 transition-colors"
               >
-                <span>See All</span>
+                <span>Lihat</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
@@ -422,31 +413,31 @@ export default function WiNkDashboardOverview() {
             <div className="space-y-4">
               {[
                 {
-                  name: 'David Elson',
-                  action: 'favorited your shop',
-                  time: '6 mins ago',
-                  initials: 'DE',
+                  name: 'Dewi Lestari',
+                  action: t.actions.favorited,
+                  time: '6 menit lalu',
+                  initials: 'DL',
                   color: 'bg-emerald-100 text-emerald-800',
                 },
                 {
-                  name: 'Kurt Bates',
-                  action: 'purchased your product',
-                  time: '18 mins ago',
-                  initials: 'KB',
+                  name: 'Budi Santoso',
+                  action: t.actions.purchased,
+                  time: '18 menit lalu',
+                  initials: 'BS',
                   color: 'bg-indigo-100 text-indigo-800',
                 },
                 {
-                  name: 'Eddie Lake',
-                  action: 'favorited your shop',
-                  time: '20 mins ago',
-                  initials: 'EL',
+                  name: 'Siti Rahma',
+                  action: t.actions.favorited,
+                  time: '20 menit lalu',
+                  initials: 'SR',
                   color: 'bg-amber-100 text-amber-800',
                 },
                 {
-                  name: 'Patricia Sanders',
-                  action: 'purchased your product',
-                  time: '32 mins ago',
-                  initials: 'PS',
+                  name: 'Ahmad Fauzi',
+                  action: t.actions.purchased,
+                  time: '32 menit lalu',
+                  initials: 'AF',
                   color: 'bg-rose-100 text-rose-800',
                 },
               ].map((act, i) => (
@@ -475,7 +466,7 @@ export default function WiNkDashboardOverview() {
         <button
           type="button"
           className="w-11 h-11 rounded-full bg-black text-white flex items-center justify-center shadow-lg hover:bg-gray-800 transition-all hover:scale-105"
-          title="Support Chat"
+          title="Bantuan Pengelola"
         >
           <MessageSquare className="w-5 h-5" />
         </button>

@@ -1,11 +1,19 @@
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from '../components/providers';
 import { AdminSidebar } from '../components/admin-sidebar';
 
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
 export const metadata: Metadata = {
-  title: 'WiNk / CommerceOS — Admin Console',
-  description: 'Executive management suite for catalog, inventory, order fulfillment, and transaction ledgers.',
+  title: 'WiNk / CommerceOS — Panel Kelola UMKM & Toko Oleh-oleh',
+  description:
+    'Sistem manajemen terpadu inventaris, pemrosesan pesanan, dan pembukuan stok untuk pengrajin dan UMKM.',
 };
 
 export default function RootLayout({
@@ -14,8 +22,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-[#F4F4F6] text-ink antialiased">
+    <html lang="id" className={inter.variable}>
+      <body className={`${inter.className} min-h-screen bg-[#F4F4F6] text-ink antialiased font-sans`}>
         <Providers>
           <div className="min-h-screen flex w-full">
             <AdminSidebar />

@@ -3,14 +3,18 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, ShoppingBag, User, ShieldCheck, X } from 'lucide-react';
+import { Search, ShoppingBag, User, ShieldCheck, X, Globe } from 'lucide-react';
 import { useCartStore } from '../stores/cart-store';
 import { useAuthStore } from '../stores/auth-store';
+import { useLanguageStore, translations } from '../stores/language-store';
 
 export function Navbar() {
   const pathname = usePathname();
   const { openCart, itemCount } = useCartStore();
   const { user, logout } = useAuthStore();
+  const { language, setLanguage, toggleLanguage } = useLanguageStore();
+  const t = translations[language];
+
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -25,26 +29,31 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-xs border-b border-gray-100">
+      {/* Announcement Ribbon */}
+      <div className="bg-[#111827] text-white text-[11px] font-medium py-1.5 px-4 text-center tracking-wide flex items-center justify-center gap-3">
+        <span>{t.announcement}</span>
+      </div>
+
       <div className="max-w-7xl mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
         {/* Left: Brand Logo styled like MINDI */}
-        <div className="flex items-center">
+        <div className="flex items-center gap-3">
           <Link
             href="/"
-            className="text-base font-semibold tracking-[0.28em] uppercase text-gray-900 hover:opacity-80 transition-opacity"
+            className="text-base font-semibold tracking-[0.24em] uppercase text-gray-900 hover:opacity-80 transition-opacity"
           >
-            MINDI
+            {t.brandName}
           </Link>
         </div>
 
         {/* Center: Clean Minimalist Nav Links */}
-        <nav className="hidden md:flex items-center gap-10">
+        <nav className="hidden md:flex items-center gap-8">
           <Link
             href="/"
             className={`text-xs font-medium tracking-wide transition-colors ${
               pathname === '/' ? 'text-black font-semibold' : 'text-gray-500 hover:text-black'
             }`}
           >
-            Home
+            {t.nav.home}
           </Link>
           <Link
             href="/products"
@@ -54,31 +63,57 @@ export function Navbar() {
                 : 'text-gray-500 hover:text-black'
             }`}
           >
-            Shop
+            {t.nav.shop}
           </Link>
           <Link
             href="/about"
             className="text-xs font-medium tracking-wide text-gray-500 hover:text-black transition-colors"
           >
-            About
+            {t.nav.about}
           </Link>
           <Link
             href="/blog"
             className="text-xs font-medium tracking-wide text-gray-500 hover:text-black transition-colors"
           >
-            Blog
+            {t.nav.blog}
           </Link>
         </nav>
 
-        {/* Right: Search, Cart, User & Admin */}
-        <div className="flex items-center gap-6">
+        {/* Right: Language Switcher, Search, User, Admin, Cart */}
+        <div className="flex items-center gap-4 sm:gap-5">
+          {/* Language Switcher Pill (ID | EN) */}
+          <div className="flex items-center bg-gray-100 p-0.5 rounded-full text-[11px] font-semibold">
+            <button
+              onClick={() => setLanguage('id')}
+              className={`px-2 py-0.5 rounded-full transition-all ${
+                language === 'id'
+                  ? 'bg-white text-gray-900 shadow-2xs font-bold'
+                  : 'text-gray-500 hover:text-gray-900'
+              }`}
+              title="Bahasa Indonesia"
+            >
+              ID
+            </button>
+            <button
+              onClick={() => setLanguage('en')}
+              className={`px-2 py-0.5 rounded-full transition-all ${
+                language === 'en'
+                  ? 'bg-white text-gray-900 shadow-2xs font-bold'
+                  : 'text-gray-500 hover:text-gray-900'
+              }`}
+              title="English"
+            >
+              EN
+            </button>
+          </div>
+
           {/* Quick Admin Portal shortcut */}
           <a
             href="http://localhost:3001"
             target="_blank"
             rel="noreferrer"
-            className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-medium text-gray-500 hover:text-black bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-full transition-colors"
-            title="Open Admin Console"
+            className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-medium text-gray-600 hover:text-black bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-full transition-colors"
+            title="Buka Panel Admin"
           >
             <ShieldCheck className="w-3.5 h-3.5 text-gray-700" />
             <span>Admin</span>
@@ -90,7 +125,7 @@ export function Navbar() {
               onClick={() => setSearchOpen(!searchOpen)}
               type="button"
               className="text-gray-700 hover:text-black p-1 transition-colors"
-              title="Search products"
+              title="Cari produk"
             >
               <Search className="w-4 h-4" />
             </button>
@@ -98,11 +133,11 @@ export function Navbar() {
             {searchOpen && (
               <form
                 onSubmit={handleSearchSubmit}
-                className="absolute right-0 top-10 w-64 bg-white border border-gray-200 rounded-xl shadow-lg p-2 z-50 flex items-center gap-2"
+                className="absolute right-0 top-10 w-72 bg-white border border-gray-200 rounded-xl shadow-lg p-2 z-50 flex items-center gap-2"
               >
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder={t.nav.searchPlaceholder}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   autoFocus
@@ -125,7 +160,7 @@ export function Navbar() {
               <Link
                 href="/account"
                 className="text-xs text-gray-600 hover:text-black flex items-center gap-1 transition-colors"
-                title="Account"
+                title={t.nav.account}
               >
                 <User className="w-4 h-4" />
               </Link>
@@ -134,7 +169,7 @@ export function Navbar() {
             <Link
               href="/login"
               className="text-gray-700 hover:text-black p-1 transition-colors"
-              title="Sign in"
+              title={t.nav.signIn}
             >
               <User className="w-4 h-4" />
             </Link>
@@ -145,7 +180,7 @@ export function Navbar() {
             onClick={() => openCart()}
             type="button"
             className="text-gray-700 hover:text-black p-1 relative transition-colors"
-            title="Shopping Cart"
+            title="Keranjang Belanja"
           >
             <ShoppingBag className="w-4 h-4" />
             {count > 0 && (

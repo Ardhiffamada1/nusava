@@ -9,10 +9,13 @@ import { ChevronDown, Plus, Check } from 'lucide-react';
 import { apiRequest } from '../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 import { useCartStore } from '../../stores/cart-store';
+import { useLanguageStore, translations } from '../../stores/language-store';
 
 function MindiCatalogContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { language } = useLanguageStore();
+  const t = translations[language];
 
   const categorySlug = searchParams.get('category') || '';
   const search = searchParams.get('q') || '';
@@ -70,41 +73,48 @@ function MindiCatalogContent() {
     openCart();
   };
 
-  // Pre-configured category list matching MINDI reference style
+  // Traditional UMKM Souvenir Categories
   const categoryFilters = [
-    { label: 'All Products', slug: '' },
-    { label: 'Wood', slug: 'living-ceramics' },
-    { label: 'Ceramic', slug: 'living-ceramics' },
-    { label: 'Tin', slug: 'workspace' },
-    { label: 'Apparel', slug: 'apparel' },
-    { label: 'Leather', slug: 'leather-goods' },
-    { label: 'Audio', slug: 'audio' },
+    { label: t.catalog.categories.all, slug: '' },
+    { label: t.catalog.categories.craft, slug: 'living-ceramics' },
+    { label: t.catalog.categories.food, slug: 'apparel' },
+    { label: t.catalog.categories.apparel, slug: 'apparel' },
+    { label: t.catalog.categories.leather, slug: 'leather-goods' },
+    { label: t.catalog.categories.coffee, slug: 'workspace' },
   ];
 
   return (
     <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12 md:py-16">
       {/* Top Title & Sort Controls */}
       <div className="flex items-center justify-between mb-12">
-        <h1 className="text-2xl font-normal text-gray-900 tracking-tight">Shop</h1>
+        <h1 className="text-2xl font-light text-gray-900 tracking-tight">{t.catalog.title}</h1>
 
         {/* Minimal Sort Dropdown (MINDI reference style) */}
         <div className="relative">
           <button
             onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
             type="button"
-            className="flex items-center gap-4 px-3.5 py-1.5 border border-gray-200 hover:border-gray-300 text-xs text-gray-700 bg-white rounded transition-colors"
+            className="flex items-center gap-4 px-3.5 py-1.5 border border-gray-200 hover:border-gray-300 text-xs text-gray-700 bg-white rounded-lg transition-colors shadow-2xs"
           >
-            <span className="capitalize">{sortBy}</span>
+            <span className="capitalize font-medium">
+              {sortBy === 'newest'
+                ? t.catalog.sortOptions.newest
+                : sortBy === 'price_asc'
+                ? t.catalog.sortOptions.price_asc
+                : sortBy === 'price_desc'
+                ? t.catalog.sortOptions.price_desc
+                : t.catalog.sortOptions.popular}
+            </span>
             <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
           </button>
 
           {sortDropdownOpen && (
-            <div className="absolute right-0 mt-1 w-36 bg-white border border-gray-200 rounded shadow-lg py-1 z-30 text-xs">
+            <div className="absolute right-0 mt-1 w-48 bg-white border border-gray-200 rounded-xl shadow-lg py-1 z-30 text-xs">
               {[
-                { label: 'Newest', val: 'newest' },
-                { label: 'Price: Low-High', val: 'price_asc' },
-                { label: 'Price: High-Low', val: 'price_desc' },
-                { label: 'Best Selling', val: 'popular' },
+                { label: t.catalog.sortOptions.newest, val: 'newest' },
+                { label: t.catalog.sortOptions.price_asc, val: 'price_asc' },
+                { label: t.catalog.sortOptions.price_desc, val: 'price_desc' },
+                { label: t.catalog.sortOptions.popular, val: 'popular' },
               ].map((opt) => (
                 <button
                   key={opt.val}
@@ -112,9 +122,9 @@ function MindiCatalogContent() {
                     updateParam('sortBy', opt.val);
                     setSortDropdownOpen(false);
                   }}
-                  className={`w-full text-left px-3 py-1.5 transition-colors ${
+                  className={`w-full text-left px-3.5 py-2 transition-colors ${
                     sortBy === opt.val
-                      ? 'font-semibold text-black bg-gray-50'
+                      ? 'font-bold text-black bg-gray-50'
                       : 'text-gray-600 hover:bg-gray-50'
                   }`}
                 >
@@ -139,7 +149,7 @@ function MindiCatalogContent() {
                 onClick={() => updateParam('category', cat.slug || null)}
                 className={`block text-xs text-left tracking-wide transition-colors ${
                   isSelected
-                    ? 'text-black font-semibold'
+                    ? 'text-black font-bold'
                     : 'text-gray-500 hover:text-black font-normal'
                 }`}
               >
@@ -163,12 +173,12 @@ function MindiCatalogContent() {
             </div>
           ) : productsData?.items?.length === 0 ? (
             <div className="py-24 text-center">
-              <p className="text-sm text-gray-500">No products found in this collection.</p>
+              <p className="text-sm text-gray-500">{t.catalog.emptyState}</p>
               <button
                 onClick={() => updateParam('category', null)}
                 className="mt-4 text-xs font-semibold text-black underline"
               >
-                Clear all filters
+                {t.catalog.clearFilters}
               </button>
             </div>
           ) : (
@@ -200,7 +210,7 @@ function MindiCatalogContent() {
                       <button
                         onClick={(e) => handleQuickAdd(e, product)}
                         className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-white text-gray-800 shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black hover:text-white"
-                        title="Add to cart"
+                        title={t.catalog.quickAddSuccess}
                       >
                         {addedSlug === product.slug ? (
                           <Check className="w-4 h-4 text-emerald-600" />
@@ -211,7 +221,7 @@ function MindiCatalogContent() {
                     </div>
 
                     {/* Product Name */}
-                    <h3 className="text-xs font-medium text-gray-900 tracking-tight group-hover:opacity-75 transition-opacity">
+                    <h3 className="text-xs font-semibold text-gray-900 tracking-tight group-hover:opacity-75 transition-opacity">
                       {product.title}
                     </h3>
 
@@ -235,7 +245,7 @@ export default function ProductsPage() {
     <Suspense
       fallback={
         <div className="max-w-7xl mx-auto px-6 py-20 text-center text-xs text-gray-400">
-          Loading catalog...
+          Memuat produk...
         </div>
       }
     >

@@ -25,10 +25,14 @@ import {
   PanelLeftClose,
 } from 'lucide-react';
 import { apiRequest } from '../lib/api';
+import { useAdminLanguageStore, adminTranslations } from '../stores/language-store';
 
 export function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { language, setLanguage } = useAdminLanguageStore();
+  const t = adminTranslations[language].sidebar;
+
   const [catalogOpen, setCatalogOpen] = useState(
     pathname.startsWith('/products') || pathname.startsWith('/inventory'),
   );
@@ -45,23 +49,46 @@ export function AdminSidebar() {
   return (
     <aside className="w-68 bg-white border-r border-[#E5E7EB] min-h-screen flex flex-col shrink-0 px-4 py-5 select-none justify-between">
       <div>
-        {/* Top Header: Logo + Collapse Button */}
+        {/* Top Header: Logo + Collapse Button + ID/EN Toggle */}
         <div className="flex items-center justify-between px-2 mb-5">
           <div className="flex items-center gap-1.5">
             <span className="text-xl font-bold tracking-tight text-black flex items-center">
               Wi<span className="text-black font-extrabold">N</span>k
             </span>
             <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 bg-gray-100 rounded text-gray-500 font-medium">
-              OS
+              UMKM
             </span>
           </div>
-          <button
-            type="button"
-            className="text-gray-400 hover:text-gray-700 p-1 rounded-lg hover:bg-gray-100 transition-colors"
-            title="Collapse sidebar"
-          >
-            <PanelLeftClose className="w-4 h-4" />
-          </button>
+
+          <div className="flex items-center gap-2">
+            {/* ID / EN Language Switcher */}
+            <div className="flex items-center bg-gray-100 p-0.5 rounded-full text-[10px] font-bold">
+              <button
+                onClick={() => setLanguage('id')}
+                className={`px-1.5 py-0.5 rounded-full transition-all ${
+                  language === 'id' ? 'bg-white text-gray-900 shadow-2xs' : 'text-gray-400'
+                }`}
+              >
+                ID
+              </button>
+              <button
+                onClick={() => setLanguage('en')}
+                className={`px-1.5 py-0.5 rounded-full transition-all ${
+                  language === 'en' ? 'bg-white text-gray-900 shadow-2xs' : 'text-gray-400'
+                }`}
+              >
+                EN
+              </button>
+            </div>
+
+            <button
+              type="button"
+              className="text-gray-400 hover:text-gray-700 p-1 rounded-lg hover:bg-gray-100 transition-colors"
+              title="Sembunyikan sidebar"
+            >
+              <PanelLeftClose className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
 
         {/* Store Selector Dropdown */}
@@ -72,7 +99,7 @@ export function AdminSidebar() {
           >
             <div className="flex items-center gap-2">
               <Store className="w-3.5 h-3.5 text-gray-500" />
-              <span>Mob Shop</span>
+              <span>{t.storeTitle}</span>
             </div>
             <ChevronsUpDown className="w-3.5 h-3.5 text-gray-400" />
           </button>
@@ -84,7 +111,7 @@ export function AdminSidebar() {
             <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 pointer-events-none" />
             <input
               type="text"
-              placeholder="Search"
+              placeholder={t.searchPlaceholder}
               className="w-full pl-9 pr-9 py-2 bg-[#F4F4F6] border-0 rounded-xl text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 transition-all"
             />
             <span className="absolute right-2.5 text-[10px] font-mono text-gray-400 bg-white border border-gray-200 px-1.5 py-0.5 rounded shadow-2xs">
@@ -95,7 +122,9 @@ export function AdminSidebar() {
 
         {/* Menu Section */}
         <div className="space-y-1 mb-6">
-          <span className="px-3 text-[11px] font-medium text-gray-400 block mb-2">Menu</span>
+          <span className="px-3 text-[11px] font-semibold text-gray-400 block mb-2">
+            {t.menuHeader}
+          </span>
 
           {/* Home */}
           <Link
@@ -107,7 +136,7 @@ export function AdminSidebar() {
             }`}
           >
             <Home className="w-4 h-4 text-gray-600" />
-            <span>Home</span>
+            <span>{t.home}</span>
           </Link>
 
           {/* Catalog (Collapsible) */}
@@ -122,7 +151,7 @@ export function AdminSidebar() {
             >
               <div className="flex items-center gap-3">
                 <Package className="w-4 h-4 text-gray-600" />
-                <span>Catalog</span>
+                <span>{t.catalog}</span>
               </div>
               {catalogOpen ? (
                 <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
@@ -140,7 +169,7 @@ export function AdminSidebar() {
                       : 'text-gray-500 hover:text-black'
                   }`}
                 >
-                  Products
+                  {t.products}
                 </Link>
                 <Link
                   href="/inventory"
@@ -150,7 +179,7 @@ export function AdminSidebar() {
                       : 'text-gray-500 hover:text-black'
                   }`}
                 >
-                  Inventory & Stock
+                  {t.inventory}
                 </Link>
               </div>
             )}
@@ -166,7 +195,7 @@ export function AdminSidebar() {
             }`}
           >
             <ShoppingBag className="w-4 h-4 text-gray-600" />
-            <span>Orders</span>
+            <span>{t.orders}</span>
           </Link>
 
           {/* Customers */}
@@ -179,7 +208,7 @@ export function AdminSidebar() {
             }`}
           >
             <Users className="w-4 h-4 text-gray-600" />
-            <span>Customers</span>
+            <span>{t.customers}</span>
           </Link>
 
           {/* Analytics / Reports */}
@@ -192,7 +221,7 @@ export function AdminSidebar() {
             }`}
           >
             <BarChart3 className="w-4 h-4 text-gray-600" />
-            <span>Analytics</span>
+            <span>{t.analytics}</span>
           </Link>
 
           {/* Audit Logs */}
@@ -205,26 +234,14 @@ export function AdminSidebar() {
             }`}
           >
             <History className="w-4 h-4 text-gray-600" />
-            <span>Audit Logs</span>
+            <span>{t.audit}</span>
           </Link>
-        </div>
-
-        {/* Integrations Section */}
-        <div className="space-y-1 mb-6">
-          <div className="flex items-center justify-between px-3 mb-1">
-            <span className="text-[11px] font-medium text-gray-400">Integrations</span>
-            <Plus className="w-3.5 h-3.5 text-gray-400 hover:text-gray-700 cursor-pointer" />
-          </div>
-          <div className="flex items-center gap-3 px-3 py-2 text-xs text-gray-600 hover:bg-[#FAFAFA] rounded-xl transition-colors cursor-pointer">
-            <Grid className="w-4 h-4 text-gray-500" />
-            <span>Integrations</span>
-          </div>
         </div>
 
         {/* Sales Channels Section */}
         <div className="space-y-1">
           <div className="flex items-center justify-between px-3 mb-1">
-            <span className="text-[11px] font-medium text-gray-400">Sales Channels</span>
+            <span className="text-[11px] font-semibold text-gray-400">{t.salesChannels}</span>
             <Plus className="w-3.5 h-3.5 text-gray-400 hover:text-gray-700 cursor-pointer" />
           </div>
           <a
@@ -235,7 +252,7 @@ export function AdminSidebar() {
           >
             <div className="flex items-center gap-3">
               <Store className="w-4 h-4 text-gray-500" />
-              <span>Online Store</span>
+              <span>{t.onlineStore}</span>
             </div>
             <ExternalLink className="w-3.5 h-3.5 text-gray-400" />
           </a>
@@ -251,7 +268,7 @@ export function AdminSidebar() {
             </div>
             <div className="flex flex-col">
               <span className="text-xs font-semibold text-gray-900 leading-tight">Jenny Wilson</span>
-              <span className="text-[11px] text-gray-400 font-mono">orbix@mail.com</span>
+              <span className="text-[11px] text-gray-400 font-mono">{t.adminRole}</span>
             </div>
           </div>
           <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
@@ -263,14 +280,14 @@ export function AdminSidebar() {
             className="flex items-center gap-3 px-3 py-2 text-xs text-gray-600 hover:text-black hover:bg-gray-100/60 rounded-lg transition-colors"
           >
             <Settings className="w-3.5 h-3.5 text-gray-500" />
-            <span>Settings</span>
+            <span>{t.settings}</span>
           </Link>
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-3 py-2 text-xs text-rose-600 hover:bg-rose-50 rounded-lg transition-colors text-left"
           >
             <LogOut className="w-3.5 h-3.5 text-rose-500" />
-            <span>Log out</span>
+            <span>{t.logout}</span>
           </button>
         </div>
       </div>
