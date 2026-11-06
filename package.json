@@ -1,0 +1,23 @@
+{
+  "name": "commerceos-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@12.18.0",
+  "scripts": {
+    "dev": "concurrently -n \"api,storefront,admin\" -c \"cyan,green,magenta\" \"pnpm dev:api\" \"pnpm dev:storefront\" \"pnpm dev:admin\"",
+    "dev:api": "pnpm --filter @commerceos/api dev",
+    "dev:storefront": "pnpm --filter @commerceos/storefront dev",
+    "dev:admin": "pnpm --filter @commerceos/admin dev",
+    "build": "pnpm --filter \"./packages/*\" build && pnpm --filter \"./apps/*\" build",
+    "db:generate": "pnpm --filter @commerceos/database generate",
+    "db:migrate": "pnpm --filter @commerceos/database migrate",
+    "db:push": "pnpm --filter @commerceos/database push",
+    "db:seed": "pnpm --filter @commerceos/database seed",
+    "test": "pnpm --filter \"./apps/*\" test",
+    "lint": "pnpm --recursive lint"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6",
+    "typescript": "^5.7.3"
+  }
+}
