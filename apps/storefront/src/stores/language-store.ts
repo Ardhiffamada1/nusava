@@ -12,7 +12,7 @@ interface LanguageStore {
 export const useLanguageStore = create<LanguageStore>()(
   persist(
     (set) => ({
-      language: 'id', // Default to Indonesian for UMKM Oleh-oleh
+      language: 'id', // Default to Indonesian
       setLanguage: (language) => set({ language }),
       toggleLanguage: () =>
         set((state) => ({ language: state.language === 'id' ? 'en' : 'id' })),
@@ -23,136 +23,301 @@ export const useLanguageStore = create<LanguageStore>()(
   ),
 );
 
-// Dictionary of UMKM Traditional Souvenirs & Crafts
 export const translations = {
   id: {
-    brandName: 'MINDI OLEH-OLEH',
-    announcement: 'Gratis ongkir ke seluruh Indonesia untuk pesanan di atas Rp 250.000',
+    brandName: 'MINDI',
+    brandSub: 'OLEH-OLEH & KRIYA NUSANTARA',
+    announcement: 'Pengiriman aman dengan kemasan proteksi khusus ke seluruh Indonesia',
     nav: {
       home: 'Beranda',
-      shop: 'Katalog Oleh-oleh',
-      about: 'Tentang Pengrajin',
-      blog: 'Cerita UMKM',
-      admin: 'Portal Admin',
+      shop: 'Katalog',
+      about: 'Kisah Pengrajin',
+      blog: 'Warta Kriya',
+      admin: 'Panel Admin',
       signIn: 'Masuk',
       signOut: 'Keluar',
-      account: 'Akun Saya',
-      searchPlaceholder: 'Cari oleh-oleh, batik, kerajinan...',
+      account: 'Akun',
+      searchPlaceholder: 'Cari gerabah, kopi, batik, kayu jati...',
     },
     hero: {
-      tagline: 'KARYA OTENTIK DARI PENGRAJIN NUSANTARA',
-      title: 'Oleh-oleh khas & kerajinan lokal berkualitas kurasi.',
+      badge: 'KURASI OLEH-OLEH TRADISIONAL 2026',
+      title: 'Oleh-oleh bermakna, dirawat dengan tradisi.',
       description:
-        'Mendukung UMKM daerah dengan transaksi transparan dan jaminan keaslian bahan tradisi.',
+        'Karya kriya otentik dan cita rasa khas daerah yang dikurasi langsung dari bengkel dan dapur pengrajin lokal Nusantara.',
       exploreBtn: 'Jelajahi Koleksi',
-      adminBtn: 'Panel Kelola UMKM →',
+      storyBtn: 'Kisah Pengrajin →',
+    },
+    categories: {
+      heading: 'Ragam Kriya & Cita Rasa',
+      subheading: 'Dibuat dengan kesabaran, keterampilan turun-temurun, dan bahan alami pilihan.',
+      wood: {
+        title: 'Kriya Kayu Jati',
+        origin: 'Pahat Tangan Jepara & Blora',
+        count: '6 Karya',
+      },
+      ceramic: {
+        title: 'Gerabah & Keramik',
+        origin: 'Tanah Liat Bakar Kasongan',
+        count: '9 Karya',
+      },
+      culinary: {
+        title: 'Kudapan & Kopi Sangrai',
+        origin: 'Kopi Gayo & Kudapan Tradisi',
+        count: '8 Pilihan',
+      },
+      textile: {
+        title: 'Wastra & Batik Tulis',
+        origin: 'Serat Alami Pekalongan & Solo',
+        count: '6 Koleksi',
+      },
+    },
+    showcase: {
+      tag: 'PILIHAN BULAN INI',
+      heading: 'Koleksi Kurator Pengrajin',
+      viewAll: 'Lihat seluruh 31 karya',
+      quickAdd: '+ Keranjang',
+      added: 'Ditambahkan!',
+    },
+    philosophy: {
+      tag: 'NILAI KAMI',
+      title: 'Ketulusan tangan di balik setiap karya kriya.',
+      quote:
+        '“Setiap garis pahat kayu dan olahan rasa menyimpan jejak ketulusan tangan yang merawatnya. Kami hadir agar karya pengrajin daerah dapat dihargai selayaknya di ruang-ruang modern.”',
+      pillar1Title: 'Bahan Alami & Lestari',
+      pillar1Desc:
+        'Kayu legal bersertifikasi, serat kapas alami, serta pangan tanpa bahan kimia pengawet sintesis.',
+      pillar2Title: 'Keadilan Rantai Pasok',
+      pillar2Desc:
+        'Bermitra langsung tanpa perantara tengkulak sehingga nilai ekonomi kembali utuh ke pengrajin.',
+      pillar3Title: 'Kemasan Khusus Anti-Rusak',
+      pillar3Desc:
+        'Standar kemasan ganda dengan proteksi tebal untuk keramik dan pengunci vakum untuk kudapan.',
+    },
+    assurances: [
+      {
+        title: 'Kurasi Asli Pengrajin',
+        desc: '100% karya otentik terverifikasi dari daerah asal',
+      },
+      {
+        title: 'Kemasan Proteksi Ekspedisi',
+        desc: 'Dilindungi bubble wrap tebal dan kardus berlapis',
+      },
+      {
+        title: 'Bayar di Tempat (COD)',
+        desc: 'Tersedia pembayaran tunai saat barang diterima',
+      },
+      {
+        title: 'Dukungan Komunitas UMKM',
+        desc: 'Setiap pesanan langsung menghidupkan bengkel lokal',
+      },
+    ],
+    journal: {
+      tag: 'WARTA PENGRAJIN',
+      title: 'Catatan dari Bengkel & Dapur Tradisi',
+      readArticle: 'Baca Cerita',
+      articles: [
+        {
+          title: 'Mengenal Karakter Kayu Jati Blora dan Rahasia Ketahanannya',
+          category: 'Kriya Kayu',
+          date: 'Nov 2026',
+        },
+        {
+          title: 'Tradisi Pembakaran Gerabah Kasongan yang Bertahan Tiga Generasi',
+          category: 'Keramik',
+          date: 'Okt 2026',
+        },
+        {
+          title: 'Seni Roasting Kopi Arabika Gayo dengan Wajan Tanah Liat',
+          category: 'Kuliner',
+          date: 'Okt 2026',
+        },
+      ],
     },
     catalog: {
-      title: 'Katalog Oleh-oleh',
+      title: 'Katalog Koleksi',
+      subtitle: 'Telusuri ragam oleh-oleh dan kriya pilihan dari seluruh penjuru daerah.',
       allProducts: 'Semua Produk',
       categories: {
         all: 'Semua Produk',
-        food: 'Kuliner & Kudapan',
-        craft: 'Gerabah & Kerajinan Kayu',
-        apparel: 'Batik & Tenun',
+        food: 'Kuliner & Kudapan Khas',
+        craft: 'Gerabah & Keramik',
+        wood: 'Kriya Kayu Jati',
+        apparel: 'Wastra & Batik',
         coffee: 'Kopi & Rempah',
-        leather: 'Kerajinan Kulit Asli',
+        leather: 'Kerajinan Kulit Nabati',
       },
-      sortLabel: 'Urutkan',
       sortOptions: {
         newest: 'Terbaru',
-        price_asc: 'Harga: Rendah ke Tinggi',
-        price_desc: 'Harga: Tinggi ke Rendah',
+        price_asc: 'Harga: Terendah',
+        price_desc: 'Harga: Tertinggi',
         popular: 'Paling Diminati',
       },
-      quickAddSuccess: 'Ditambahkan ke keranjang!',
       emptyState: 'Belum ada produk untuk kategori ini.',
       clearFilters: 'Bersihkan filter',
     },
-    showcase: {
-      heading: 'Koleksi Pilihan UMKM',
-      viewAll: 'Lihat seluruh produk',
-    },
     footer: {
       description:
-        'Pemberdayaan UMKM lokal dan pengrajin tradisional Nusantara dengan tata kelola inventaris modern.',
-      collectionsTitle: 'Kategori Unggulan',
-      infoTitle: 'Layanan & Bantuan',
+        'Platform kurasi oleh-oleh khas daerah dan kriya tradisional Nusantara. Menghubungkan pengrajin lokal dengan pencinta estetika otentik.',
+      collectionsTitle: 'Koleksi Kriya',
+      infoTitle: 'Layanan Pembeli',
       infoItems: [
-        'Bayar di Tempat (COD)',
+        'Konfirmasi Bayar di Tempat (COD)',
         'Transfer Bank Manual (Demo)',
-        'Garansi Kualitas Pengrajin',
-        'Kebijakan Pengiriman Aman',
+        'Garansi Pengiriman Aman',
+        'Pertanyaan Umum (FAQ)',
       ],
       architectureTitle: 'Sistem CommerceOS',
       architectureDesc:
-        'Arsitektur modular monolith Next.js 15, NestJS, dan PostgreSQL dengan ledger stok anti-overselling.',
+        'Dibangun dengan arsitektur modular monolith Next.js 15, NestJS, dan PostgreSQL. Ledger stok atomik anti-overselling.',
       rights: 'Hak Cipta Terpelihara.',
       adminLink: 'Konsol Manajemen Admin (:3001)',
     },
   },
   en: {
-    brandName: 'MINDI HERITAGE',
-    announcement: 'Complimentary shipping across the archipelago on orders over $150',
+    brandName: 'MINDI',
+    brandSub: 'ARCHIPELAGO CRAFT & HEIRLOOMS',
+    announcement: 'Carefully packaged and insured courier delivery across all islands',
     nav: {
       home: 'Home',
-      shop: 'Shop Souvenirs',
+      shop: 'Collection',
       about: 'Artisans',
-      blog: 'MSME Stories',
+      blog: 'Journal',
       admin: 'Admin Portal',
       signIn: 'Sign in',
       signOut: 'Sign out',
       account: 'Account',
-      searchPlaceholder: 'Search souvenirs, batik, crafts...',
+      searchPlaceholder: 'Search ceramics, coffee, batik, teakwood...',
     },
     hero: {
-      tagline: 'AUTHENTIC TRADITIONAL ARCHIPELAGO CRAFTS',
-      title: 'Curated traditional souvenirs & handcrafted daily goods.',
+      badge: 'ARCHIPELAGO HEIRLOOM CURATION 2026',
+      title: 'Objects of quiet craft & ancestral flavor.',
       description:
-        'Empowering local artisans & Indonesian MSMEs with transparent real-time inventory ledgers.',
+        'Authentic handcrafted goods and traditional delicacies curated directly from local Indonesian workshops and home kitchens.',
       exploreBtn: 'Explore Collection',
-      adminBtn: 'Admin Dashboard →',
+      storyBtn: 'Artisan Stories →',
+    },
+    categories: {
+      heading: 'Craft Traditions & Regional Flavors',
+      subheading: 'Crafted with patient hands, multi-generational skills, and raw natural materials.',
+      wood: {
+        title: 'Teakwood Tableware',
+        origin: 'Hand-carved in Jepara & Blora',
+        count: '6 Objects',
+      },
+      ceramic: {
+        title: 'Wheel-thrown Pottery',
+        origin: 'Kasongan Earthenware Clay',
+        count: '9 Objects',
+      },
+      culinary: {
+        title: 'Roasted Coffee & Delicacies',
+        origin: 'Gayo Coffee & Traditional Bakes',
+        count: '8 Selections',
+      },
+      textile: {
+        title: 'Woven Textiles & Batik',
+        origin: 'Natural Fiber Pekalongan & Solo',
+        count: '6 Collections',
+      },
+    },
+    showcase: {
+      tag: 'MONTHLY SELECTION',
+      heading: 'Curator’s Choice',
+      viewAll: 'View all 31 objects',
+      quickAdd: '+ Add to Bag',
+      added: 'Added!',
+    },
+    philosophy: {
+      tag: 'OUR VALUES',
+      title: 'Patient hands behind every honest object.',
+      quote:
+        '“Every chisel mark in teakwood and every wheel-thrown clay vessel carries the patience of the craftsperson. We exist so their heritage thrives in modern homes.”',
+      pillar1Title: 'Natural & Sustainable Materials',
+      pillar1Desc:
+        'Certified sustainable timber, organic cotton fibers, and delicacies prepared without synthetic additives.',
+      pillar2Title: 'Fair-Trade Value Chain',
+      pillar2Desc:
+        'Working directly with maker workshops so that value flows back to the creators themselves.',
+      pillar3Title: 'Reinforced Shipping Protection',
+      pillar3Desc:
+        'Heavy-duty multi-layered cushioning for pottery and airtight nitrogen seals for regional delicacies.',
+    },
+    assurances: [
+      {
+        title: 'Verified Maker Provenance',
+        desc: '100% genuine craftsmanship directly from origin',
+      },
+      {
+        title: 'Insured Courier Protection',
+        desc: 'Protected with multi-layer shockproof boxing',
+      },
+      {
+        title: 'Cash on Delivery (COD)',
+        desc: 'Pay cash upon delivery across major cities',
+      },
+      {
+        title: 'Supporting Maker Communities',
+        desc: 'Every order directly supports regional families',
+      },
+    ],
+    journal: {
+      tag: 'ARTISAN JOURNAL',
+      title: 'Notes from the Workshops & Traditional Kitchens',
+      readArticle: 'Read Story',
+      articles: [
+        {
+          title: 'Understanding Blora Teakwood Grain and Its Enduring Resilience',
+          category: 'Woodcraft',
+          date: 'Nov 2026',
+        },
+        {
+          title: 'Three Generations of Wheel-Thrown Pottery in Kasongan',
+          category: 'Ceramics',
+          date: 'Oct 2026',
+        },
+        {
+          title: 'The Art of Clay-Pan Roasting Indonesian Single-Origin Coffee',
+          category: 'Culinary',
+          date: 'Oct 2026',
+        },
+      ],
     },
     catalog: {
-      title: 'Shop Souvenirs',
-      allProducts: 'All Products',
+      title: 'The Collection',
+      subtitle: 'Browse authentic traditional souvenirs and craft objects from across the archipelago.',
+      allProducts: 'All Objects',
       categories: {
-        all: 'All Products',
+        all: 'All Objects',
         food: 'Culinary Delicacies',
-        craft: 'Ceramic & Wood Crafts',
-        apparel: 'Batik & Textiles',
-        coffee: 'Coffee & Spices',
-        leather: 'Genuine Leather Crafts',
+        craft: 'Wheel-thrown Ceramics',
+        wood: 'Teakwood Tableware',
+        apparel: 'Textiles & Batik',
+        coffee: 'Single-Origin Coffee',
+        leather: 'Vegetable-Tanned Leather',
       },
-      sortLabel: 'Sort',
       sortOptions: {
         newest: 'Newest',
         price_asc: 'Price: Low to High',
         price_desc: 'Price: High to Low',
         popular: 'Most Popular',
       },
-      quickAddSuccess: 'Added to cart!',
-      emptyState: 'No products found in this category.',
+      emptyState: 'No objects found in this category.',
       clearFilters: 'Clear filters',
-    },
-    showcase: {
-      heading: 'Curated MSME Editions',
-      viewAll: 'View all products',
     },
     footer: {
       description:
-        'Empowering traditional Indonesian MSMEs and artisanal workshops with modern e-commerce reliability.',
+        'A curated platform for authentic Indonesian regional souvenirs and traditional craft objects, built for modern spaces.',
       collectionsTitle: 'Collections',
-      infoTitle: 'Assurance & Support',
+      infoTitle: 'Customer Care',
       infoItems: [
-        'Cash on Delivery (COD)',
+        'Cash on Delivery Confirmation (COD)',
         'Manual Bank Transfer (Demo)',
-        'Artisan Quality Guarantee',
-        'Secure Packaging & Shipping',
+        'Secure Transit Guarantee',
+        'Frequently Asked Questions',
       ],
       architectureTitle: 'CommerceOS Engine',
       architectureDesc:
-        'Modular monolith with Next.js 15, NestJS, and PostgreSQL with atomic inventory ledgers.',
+        'Engineered with Next.js 15, NestJS, and PostgreSQL. Strict atomic row-level locking for zero overselling.',
       rights: 'All rights reserved.',
       adminLink: 'Admin Management Console (:3001)',
     },

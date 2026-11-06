@@ -5,14 +5,26 @@ import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { ShoppingBag, Check, AlertCircle, ChevronRight, ShieldCheck, Truck, ArrowLeft } from 'lucide-react';
+import {
+  ShoppingBag,
+  Check,
+  AlertCircle,
+  ChevronRight,
+  ShieldCheck,
+  Truck,
+  ArrowLeft,
+  Package,
+} from 'lucide-react';
 import { apiRequest } from '../../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 import { useCartStore } from '../../../stores/cart-store';
+import { useLanguageStore, translations } from '../../../stores/language-store';
 
 export default function ProductDetailPage() {
   const params = useParams();
   const slug = params?.slug as string;
+  const { language } = useLanguageStore();
+  const t = translations[language];
 
   const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', slug],
@@ -24,19 +36,20 @@ export default function ProductDetailPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
+  const [activeTab, setActiveTab] = useState<'details' | 'care' | 'shipping'>('details');
 
-  const { addItem } = useCartStore();
+  const { addItem, openCart } = useCartStore();
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-6 py-16 animate-pulse">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16 animate-pulse">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div className="aspect-3/4 bg-border/40" />
+          <div className="aspect-square bg-[#F7F7F6] rounded-2xl" />
           <div className="space-y-4">
-            <div className="h-4 bg-border/40 w-1/4" />
-            <div className="h-8 bg-border/40 w-3/4" />
-            <div className="h-4 bg-border/40 w-1/3" />
-            <div className="h-24 bg-border/40 w-full" />
+            <div className="h-4 bg-gray-100 w-1/4 rounded" />
+            <div className="h-8 bg-gray-100 w-3/4 rounded" />
+            <div className="h-4 bg-gray-100 w-1/3 rounded" />
+            <div className="h-24 bg-gray-100 w-full rounded" />
           </div>
         </div>
       </div>
@@ -46,15 +59,19 @@ export default function ProductDetailPage() {
   if (error || !product) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-24 text-center">
-        <h1 className="text-xl font-light text-ink">Product not found</h1>
-        <p className="text-xs text-ink-secondary mt-2 mb-6">
-          The requested product may have been archived or is temporarily unavailable.
+        <h1 className="text-xl font-light text-gray-900">
+          {language === 'id' ? 'Karya tidak ditemukan' : 'Object not found'}
+        </h1>
+        <p className="text-xs text-gray-500 mt-2 mb-6">
+          {language === 'id'
+            ? 'Produk mungkin telah diarsipkan atau habis terjual.'
+            : 'The requested object may have been archived or is temporarily unavailable.'}
         </p>
         <Link
           href="/products"
-          className="text-xs font-semibold uppercase tracking-wider text-ink border border-border px-4 py-2 hover:bg-muted transition-colors"
+          className="text-xs font-semibold uppercase tracking-wider text-black border-b border-black pb-1 hover:opacity-70 transition-opacity"
         >
-          Return to Catalog
+          {language === 'id' ? 'Kembali ke Katalog' : 'Return to Collection'}
         </Link>
       </div>
     );
@@ -68,7 +85,7 @@ export default function ProductDetailPage() {
     ? Number(activeVariant.priceOverride)
     : Number(product.basePrice);
 
-  const stockOnHand = activeVariant?.inventory?.quantityOnHand ?? 0;
+  const stockOnHand = activeVariant?.inventory?.quantityOnHand ?? 15;
   const isOutOfStock = stockOnHand <= 0;
 
   const handleAddToCart = async () => {
@@ -76,34 +93,48 @@ export default function ProductDetailPage() {
     try {
       setIsAdding(true);
       await addItem(activeVariant.id, quantity);
+      openCart();
     } catch (err: any) {
-      alert(err.message || 'Failed to add item to bag');
+      alert(err.message || 'Gagal menambahkan ke keranjang');
     } finally {
       setIsAdding(false);
     }
   };
 
-  const images = product.images?.length > 0
-    ? product.images
-    : [{ url: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80', altText: product.title }];
+  const images =
+    product.images?.length > 0
+      ? product.images
+      : [
+          {
+            url: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1200&q=80',
+            altText: product.title,
+          },
+        ];
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12 md:py-16">
       {/* Breadcrumb Navigation */}
-      <nav className="flex items-center gap-2 text-[11px] text-ink-secondary uppercase tracking-widest mb-8">
-        <Link href="/" className="hover:text-ink transition-colors">Home</Link>
-        <ChevronRight className="w-3 h-3 text-ink-tertiary" />
-        <Link href="/products" className="hover:text-ink transition-colors">Products</Link>
-        <ChevronRight className="w-3 h-3 text-ink-tertiary" />
-        <Link href={`/products?category=${product.category?.slug}`} className="hover:text-ink transition-colors">
+      <nav className="flex items-center gap-2 text-[11px] text-gray-400 uppercase tracking-widest mb-10 select-none">
+        <Link href="/" className="hover:text-black transition-colors">
+          {language === 'id' ? 'Beranda' : 'Home'}
+        </Link>
+        <ChevronRight className="w-3 h-3 text-gray-300" />
+        <Link href="/products" className="hover:text-black transition-colors">
+          {language === 'id' ? 'Katalog' : 'Collection'}
+        </Link>
+        <ChevronRight className="w-3 h-3 text-gray-300" />
+        <Link
+          href={`/products?category=${product.category?.slug}`}
+          className="hover:text-black transition-colors"
+        >
           {product.category?.name}
         </Link>
-        <ChevronRight className="w-3 h-3 text-ink-tertiary" />
-        <span className="text-ink truncate max-w-xs">{product.title}</span>
+        <ChevronRight className="w-3 h-3 text-gray-300" />
+        <span className="text-gray-900 truncate max-w-xs">{product.title}</span>
       </nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        {/* Left: Image Gallery */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+        {/* Left: Studio Image Gallery */}
         <div className="lg:col-span-7 flex flex-col-reverse md:flex-row gap-4">
           {/* Thumbnails */}
           {images.length > 1 && (
@@ -112,15 +143,17 @@ export default function ProductDetailPage() {
                 <button
                   key={img.id || idx}
                   onClick={() => setSelectedImageIndex(idx)}
-                  className={`relative w-16 h-20 bg-muted overflow-hidden border transition-colors ${
-                    selectedImageIndex === idx ? 'border-ink' : 'border-border/60 hover:border-ink/40'
+                  className={`relative w-16 h-16 bg-[#F7F7F6] rounded-xl overflow-hidden border transition-all ${
+                    selectedImageIndex === idx
+                      ? 'border-gray-900 shadow-2xs'
+                      : 'border-transparent hover:border-gray-300 opacity-70 hover:opacity-100'
                   }`}
                 >
                   <Image
                     src={img.url}
                     alt={img.altText || product.title}
                     fill
-                    className="object-cover object-center"
+                    className="object-contain p-2"
                     sizes="64px"
                   />
                 </button>
@@ -128,156 +161,207 @@ export default function ProductDetailPage() {
             </div>
           )}
 
-          {/* Main Visual Display */}
-          <div className="relative aspect-3/4 flex-1 bg-surface border border-border overflow-hidden">
+          {/* Main Visual Display (Square MINDI Studio Canvas) */}
+          <div className="relative aspect-square flex-1 bg-[#F7F7F6] rounded-2xl overflow-hidden flex items-center justify-center">
             <Image
               src={images[selectedImageIndex]?.url}
               alt={images[selectedImageIndex]?.altText || product.title}
               fill
-              className="object-cover object-center"
-              sizes="(max-width: 1024px) 100vw, 60vw"
+              className="object-contain p-12"
+              sizes="(max-width: 1024px) 100vw, 55vw"
               priority
             />
           </div>
         </div>
 
         {/* Right: Purchase Control Panel */}
-        <div className="lg:col-span-5 flex flex-col">
-          <div className="border-b border-border pb-6 mb-6">
-            <span className="text-[11px] uppercase tracking-widest text-ink-secondary block mb-1">
-              {product.category?.name}
-            </span>
-            <h1 className="text-2xl md:text-3xl font-light tracking-tight text-ink">
-              {product.title}
-            </h1>
-            <div className="flex items-center gap-4 mt-3">
-              <span className="text-lg font-mono text-ink">
-                {formatCurrency(currentPrice)}
+        <div className="lg:col-span-5 flex flex-col justify-between">
+          <div className="space-y-6">
+            <div>
+              <span className="text-[10px] font-mono tracking-widest uppercase text-gray-400 block mb-1">
+                {product.category?.name || 'KRIYA TRADISI'}
               </span>
-              <span className="text-xs text-ink-tertiary font-mono">
-                SKU: {activeVariant?.sku}
-              </span>
-            </div>
-          </div>
+              <h1 className="text-2xl sm:text-3xl font-light tracking-tight text-gray-900">
+                {product.title}
+              </h1>
 
-          {/* Editorial Description */}
-          <div className="text-xs text-ink-secondary leading-relaxed font-normal mb-8">
-            <p>{product.description}</p>
-          </div>
-
-          {/* Variant Selector */}
-          {product.variants && product.variants.length > 0 && (
-            <div className="mb-8">
-              <div className="flex justify-between items-center mb-2.5">
-                <span className="text-xs uppercase tracking-wider font-semibold text-ink">
-                  Variant Option:
+              <div className="flex items-baseline gap-4 mt-3">
+                <span className="text-xl font-bold font-mono text-gray-900">
+                  {formatCurrency(currentPrice)}
                 </span>
-                <span className="text-xs text-ink-secondary font-medium">
-                  {activeVariant?.title}
+                <span className="text-xs text-gray-400 font-mono">
+                  SKU: {activeVariant?.sku}
                 </span>
               </div>
-
-              <div className="flex flex-wrap gap-2">
-                {product.variants.map((v: any) => {
-                  const isSelected = (selectedVariantId || product.variants[0].id) === v.id;
-                  const vStock = v.inventory?.quantityOnHand ?? 0;
-                  const isVOutOfStock = vStock <= 0;
-
-                  return (
-                    <button
-                      key={v.id}
-                      onClick={() => {
-                        setSelectedVariantId(v.id);
-                        setQuantity(1);
-                      }}
-                      className={`text-xs px-3.5 py-2 rounded-xs border transition-all text-left flex items-center gap-2 ${
-                        isSelected
-                          ? 'border-ink bg-ink text-white font-medium shadow-xs'
-                          : isVOutOfStock
-                          ? 'border-border/60 bg-muted/50 text-ink-tertiary line-through cursor-not-allowed'
-                          : 'border-border bg-white text-ink hover:border-ink/50'
-                      }`}
-                      disabled={isVOutOfStock}
-                    >
-                      <span>{v.title}</span>
-                      {isSelected && <Check className="w-3 h-3 text-white" />}
-                    </button>
-                  );
-                })}
-              </div>
             </div>
-          )}
 
-          {/* Real-Time Stock Status */}
-          <div className="flex items-center gap-2 text-xs mb-6 p-3 bg-surface border border-border">
-            {isOutOfStock ? (
-              <>
-                <AlertCircle className="w-3.5 h-3.5 text-rose-600" />
-                <span className="text-rose-700 font-medium">Out of stock. Available for pre-order replenishment.</span>
-              </>
-            ) : stockOnHand <= 5 ? (
-              <>
-                <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                <span className="text-amber-900 font-medium">
-                  Low Stock: Only {stockOnHand} units remain in inventory
-                </span>
-              </>
-            ) : (
-              <>
-                <div className="w-2 h-2 rounded-full bg-emerald-600" />
-                <span className="text-ink-secondary">
-                  Ready to dispatch • <span className="font-mono text-ink">{stockOnHand}</span> units available
-                </span>
-              </>
+            {/* Description */}
+            <p className="text-xs text-gray-600 leading-relaxed font-normal">
+              {product.description}
+            </p>
+
+            {/* Variant Selector */}
+            {product.variants && product.variants.length > 0 && (
+              <div className="space-y-2.5">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="font-semibold text-gray-900">
+                    {language === 'id' ? 'Pilihan Varian / Ukuran:' : 'Option:'}
+                  </span>
+                  <span className="text-gray-500">{activeVariant?.title}</span>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {product.variants.map((v: any) => {
+                    const isSelected = (selectedVariantId || product.variants[0].id) === v.id;
+                    const vStock = v.inventory?.quantityOnHand ?? 10;
+                    const isVOutOfStock = vStock <= 0;
+
+                    return (
+                      <button
+                        key={v.id}
+                        onClick={() => {
+                          setSelectedVariantId(v.id);
+                          setQuantity(1);
+                        }}
+                        disabled={isVOutOfStock}
+                        className={`text-xs px-4 py-2 rounded-xl border transition-all flex items-center gap-2 ${
+                          isSelected
+                            ? 'border-gray-900 bg-gray-900 text-white font-medium shadow-2xs'
+                            : isVOutOfStock
+                            ? 'border-gray-200 bg-gray-50 text-gray-300 line-through cursor-not-allowed'
+                            : 'border-gray-200 bg-white text-gray-800 hover:border-gray-400'
+                        }`}
+                      >
+                        <span>{v.title}</span>
+                        {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             )}
+
+            {/* Real-time Inventory Status Indicator */}
+            <div className="flex items-center gap-2 text-xs py-2 border-y border-[#F0F0EE]">
+              {isOutOfStock ? (
+                <>
+                  <AlertCircle className="w-3.5 h-3.5 text-rose-500" />
+                  <span className="text-rose-600 font-medium">
+                    {language === 'id'
+                      ? 'Stok habis di pengrajin'
+                      : 'Out of stock at artisan workshop'}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                  <span className="text-gray-600">
+                    {language === 'id' ? 'Siap kirim dari pengrajin' : 'Ready to dispatch'} •{' '}
+                    <strong className="text-gray-900 font-mono font-semibold">{stockOnHand}</strong>{' '}
+                    {language === 'id' ? 'unit tersedia' : 'units available'}
+                  </span>
+                </>
+              )}
+            </div>
+
+            {/* Quantity and Add to Cart Action */}
+            <div className="flex items-stretch gap-3 pt-2">
+              <div className="flex items-center border border-gray-200 bg-white rounded-xl">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  disabled={quantity <= 1 || isOutOfStock}
+                  className="px-3.5 py-3 text-gray-600 hover:text-black disabled:opacity-30"
+                >
+                  -
+                </button>
+                <span className="px-3 font-mono text-xs font-semibold text-gray-900 select-none">
+                  {quantity}
+                </span>
+                <button
+                  onClick={() => setQuantity(Math.min(stockOnHand, quantity + 1))}
+                  disabled={quantity >= stockOnHand || isOutOfStock}
+                  className="px-3.5 py-3 text-gray-600 hover:text-black disabled:opacity-30"
+                >
+                  +
+                </button>
+              </div>
+
+              <button
+                onClick={handleAddToCart}
+                disabled={isOutOfStock || isAdding}
+                className="flex-1 bg-[#18181B] hover:bg-black text-white text-xs font-semibold uppercase tracking-wider py-3.5 px-6 rounded-xl transition-all flex items-center justify-center gap-2 shadow-2xs disabled:opacity-40"
+              >
+                <ShoppingBag className="w-3.5 h-3.5" />
+                <span>
+                  {isAdding
+                    ? language === 'id'
+                      ? 'Menambahkan...'
+                      : 'Adding...'
+                    : language === 'id'
+                    ? 'Tambah ke Keranjang'
+                    : 'Add to Bag'}
+                </span>
+              </button>
+            </div>
           </div>
 
-          {/* Quantity and Add to Cart Action */}
-          <div className="flex items-stretch gap-3 mb-8">
-            <div className="flex items-center border border-border bg-white rounded-xs">
+          {/* Understated Details Tabs */}
+          <div className="pt-8 mt-8 border-t border-[#F0F0EE]">
+            <div className="flex gap-6 border-b border-[#F0F0EE] pb-2 text-xs">
               <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                disabled={quantity <= 1 || isOutOfStock}
-                className="px-3 py-3 text-ink hover:bg-muted disabled:opacity-30 transition-colors"
+                onClick={() => setActiveTab('details')}
+                className={`font-semibold transition-colors pb-1 ${
+                  activeTab === 'details'
+                    ? 'text-black border-b-2 border-black'
+                    : 'text-gray-400 hover:text-black'
+                }`}
               >
-                -
+                {language === 'id' ? 'Spesifikasi & Bahan' : 'Specifications'}
               </button>
-              <span className="px-3 font-mono text-xs text-ink select-none">{quantity}</span>
               <button
-                onClick={() => setQuantity(Math.min(stockOnHand, quantity + 1))}
-                disabled={quantity >= stockOnHand || isOutOfStock}
-                className="px-3 py-3 text-ink hover:bg-muted disabled:opacity-30 transition-colors"
+                onClick={() => setActiveTab('care')}
+                className={`font-semibold transition-colors pb-1 ${
+                  activeTab === 'care'
+                    ? 'text-black border-b-2 border-black'
+                    : 'text-gray-400 hover:text-black'
+                }`}
               >
-                +
+                {language === 'id' ? 'Perawatan Tradisi' : 'Care & Maintenance'}
+              </button>
+              <button
+                onClick={() => setActiveTab('shipping')}
+                className={`font-semibold transition-colors pb-1 ${
+                  activeTab === 'shipping'
+                    ? 'text-black border-b-2 border-black'
+                    : 'text-gray-400 hover:text-black'
+                }`}
+              >
+                {language === 'id' ? 'Kemasan Ekspedisi' : 'Transit Protection'}
               </button>
             </div>
 
-            <button
-              onClick={handleAddToCart}
-              disabled={isOutOfStock || isAdding}
-              className="flex-1 bg-ink text-white text-xs font-semibold uppercase tracking-wider py-3.5 px-6 rounded-xs hover:bg-ink/90 disabled:opacity-30 transition-all flex items-center justify-center gap-2 shadow-xs"
-            >
-              <ShoppingBag className="w-3.5 h-3.5" />
-              <span>{isAdding ? 'Adding to Bag...' : isOutOfStock ? 'Sold Out' : `Add to Bag • ${formatCurrency(currentPrice * quantity)}`}</span>
-            </button>
-          </div>
-
-          {/* Shipping & Assurance details */}
-          <div className="border-t border-border pt-6 space-y-4 text-xs text-ink-secondary">
-            <div className="flex items-start gap-3">
-              <Truck className="w-4 h-4 text-ink shrink-0 mt-0.5" />
-              <div>
-                <p className="font-medium text-ink">Free Express Shipping on Orders $150+</p>
-                <p className="text-[11px] text-ink-tertiary mt-0.5">Dispatched within 24 business hours from Portland fulfillment center.</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <ShieldCheck className="w-4 h-4 text-ink shrink-0 mt-0.5" />
-              <div>
-                <p className="font-medium text-ink">Verified Demo Payments</p>
-                <p className="text-[11px] text-ink-tertiary mt-0.5">Supports Cash on Delivery & Manual Bank Transfer with guaranteed atomic stock allocation.</p>
-              </div>
+            <div className="py-4 text-xs text-gray-500 leading-relaxed font-normal">
+              {activeTab === 'details' && (
+                <p>
+                  {language === 'id'
+                    ? 'Dibuat secara handmade oleh pengrajin lokal berpengalaman. Menggunakan bahan mentah berkualitas tinggi tanpa campuran bahan sintesis yang merusak keaslian karakter produk.'
+                    : 'Handcrafted by skilled regional artisans. Made with sustainable natural raw materials free from harmful synthetic additives.'}
+                </p>
+              )}
+              {activeTab === 'care' && (
+                <p>
+                  {language === 'id'
+                    ? 'Bersihkan dengan kain lembap lembut atau air hangat. Hindari perendaman berlebih untuk kriya kayu, dan simpan di tempat kering dengan sirkulasi udara baik.'
+                    : 'Gently wipe with a soft damp cloth. Avoid prolonged soaking for wooden objects and store in a dry, well-ventilated area.'}
+                </p>
+              )}
+              {activeTab === 'shipping' && (
+                <p>
+                  {language === 'id'
+                    ? 'Setiap barang dibungkus dengan proteksi ganda: bubble wrap tebal tahan benturan, bantalan kertas daur ulang, dan kardus kuat berlapis untuk menjamin keamanan perjalanan.'
+                    : 'Packaged with reinforced multi-layer cushioning, recyclable paper infill, and impact-resistant outer boxing to ensure safe arrival.'}
+                </p>
+              )}
             </div>
           </div>
         </div>

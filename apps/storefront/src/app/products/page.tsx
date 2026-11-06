@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
-import { ChevronDown, Plus, Check } from 'lucide-react';
+import { ChevronDown, Plus, Check, ArrowRight } from 'lucide-react';
 import { apiRequest } from '../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 import { useCartStore } from '../../stores/cart-store';
@@ -67,93 +67,114 @@ function MindiCatalogContent() {
     if (!defaultVariant) return;
 
     await addItem(defaultVariant.id, 1);
-
     setAddedSlug(product.slug);
     setTimeout(() => setAddedSlug(null), 1200);
     openCart();
   };
 
-  // Traditional UMKM Souvenir Categories
-  const categoryFilters = [
-    { label: t.catalog.categories.all, slug: '' },
-    { label: t.catalog.categories.craft, slug: 'living-ceramics' },
-    { label: t.catalog.categories.food, slug: 'apparel' },
-    { label: t.catalog.categories.apparel, slug: 'apparel' },
-    { label: t.catalog.categories.leather, slug: 'leather-goods' },
-    { label: t.catalog.categories.coffee, slug: 'workspace' },
-  ];
-
   return (
     <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12 md:py-16">
-      {/* Top Title & Sort Controls */}
-      <div className="flex items-center justify-between mb-12">
-        <h1 className="text-2xl font-light text-gray-900 tracking-tight">{t.catalog.title}</h1>
+      {/* Top Header of Catalog */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-8 border-b border-[#F0F0EE] mb-12">
+        <div>
+          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-gray-400 block mb-1">
+            {language === 'id' ? 'KURASI OLEH-OLEH & KRIYA' : 'ARCHIPELAGO CURATION'}
+          </span>
+          <h1 className="text-3xl font-light text-gray-900 tracking-tight">
+            {selectedCategory ? selectedCategory.name : t.catalog.title}
+          </h1>
+          <p className="text-xs text-gray-500 mt-1 max-w-lg">
+            {selectedCategory?.description || t.catalog.subtitle}
+          </p>
+        </div>
 
         {/* Minimal Sort Dropdown (MINDI reference style) */}
-        <div className="relative">
-          <button
-            onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
-            type="button"
-            className="flex items-center gap-4 px-3.5 py-1.5 border border-gray-200 hover:border-gray-300 text-xs text-gray-700 bg-white rounded-lg transition-colors shadow-2xs"
-          >
-            <span className="capitalize font-medium">
-              {sortBy === 'newest'
-                ? t.catalog.sortOptions.newest
-                : sortBy === 'price_asc'
-                ? t.catalog.sortOptions.price_asc
-                : sortBy === 'price_desc'
-                ? t.catalog.sortOptions.price_desc
-                : t.catalog.sortOptions.popular}
-            </span>
-            <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
-          </button>
+        <div className="flex items-center gap-4">
+          <span className="text-xs font-mono text-gray-400">
+            {productsData?.meta?.total ?? 0} {language === 'id' ? 'Karya' : 'Objects'}
+          </span>
 
-          {sortDropdownOpen && (
-            <div className="absolute right-0 mt-1 w-48 bg-white border border-gray-200 rounded-xl shadow-lg py-1 z-30 text-xs">
-              {[
-                { label: t.catalog.sortOptions.newest, val: 'newest' },
-                { label: t.catalog.sortOptions.price_asc, val: 'price_asc' },
-                { label: t.catalog.sortOptions.price_desc, val: 'price_desc' },
-                { label: t.catalog.sortOptions.popular, val: 'popular' },
-              ].map((opt) => (
-                <button
-                  key={opt.val}
-                  onClick={() => {
-                    updateParam('sortBy', opt.val);
-                    setSortDropdownOpen(false);
-                  }}
-                  className={`w-full text-left px-3.5 py-2 transition-colors ${
-                    sortBy === opt.val
-                      ? 'font-bold text-black bg-gray-50'
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          )}
+          <div className="relative">
+            <button
+              onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
+              type="button"
+              className="flex items-center gap-3 px-3.5 py-1.5 border border-gray-200 hover:border-gray-300 text-xs text-gray-700 bg-white rounded-lg transition-colors shadow-2xs"
+            >
+              <span className="font-medium">
+                {sortBy === 'newest'
+                  ? t.catalog.sortOptions.newest
+                  : sortBy === 'price_asc'
+                  ? t.catalog.sortOptions.price_asc
+                  : sortBy === 'price_desc'
+                  ? t.catalog.sortOptions.price_desc
+                  : t.catalog.sortOptions.popular}
+              </span>
+              <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+            </button>
+
+            {sortDropdownOpen && (
+              <div className="absolute right-0 mt-1 w-44 bg-white border border-gray-200 rounded-xl shadow-lg py-1 z-30 text-xs">
+                {[
+                  { label: t.catalog.sortOptions.newest, val: 'newest' },
+                  { label: t.catalog.sortOptions.price_asc, val: 'price_asc' },
+                  { label: t.catalog.sortOptions.price_desc, val: 'price_desc' },
+                  { label: t.catalog.sortOptions.popular, val: 'popular' },
+                ].map((opt) => (
+                  <button
+                    key={opt.val}
+                    onClick={() => {
+                      updateParam('sortBy', opt.val);
+                      setSortDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-3.5 py-2 transition-colors ${
+                      sortBy === opt.val
+                        ? 'font-bold text-black bg-gray-50'
+                        : 'text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Main MINDI Layout: Left Category Text List + Right 3-Column Studio Grid */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
         {/* Left Column: Quiet Vertical Text Category Navigation */}
-        <aside className="md:col-span-3 lg:col-span-2 space-y-4 select-none">
-          {categoryFilters.map((cat, idx) => {
-            const isSelected =
-              (!cat.slug && !categorySlug) || (cat.slug && categorySlug === cat.slug);
+        <aside className="md:col-span-3 lg:col-span-2 space-y-3.5 select-none">
+          <span className="text-[10px] font-mono tracking-widest uppercase text-gray-400 block mb-2">
+            {language === 'id' ? 'KATEGORI' : 'CATEGORIES'}
+          </span>
+
+          {/* All Products */}
+          <button
+            onClick={() => updateParam('category', null)}
+            className={`block text-xs text-left tracking-wide transition-colors ${
+              !categorySlug
+                ? 'text-black font-bold'
+                : 'text-gray-500 hover:text-black font-normal'
+            }`}
+          >
+            {t.catalog.allProducts}
+          </button>
+
+          {/* Dynamic Categories from DB */}
+          {categories?.map((cat) => {
+            const isSelected = categorySlug === cat.slug;
             return (
               <button
-                key={idx}
-                onClick={() => updateParam('category', cat.slug || null)}
+                key={cat.id}
+                onClick={() => updateParam('category', cat.slug)}
                 className={`block text-xs text-left tracking-wide transition-colors ${
                   isSelected
                     ? 'text-black font-bold'
                     : 'text-gray-500 hover:text-black font-normal'
                 }`}
               >
-                {cat.label}
+                {cat.name}
               </button>
             );
           })}
@@ -165,7 +186,7 @@ function MindiCatalogContent() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="space-y-4 animate-pulse">
-                  <div className="aspect-square bg-gray-100 rounded" />
+                  <div className="aspect-square bg-[#F7F7F6] rounded-xl" />
                   <div className="h-4 bg-gray-100 w-2/3 rounded" />
                   <div className="h-3 bg-gray-100 w-1/4 rounded" />
                 </div>
@@ -185,19 +206,18 @@ function MindiCatalogContent() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
               {productsData?.items?.map((product) => {
                 const defaultVariant = product.variants?.[0];
-                const price = Number(defaultVariant?.price || 0);
+                const price = Number(defaultVariant?.priceOverride || product.basePrice || 0);
                 const imageUrl =
                   product.images?.[0]?.url ||
                   'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=600&q=80';
 
                 return (
-                  <Link
-                    key={product.id}
-                    href={`/products/${product.slug}`}
-                    className="group flex flex-col text-center focus:outline-none"
-                  >
+                  <div key={product.id} className="group flex flex-col text-left">
                     {/* Square Image Backdrop (#F6F6F6 studio feel) */}
-                    <div className="relative aspect-square w-full bg-[#F7F7F7] flex items-center justify-center overflow-hidden mb-4 rounded-xs transition-colors group-hover:bg-[#F2F2F2]">
+                    <Link
+                      href={`/products/${product.slug}`}
+                      className="relative aspect-square w-full bg-[#F7F7F6] flex items-center justify-center overflow-hidden mb-4 rounded-xl transition-colors group-hover:bg-[#F2F1ED]"
+                    >
                       <Image
                         src={imageUrl}
                         alt={product.title}
@@ -209,27 +229,42 @@ function MindiCatalogContent() {
                       {/* Subtle hover quick add button */}
                       <button
                         onClick={(e) => handleQuickAdd(e, product)}
-                        className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-white text-gray-800 shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black hover:text-white"
-                        title={t.catalog.quickAddSuccess}
+                        className="absolute bottom-4 right-4 bg-white/95 text-gray-900 text-xs font-semibold px-3 py-1.5 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black hover:text-white flex items-center gap-1.5"
                       >
                         {addedSlug === product.slug ? (
-                          <Check className="w-4 h-4 text-emerald-600" />
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>{language === 'id' ? 'Ditambahkan' : 'Added'}</span>
+                          </>
                         ) : (
-                          <Plus className="w-4 h-4" />
+                          <>
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>{language === 'id' ? '+ Keranjang' : '+ Add'}</span>
+                          </>
                         )}
                       </button>
+                    </Link>
+
+                    {/* Product Name & Category */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <Link
+                          href={`/products/${product.slug}`}
+                          className="text-xs font-semibold text-gray-900 tracking-tight hover:underline block"
+                        >
+                          {product.title}
+                        </Link>
+                        <span className="text-[11px] text-gray-400 mt-0.5 block">
+                          {product.category?.name || 'Kriya Tradisi'}
+                        </span>
+                      </div>
+
+                      {/* Price */}
+                      <span className="text-xs font-semibold text-gray-900 font-mono">
+                        {formatCurrency(price)}
+                      </span>
                     </div>
-
-                    {/* Product Name */}
-                    <h3 className="text-xs font-semibold text-gray-900 tracking-tight group-hover:opacity-75 transition-opacity">
-                      {product.title}
-                    </h3>
-
-                    {/* Price */}
-                    <span className="text-xs text-gray-500 mt-1 font-normal">
-                      {formatCurrency(price)}
-                    </span>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
@@ -245,7 +280,7 @@ export default function ProductsPage() {
     <Suspense
       fallback={
         <div className="max-w-7xl mx-auto px-6 py-20 text-center text-xs text-gray-400">
-          Memuat produk...
+          Memuat katalog...
         </div>
       }
     >
