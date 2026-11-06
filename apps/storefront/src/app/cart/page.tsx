@@ -3,65 +3,76 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Trash2, ArrowRight, ShoppingBag, ArrowLeft, Shield } from 'lucide-react';
+import { Trash2, ArrowRight, ShoppingBag, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { useCartStore } from '../../stores/cart-store';
 import { formatCurrency } from '@commerceos/ui';
+import { useLanguageStore } from '../../stores/language-store';
 
 export default function CartPage() {
   const { items, itemCount, subtotal, updateQuantity, removeItem, isLoading } = useCartStore();
+  const { language } = useLanguageStore();
+  const isId = language === 'id';
 
-  const freeShippingThreshold = 150;
-  const shippingCost = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : 15;
+  const freeShippingThreshold = 250000;
+  const shippingCost = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : 25000;
   const grandTotal = subtotal + shippingCost;
 
   if (items.length === 0) {
     return (
       <div className="max-w-4xl mx-auto px-6 py-24 text-center">
-        <div className="w-12 h-12 rounded-xs border border-border flex items-center justify-center mx-auto mb-4 bg-surface">
-          <ShoppingBag className="w-6 h-6 text-ink" />
+        <div className="w-16 h-16 rounded-full border border-gray-100 flex items-center justify-center mx-auto mb-4 bg-[#F5F6F6] text-gray-400">
+          <ShoppingBag className="w-7 h-7" />
         </div>
-        <h1 className="text-2xl font-light text-ink tracking-tight">Your shopping bag is empty</h1>
-        <p className="text-xs text-ink-secondary mt-2 mb-8 max-w-sm mx-auto">
-          Explore our permanent collection of raw textiles, vegetable-tanned leather, and machined workspace objects.
+        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+          {isId ? 'Wah, keranjang belanjamu masih kosong nih' : 'Your shopping bag is empty'}
+        </h1>
+        <p className="text-sm text-gray-500 mt-2 mb-8 max-w-md mx-auto">
+          {isId
+            ? 'Yuk intip aneka oleh-oleh lezat dan kerajinan khas Nusantara langsung dari para pengrajin lokal.'
+            : 'Explore our curated collection of authentic Indonesian gifts and handicrafts.'}
         </p>
         <Link
           href="/products"
-          className="inline-flex items-center gap-2 bg-ink text-white text-xs font-semibold uppercase tracking-wider py-3.5 px-6 rounded-xs hover:bg-ink/90 transition-all"
+          className="inline-flex items-center gap-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-sm font-semibold py-3 px-7 rounded-full transition-all shadow-sm"
         >
-          <span>Explore Catalog</span>
-          <ArrowRight className="w-3.5 h-3.5" />
+          <span>{isId ? 'Mulai Belanja Oleh-oleh' : 'Start Browsing'}</span>
+          <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
-      <div className="border-b border-border pb-6 mb-8 flex items-baseline justify-between">
+    <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10">
+      <div className="border-b border-gray-100 pb-5 mb-8 flex items-baseline justify-between">
         <div>
-          <span className="text-[11px] uppercase tracking-widest text-ink-secondary">Review Selection</span>
-          <h1 className="text-2xl md:text-3xl font-light text-ink tracking-tight mt-1">Shopping Bag</h1>
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#003d29]">
+            {isId ? 'Rincian Pesanan' : 'Review Selection'}
+          </span>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight mt-1">
+            {isId ? 'Keranjang Belanja Kamu' : 'Shopping Cart'}
+          </h1>
         </div>
-        <span className="text-xs font-mono text-ink-secondary">{itemCount} Items</span>
+        <span className="text-sm font-semibold text-gray-500">{itemCount} {isId ? 'Barang' : 'Items'}</span>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         {/* Line Items Table */}
-        <div className="lg:col-span-8 divide-y divide-border border-y border-border">
+        <div className="lg:col-span-8 divide-y divide-gray-100 border-y border-gray-100">
           {items.map((item) => (
             <div key={item.id} className="py-6 flex flex-col sm:flex-row gap-6 items-start">
               {/* Product Thumbnail */}
-              <div className="relative w-24 h-32 bg-muted shrink-0 overflow-hidden border border-border">
+              <div className="relative w-24 h-28 bg-[#F5F6F6] rounded-2xl shrink-0 overflow-hidden border border-gray-100">
                 {item.imageUrl ? (
                   <Image
                     src={item.imageUrl}
                     alt={item.productTitle}
                     fill
-                    className="object-cover object-center"
+                    className="object-contain p-2"
                     sizes="96px"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-ink-tertiary">
+                  <div className="w-full h-full flex items-center justify-center text-gray-400">
                     <ShoppingBag className="w-6 h-6" />
                   </div>
                 )}
@@ -74,41 +85,41 @@ export default function CartPage() {
                     <div>
                       <Link
                         href={`/products/${item.productSlug}`}
-                        className="text-sm font-medium text-ink hover:underline"
+                        className="text-base font-semibold text-gray-900 hover:text-[#003d29] transition-colors"
                       >
                         {item.productTitle}
                       </Link>
-                      <p className="text-xs text-ink-secondary mt-1">{item.variantTitle}</p>
-                      <p className="text-[11px] font-mono text-ink-tertiary mt-0.5">SKU: {item.sku}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">{item.variantTitle}</p>
+                      <p className="text-[11px] font-mono text-gray-400 mt-0.5">SKU: {item.sku}</p>
                     </div>
 
-                    <span className="text-sm font-mono font-medium text-ink">
+                    <span className="text-base font-bold text-gray-900">
                       {formatCurrency(item.lineTotal)}
                     </span>
                   </div>
 
                   {item.availableStock <= 5 && item.availableStock > 0 && (
-                    <p className="text-[11px] text-amber-800 font-medium mt-2">
-                      Low stock: Only {item.availableStock} units remaining
+                    <p className="text-xs text-amber-700 font-medium mt-2">
+                      {isId ? `Stok menipis: Sisa ${item.availableStock} buah lagi!` : `Only ${item.availableStock} left in stock!`}
                     </p>
                   )}
                 </div>
 
-                <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/50">
+                <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
                   {/* Quantity Stepper */}
-                  <div className="flex items-center border border-border rounded-xs bg-white">
+                  <div className="flex items-center border border-gray-200 rounded-full bg-white px-1">
                     <button
                       onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
                       disabled={isLoading || item.quantity <= 1}
-                      className="px-2.5 py-1 text-ink hover:bg-muted disabled:opacity-30 transition-colors"
+                      className="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-black disabled:opacity-30 transition-colors"
                     >
                       -
                     </button>
-                    <span className="px-3 font-mono text-xs text-ink">{item.quantity}</span>
+                    <span className="px-3 font-semibold text-sm text-gray-900 select-none">{item.quantity}</span>
                     <button
                       onClick={() => updateQuantity(item.id, item.quantity + 1)}
                       disabled={isLoading || item.quantity >= item.availableStock}
-                      className="px-2.5 py-1 text-ink hover:bg-muted disabled:opacity-30 transition-colors"
+                      className="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-black disabled:opacity-30 transition-colors"
                     >
                       +
                     </button>
@@ -116,10 +127,10 @@ export default function CartPage() {
 
                   <button
                     onClick={() => removeItem(item.id)}
-                    className="text-xs text-ink-secondary hover:text-rose-600 flex items-center gap-1.5 transition-colors"
+                    className="text-xs text-gray-400 hover:text-rose-600 flex items-center gap-1.5 transition-colors font-medium"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>Remove</span>
+                    <Trash2 className="w-4 h-4" />
+                    <span>{isId ? 'Hapus' : 'Remove'}</span>
                   </button>
                 </div>
               </div>
@@ -128,49 +139,54 @@ export default function CartPage() {
         </div>
 
         {/* Order Summary Box */}
-        <div className="lg:col-span-4 bg-surface border border-border p-6 rounded-xs sticky top-24">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-ink mb-6">
-            Summary
+        <div className="lg:col-span-4 bg-[#F9FAFA] border border-gray-100 p-6 rounded-2xl sticky top-24">
+          <h2 className="text-base font-bold text-gray-900 mb-5">
+            {isId ? 'Ringkasan Belanja' : 'Order Summary'}
           </h2>
 
-          <div className="space-y-3 text-xs divide-y divide-border/60">
-            <div className="flex justify-between text-ink-secondary pt-1">
-              <span>Item Subtotal</span>
-              <span className="font-mono text-ink">{formatCurrency(subtotal)}</span>
+          <div className="space-y-3.5 text-sm divide-y divide-gray-100">
+            <div className="flex justify-between text-gray-600 pt-1">
+              <span>{isId ? 'Subtotal Produk' : 'Item Subtotal'}</span>
+              <span className="font-semibold text-gray-900">{formatCurrency(subtotal)}</span>
             </div>
 
-            <div className="flex justify-between text-ink-secondary pt-3">
-              <span>Delivery</span>
-              <span className="font-mono text-ink">
-                {shippingCost === 0 ? 'Complimentary' : formatCurrency(shippingCost)}
+            <div className="flex justify-between text-gray-600 pt-3.5">
+              <span>{isId ? 'Estimasi Ongkir' : 'Shipping'}</span>
+              <span className="font-semibold text-gray-900">
+                {shippingCost === 0 ? (
+                  <span className="text-emerald-700 font-bold">{isId ? 'Gratis Ongkir' : 'Free'}</span>
+                ) : (
+                  formatCurrency(shippingCost)
+                )}
               </span>
             </div>
 
-            <div className="flex justify-between text-ink font-medium text-sm pt-4">
-              <span>Grand Total</span>
-              <span className="font-mono">{formatCurrency(grandTotal)}</span>
+            <div className="flex justify-between text-gray-900 font-bold text-lg pt-4">
+              <span>{isId ? 'Total Tagihan' : 'Grand Total'}</span>
+              <span className="text-[#003d29]">{formatCurrency(grandTotal)}</span>
             </div>
           </div>
 
-          <p className="text-[11px] text-ink-tertiary mt-4 mb-6 leading-relaxed">
-            Free shipping applied on orders over $150. Tax and customs duties included.
-          </p>
+          <div className="mt-4 p-3 bg-white border border-gray-100 rounded-xl flex items-center gap-2.5 text-xs text-gray-600">
+            <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
+            <span>{isId ? 'Bisa bayar di tempat (COD) & transfer bank aman.' : 'COD & Secure Bank Transfer available.'}</span>
+          </div>
 
           <Link
             href="/checkout"
-            className="w-full flex items-center justify-center gap-2 bg-ink text-white text-xs font-semibold uppercase tracking-wider py-3.5 px-4 rounded-xs hover:bg-ink/90 transition-all shadow-xs"
+            className="w-full mt-6 flex items-center justify-center gap-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-sm font-semibold py-3.5 px-4 rounded-full transition-all shadow-sm"
           >
-            <span>Proceed to Checkout</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <span>{isId ? 'Lanjut ke Pembayaran' : 'Proceed to Checkout'}</span>
+            <ArrowRight className="w-4 h-4" />
           </Link>
 
           <div className="mt-4 text-center">
             <Link
               href="/products"
-              className="inline-flex items-center gap-1.5 text-xs text-ink-secondary hover:text-ink transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-black font-medium transition-colors"
             >
-              <ArrowLeft className="w-3 h-3" />
-              <span>Continue Shopping</span>
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>{isId ? 'Mau tambah oleh-oleh lain? Lanjut Belanja' : 'Continue Shopping'}</span>
             </Link>
           </div>
         </div>

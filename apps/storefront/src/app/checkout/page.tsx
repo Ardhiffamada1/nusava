@@ -8,7 +8,16 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useQuery } from '@tanstack/react-query';
-import { Check, ShieldCheck, Truck, CreditCard, Banknote, Building, AlertCircle, ArrowLeft } from 'lucide-react';
+import {
+  Check,
+  ShieldCheck,
+  Truck,
+  CreditCard,
+  Banknote,
+  AlertCircle,
+  ArrowLeft,
+  ShoppingBag,
+} from 'lucide-react';
 import { apiRequest } from '../../lib/api';
 import { useCartStore } from '../../stores/cart-store';
 import { useAuthStore } from '../../stores/auth-store';
@@ -16,14 +25,14 @@ import { formatCurrency } from '@commerceos/ui';
 import { PaymentMethod } from '@commerceos/contracts';
 
 const CheckoutFormSchema = z.object({
-  shippingAddressId: z.string().optional(),
-  fullName: z.string().min(2, 'Full name is required'),
-  phone: z.string().min(6, 'Valid phone number is required'),
-  streetAddress: z.string().min(3, 'Street address is required'),
-  city: z.string().min(2, 'City is required'),
-  state: z.string().min(2, 'State or province is required'),
-  postalCode: z.string().min(2, 'Postal code is required'),
-  country: z.string().min(2, 'Country is required').default('US'),
+  email: z.string().email('Format email tidak valid'),
+  fullName: z.string().min(2, 'Nama lengkap wajib diisi'),
+  phone: z.string().min(6, 'Nomor HP/WhatsApp aktif wajib diisi'),
+  streetAddress: z.string().min(3, 'Alamat lengkap pengiriman wajib diisi'),
+  city: z.string().min(2, 'Kota atau Kabupaten wajib diisi'),
+  state: z.string().min(2, 'Provinsi wajib diisi'),
+  postalCode: z.string().min(2, 'Kode pos wajib diisi'),
+  country: z.string().default('ID'),
   paymentMethod: z.nativeEnum(PaymentMethod),
   notes: z.string().max(500).optional(),
 });
@@ -33,10 +42,12 @@ type CheckoutFormData = z.infer<typeof CheckoutFormSchema>;
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, subtotal, fetchCart } = useCartStore();
-  const { user, isLoading: isAuthLoading } = useAuthStore();
+  const { user } = useAuthStore();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [couponCode, setCouponCode] = useState('');
+  const [couponApplied, setCouponApplied] = useState(false);
 
   const { data: addresses } = useQuery({
     queryKey: ['user-addresses'],
@@ -55,33 +66,38 @@ export default function CheckoutPage() {
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(CheckoutFormSchema),
     defaultValues: {
-      country: 'US',
+      email: user?.email || '',
+      fullName: user ? `${user.firstName} ${user.lastName}` : '',
+      country: 'ID',
       paymentMethod: PaymentMethod.CASH_ON_DELIVERY,
     },
   });
 
   const selectedPaymentMethod = watch('paymentMethod');
-  const selectedAddressId = watch('shippingAddressId');
 
   useEffect(() => {
+    if (user) {
+      setValue('email', user.email);
+      setValue('fullName', `${user.firstName} ${user.lastName}`);
+    }
     if (defaultAddress) {
-      setValue('shippingAddressId', defaultAddress.id);
       setValue('fullName', defaultAddress.fullName);
       setValue('phone', defaultAddress.phone);
       setValue('streetAddress', defaultAddress.streetAddress);
       setValue('city', defaultAddress.city);
       setValue('state', defaultAddress.state);
       setValue('postalCode', defaultAddress.postalCode);
-      setValue('country', defaultAddress.country);
+      setValue('country', defaultAddress.country || 'ID');
     }
-  }, [defaultAddress, setValue]);
+  }, [user, defaultAddress, setValue]);
 
   const shippingCost = subtotal >= 150 ? 0 : 15;
-  const grandTotal = subtotal + shippingCost;
+  const discount = couponApplied ? 10 : 0;
+  const grandTotal = Math.max(0, subtotal + shippingCost - discount);
 
   const onSubmit = async (data: CheckoutFormData) => {
     if (items.length === 0) {
-      setErrorMessage('Your shopping cart is empty.');
+      setErrorMessage('Keranjang belanja kamu masih kosong.');
       return;
     }
 
@@ -89,369 +105,446 @@ export default function CheckoutPage() {
       setIsSubmitting(true);
       setErrorMessage(null);
 
-      const payload: any = {
-        paymentMethod: data.paymentMethod,
-        notes: data.notes,
-      };
+      let order: any;
 
-      if (data.shippingAddressId) {
-        payload.shippingAddressId = data.shippingAddressId;
-      } else {
-        payload.newAddress = {
+      if (!user) {
+        // GUEST CHECKOUT (Tanpa perlu login / register)
+        const guestPayload = {
+          email: data.email,
           fullName: data.fullName,
           phone: data.phone,
           streetAddress: data.streetAddress,
           city: data.city,
           state: data.state,
           postalCode: data.postalCode,
-          country: data.country,
+          country: data.country || 'ID',
+          paymentMethod: data.paymentMethod,
+          notes: data.notes || '',
+          items: items.map((it) => ({
+            variantId: it.variantId,
+            quantity: it.quantity,
+          })),
         };
+
+        order = await apiRequest<any>('/checkout/guest', {
+          method: 'POST',
+          body: JSON.stringify(guestPayload),
+        });
+      } else {
+        // Logged in user checkout
+        const payload: any = {
+          paymentMethod: data.paymentMethod,
+          notes: data.notes,
+          newAddress: {
+            fullName: data.fullName,
+            phone: data.phone,
+            streetAddress: data.streetAddress,
+            city: data.city,
+            state: data.state,
+            postalCode: data.postalCode,
+            country: data.country || 'ID',
+          },
+        };
+
+        order = await apiRequest<any>('/checkout', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        });
       }
 
-      const order = await apiRequest<any>('/checkout', {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      });
-
-      // Refresh cart store
       await fetchCart();
-
-      // Redirect to confirmation view
       router.push(`/checkout/success/${order.orderNumber}`);
     } catch (err: any) {
-      setErrorMessage(err.message || 'Checkout failed. Please check stock and try again.');
+      setErrorMessage(err.message || 'Gagal memproses pesanan. Silakan periksa kembali formulir.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (!isAuthLoading && !user) {
+  if (items.length === 0) {
     return (
-      <div className="max-w-md mx-auto px-6 py-20 text-center">
-        <ShieldCheck className="w-8 h-8 text-ink mx-auto mb-4" />
-        <h1 className="text-xl font-light text-ink">Authentication Required</h1>
-        <p className="text-xs text-ink-secondary mt-2 mb-6">
-          To ensure transactional order history and verified shipping dispatch, please sign in or create an account.
-        </p>
-        <div className="flex gap-3 justify-center">
-          <Link
-            href="/login?redirect=/checkout"
-            className="text-xs font-semibold uppercase tracking-wider bg-ink text-white px-5 py-2.5 rounded-xs hover:bg-ink/90 transition-colors"
-          >
-            Sign In
-          </Link>
-          <Link
-            href="/register?redirect=/checkout"
-            className="text-xs font-semibold uppercase tracking-wider border border-border px-5 py-2.5 rounded-xs hover:bg-muted transition-colors"
-          >
-            Create Account
-          </Link>
+      <div className="max-w-md mx-auto px-6 py-24 text-center font-sans">
+        <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4 text-gray-500">
+          <ShoppingBag className="w-6 h-6" />
         </div>
+        <h1 className="text-xl font-bold text-gray-900">Keranjang Masih Kosong</h1>
+        <p className="text-xs text-gray-500 mt-2 mb-6">
+          Kamu belum memilih oleh-oleh atau produk untuk dibeli.
+        </p>
+        <Link
+          href="/products"
+          className="inline-flex px-6 py-3 bg-[#003d29] text-white text-xs font-bold rounded-full hover:bg-[#002b1d] transition-colors"
+        >
+          Lihat Katalog Oleh-oleh
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
-      <div className="border-b border-border pb-6 mb-8 flex items-center justify-between">
+    <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10 font-sans">
+      {/* Top Header */}
+      <div className="flex items-center justify-between pb-6 mb-8 border-b border-gray-100">
         <div>
-          <span className="text-[11px] uppercase tracking-widest text-ink-secondary">Transaction Gateway</span>
-          <h1 className="text-2xl md:text-3xl font-light text-ink tracking-tight mt-1">Checkout</h1>
+          <span className="text-[11px] font-mono uppercase tracking-wider text-emerald-800 font-bold block mb-0.5">
+            PROSES PEMBAYARAN CEPAT
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+            Checkout Pesanan
+          </h1>
         </div>
-        <Link href="/cart" className="text-xs text-ink-secondary hover:text-ink flex items-center gap-1 transition-colors">
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Return to Bag</span>
+
+        <Link
+          href="/cart"
+          className="text-xs font-semibold text-gray-600 hover:text-black flex items-center gap-1.5 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Kembali ke Keranjang</span>
         </Link>
       </div>
 
       {errorMessage && (
-        <div className="mb-8 p-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xs flex items-center gap-2">
+        <div className="mb-6 p-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-2xl flex items-center gap-3">
           <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
           <span>{errorMessage}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        {/* Left Form: Address & Payment */}
-        <div className="lg:col-span-7 space-y-10">
-          {/* Section 1: Shipping Address */}
-          <div>
-            <div className="flex items-center justify-between mb-4 pb-2 border-b border-border">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-ink">
-                1. Shipping Address
+      {/* Main Grid: Left Review & Delivery + Right Order Summary (Matches uploaded Shopcart reference) */}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          {/* Left Column (Review Item and Shipping + Delivery Information) */}
+          <div className="lg:col-span-7 space-y-8">
+            {/* 1. Review Item and Shipping */}
+            <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-2xs space-y-4">
+              <h2 className="text-base font-bold text-gray-900">
+                1. Rincian Produk & Pengiriman
               </h2>
-              {addresses && addresses.length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setValue('shippingAddressId', undefined)}
-                  className="text-[11px] text-ink-secondary hover:text-ink underline"
-                >
-                  Enter new address
-                </button>
-              )}
+
+              <div className="divide-y divide-gray-100">
+                {items.map((item) => (
+                  <div key={item.id} className="py-3 flex items-center justify-between gap-4 first:pt-0 last:pb-0">
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-14 h-14 bg-[#F5F6F6] rounded-xl overflow-hidden shrink-0 border border-gray-100">
+                        {item.imageUrl ? (
+                          <Image
+                            src={item.imageUrl}
+                            alt={item.productTitle}
+                            fill
+                            className="object-contain p-1.5"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-400">
+                            <ShoppingBag className="w-4 h-4" />
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <span className="text-xs font-bold text-gray-900 block line-clamp-1">
+                          {item.productTitle}
+                        </span>
+                        <span className="text-[11px] text-gray-500 font-mono">
+                          {item.variantTitle} • Qty: {item.quantity}
+                        </span>
+                      </div>
+                    </div>
+
+                    <span className="text-xs font-bold font-mono text-gray-900">
+                      {formatCurrency(item.lineTotal)}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Existing Saved Addresses */}
-            {addresses && addresses.length > 0 && (
-              <div className="space-y-2 mb-6">
-                {addresses.map((addr) => {
-                  const isChecked = selectedAddressId === addr.id;
-                  return (
-                    <label
-                      key={addr.id}
-                      className={`flex items-start gap-3 p-4 border rounded-xs cursor-pointer transition-colors ${
-                        isChecked ? 'border-ink bg-surface' : 'border-border hover:border-ink/40'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="addressRadio"
-                        checked={isChecked}
-                        onChange={() => {
-                          setValue('shippingAddressId', addr.id);
-                          setValue('fullName', addr.fullName);
-                          setValue('phone', addr.phone);
-                          setValue('streetAddress', addr.streetAddress);
-                          setValue('city', addr.city);
-                          setValue('state', addr.state);
-                          setValue('postalCode', addr.postalCode);
-                          setValue('country', addr.country);
-                        }}
-                        className="mt-0.5 text-ink"
-                      />
-                      <div className="text-xs">
-                        <p className="font-medium text-ink">{addr.fullName} <span className="text-ink-tertiary">({addr.phone})</span></p>
-                        <p className="text-ink-secondary mt-0.5">{addr.streetAddress}, {addr.city}, {addr.state} {addr.postalCode}, {addr.country}</p>
-                      </div>
-                    </label>
-                  );
-                })}
+            {/* 2. Delivery Information (Guest-friendly: Direct Form) */}
+            <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-2xs space-y-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-base font-bold text-gray-900">
+                    2. Informasi Penerima & Alamat Pengiriman
+                  </h2>
+                  {!user && (
+                    <span className="text-[11px] text-emerald-700 font-medium block mt-0.5">
+                      ✓ Belanja langsung tanpa perlu mendaftar atau login
+                    </span>
+                  )}
+                </div>
               </div>
-            )}
 
-            {/* Address Input Fields */}
-            {(!addresses || addresses.length === 0 || !selectedAddressId) && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="sm:col-span-2">
-                  <label className="block text-[11px] uppercase tracking-wider text-ink font-medium mb-1.5">Full Name</label>
+                {/* Full Name */}
+                <div>
+                  <label className="text-xs font-semibold text-gray-700 block mb-1">
+                    Nama Lengkap Penerima
+                  </label>
                   <input
                     {...register('fullName')}
-                    className="w-full text-xs p-2.5 border border-border bg-white rounded-xs focus:outline-hidden focus:border-ink"
-                    placeholder="e.g. Elena Rostova"
+                    placeholder="Contoh: Budi Santoso"
+                    className="w-full text-xs px-3.5 py-2.5 bg-[#F9FAFA] border border-gray-200 focus:bg-white focus:border-[#003d29] rounded-xl outline-none transition-all"
                   />
-                  {errors.fullName && <p className="text-[10px] text-rose-600 mt-1">{errors.fullName.message}</p>}
+                  {errors.fullName && (
+                    <span className="text-[10px] text-rose-500 mt-0.5 block">
+                      {errors.fullName.message}
+                    </span>
+                  )}
                 </div>
 
+                {/* Email */}
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-ink font-medium mb-1.5">Phone Number</label>
+                  <label className="text-xs font-semibold text-gray-700 block mb-1">
+                    Alamat Email (Untuk Tanda Terima)
+                  </label>
                   <input
-                    {...register('phone')}
-                    className="w-full text-xs p-2.5 border border-border bg-white rounded-xs focus:outline-hidden focus:border-ink"
-                    placeholder="+1 555-019-2831"
+                    type="email"
+                    {...register('email')}
+                    placeholder="budi@example.com"
+                    className="w-full text-xs px-3.5 py-2.5 bg-[#F9FAFA] border border-gray-200 focus:bg-white focus:border-[#003d29] rounded-xl outline-none transition-all"
                   />
-                  {errors.phone && <p className="text-[10px] text-rose-600 mt-1">{errors.phone.message}</p>}
+                  {errors.email && (
+                    <span className="text-[10px] text-rose-500 mt-0.5 block">
+                      {errors.email.message}
+                    </span>
+                  )}
                 </div>
+              </div>
 
+              {/* Phone */}
+              <div>
+                <label className="text-xs font-semibold text-gray-700 block mb-1">
+                  Nomor WhatsApp / HP Aktif
+                </label>
+                <input
+                  {...register('phone')}
+                  placeholder="081234567890"
+                  className="w-full text-xs px-3.5 py-2.5 bg-[#F9FAFA] border border-gray-200 focus:bg-white focus:border-[#003d29] rounded-xl outline-none transition-all"
+                />
+                {errors.phone && (
+                  <span className="text-[10px] text-rose-500 mt-0.5 block">
+                    {errors.phone.message}
+                  </span>
+                )}
+              </div>
+
+              {/* Street Address */}
+              <div>
+                <label className="text-xs font-semibold text-gray-700 block mb-1">
+                  Alamat Lengkap Pengiriman (Jalan, No. Rumah, RT/RW, Kelurahan/Kecamatan)
+                </label>
+                <textarea
+                  {...register('streetAddress')}
+                  rows={2}
+                  placeholder="Jl. Malioboro No. 45, RT 02/RW 03, Sosromenduran"
+                  className="w-full text-xs px-3.5 py-2.5 bg-[#F9FAFA] border border-gray-200 focus:bg-white focus:border-[#003d29] rounded-xl outline-none transition-all"
+                />
+                {errors.streetAddress && (
+                  <span className="text-[10px] text-rose-500 mt-0.5 block">
+                    {errors.streetAddress.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {/* City */}
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-ink font-medium mb-1.5">Country</label>
-                  <select
-                    {...register('country')}
-                    className="w-full text-xs p-2.5 border border-border bg-white rounded-xs focus:outline-hidden focus:border-ink"
-                  >
-                    <option value="US">United States (US)</option>
-                    <option value="CA">Canada (CA)</option>
-                    <option value="GB">United Kingdom (GB)</option>
-                    <option value="JP">Japan (JP)</option>
-                  </select>
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="block text-[11px] uppercase tracking-wider text-ink font-medium mb-1.5">Street Address</label>
-                  <input
-                    {...register('streetAddress')}
-                    className="w-full text-xs p-2.5 border border-border bg-white rounded-xs focus:outline-hidden focus:border-ink"
-                    placeholder="742 Evergreen Terrace"
-                  />
-                  {errors.streetAddress && <p className="text-[10px] text-rose-600 mt-1">{errors.streetAddress.message}</p>}
-                </div>
-
-                <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-ink font-medium mb-1.5">City</label>
+                  <label className="text-xs font-semibold text-gray-700 block mb-1">
+                    Kota / Kabupaten
+                  </label>
                   <input
                     {...register('city')}
-                    className="w-full text-xs p-2.5 border border-border bg-white rounded-xs focus:outline-hidden focus:border-ink"
-                    placeholder="Portland"
+                    placeholder="Yogyakarta"
+                    className="w-full text-xs px-3.5 py-2.5 bg-[#F9FAFA] border border-gray-200 focus:bg-white focus:border-[#003d29] rounded-xl outline-none transition-all"
                   />
-                  {errors.city && <p className="text-[10px] text-rose-600 mt-1">{errors.city.message}</p>}
+                  {errors.city && (
+                    <span className="text-[10px] text-rose-500 mt-0.5 block">
+                      {errors.city.message}
+                    </span>
+                  )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[11px] uppercase tracking-wider text-ink font-medium mb-1.5">State</label>
-                    <input
-                      {...register('state')}
-                      className="w-full text-xs p-2.5 border border-border bg-white rounded-xs focus:outline-hidden focus:border-ink"
-                      placeholder="OR"
-                    />
-                    {errors.state && <p className="text-[10px] text-rose-600 mt-1">{errors.state.message}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-[11px] uppercase tracking-wider text-ink font-medium mb-1.5">Postal Code</label>
-                    <input
-                      {...register('postalCode')}
-                      className="w-full text-xs p-2.5 border border-border bg-white rounded-xs focus:outline-hidden focus:border-ink"
-                      placeholder="97201"
-                    />
-                    {errors.postalCode && <p className="text-[10px] text-rose-600 mt-1">{errors.postalCode.message}</p>}
-                  </div>
+                {/* State / Province */}
+                <div>
+                  <label className="text-xs font-semibold text-gray-700 block mb-1">Provinsi</label>
+                  <input
+                    {...register('state')}
+                    placeholder="DI Yogyakarta"
+                    className="w-full text-xs px-3.5 py-2.5 bg-[#F9FAFA] border border-gray-200 focus:bg-white focus:border-[#003d29] rounded-xl outline-none transition-all"
+                  />
+                  {errors.state && (
+                    <span className="text-[10px] text-rose-500 mt-0.5 block">
+                      {errors.state.message}
+                    </span>
+                  )}
+                </div>
+
+                {/* Postal Code */}
+                <div>
+                  <label className="text-xs font-semibold text-gray-700 block mb-1">Kode Pos</label>
+                  <input
+                    {...register('postalCode')}
+                    placeholder="55271"
+                    className="w-full text-xs px-3.5 py-2.5 bg-[#F9FAFA] border border-gray-200 focus:bg-white focus:border-[#003d29] rounded-xl outline-none transition-all font-mono"
+                  />
+                  {errors.postalCode && (
+                    <span className="text-[10px] text-rose-500 mt-0.5 block">
+                      {errors.postalCode.message}
+                    </span>
+                  )}
                 </div>
               </div>
-            )}
+
+              {/* Delivery Notes */}
+              <div>
+                <label className="text-xs font-semibold text-gray-700 block mb-1">
+                  Catatan Untuk Kurir (Opsional)
+                </label>
+                <input
+                  {...register('notes')}
+                  placeholder="Titipkan ke satpam jika rumah kosong, pagar hitam..."
+                  className="w-full text-xs px-3.5 py-2.5 bg-[#F9FAFA] border border-gray-200 focus:bg-white focus:border-[#003d29] rounded-xl outline-none transition-all"
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Section 2: Payment Method */}
-          <div>
-            <div className="flex items-center justify-between mb-4 pb-2 border-b border-border">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-ink">
-                2. Payment Method (Demo)
+          {/* Right Column: Order Summary & Payment Details (From uploaded Shopcart reference) */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-2xs space-y-6 sticky top-28">
+              <h2 className="text-base font-bold text-gray-900 border-b border-gray-100 pb-3">
+                Ringkasan Pesanan
               </h2>
-              <span className="text-[11px] text-ink-tertiary">Payment gateway out of scope</span>
-            </div>
 
-            <div className="space-y-3">
-              {/* Cash on Delivery */}
-              <label
-                className={`flex items-start gap-3 p-4 border rounded-xs cursor-pointer transition-colors ${
-                  selectedPaymentMethod === PaymentMethod.CASH_ON_DELIVERY
-                    ? 'border-ink bg-surface'
-                    : 'border-border hover:border-ink/40'
-                }`}
-              >
+              {/* Coupon / Voucher Code input */}
+              <div className="flex gap-2">
                 <input
-                  type="radio"
-                  value={PaymentMethod.CASH_ON_DELIVERY}
-                  {...register('paymentMethod')}
-                  className="mt-0.5 text-ink"
+                  type="text"
+                  placeholder="Kode Kupon Promo"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value)}
+                  className="flex-1 text-xs px-3.5 py-2.5 bg-[#F9FAFA] border border-gray-200 rounded-xl outline-none focus:border-[#003d29] uppercase font-mono"
                 />
-                <div className="text-xs">
-                  <div className="flex items-center gap-2">
-                    <Banknote className="w-4 h-4 text-ink" />
-                    <span className="font-semibold text-ink">Cash on Delivery (COD)</span>
-                  </div>
-                  <p className="text-ink-secondary mt-1">
-                    Pay in cash upon physical receipt and verification at your shipping address. Order is placed with pending settlement.
-                  </p>
-                </div>
-              </label>
-
-              {/* Manual Bank Transfer */}
-              <label
-                className={`flex items-start gap-3 p-4 border rounded-xs cursor-pointer transition-colors ${
-                  selectedPaymentMethod === PaymentMethod.MANUAL_BANK_TRANSFER
-                    ? 'border-ink bg-surface'
-                    : 'border-border hover:border-ink/40'
-                }`}
-              >
-                <input
-                  type="radio"
-                  value={PaymentMethod.MANUAL_BANK_TRANSFER}
-                  {...register('paymentMethod')}
-                  className="mt-0.5 text-ink"
-                />
-                <div className="text-xs">
-                  <div className="flex items-center gap-2">
-                    <Building className="w-4 h-4 text-ink" />
-                    <span className="font-semibold text-ink">Manual Bank Transfer (Demo)</span>
-                  </div>
-                  <p className="text-ink-secondary mt-1">
-                    Direct wire transfer to CommerceOS treasury. Orders are marked PENDING and manually confirmed by admin in the console.
-                  </p>
-                  {selectedPaymentMethod === PaymentMethod.MANUAL_BANK_TRANSFER && (
-                    <div className="mt-3 p-3 bg-white border border-border text-[11px] space-y-1 font-mono text-ink-secondary">
-                      <p>Bank: CommerceOS Treasury Ltd</p>
-                      <p>Account: 8849-0192-3810</p>
-                      <p>Routing / SWIFT: CMOSUS33</p>
-                    </div>
-                  )}
-                </div>
-              </label>
-            </div>
-          </div>
-
-          {/* Section 3: Order Instructions */}
-          <div>
-            <label className="block text-[11px] uppercase tracking-wider text-ink font-medium mb-1.5">
-              Delivery Notes (Optional)
-            </label>
-            <textarea
-              {...register('notes')}
-              rows={2}
-              className="w-full text-xs p-3 border border-border bg-white rounded-xs focus:outline-hidden focus:border-ink"
-              placeholder="e.g. Leave package by side gate, ring bell."
-            />
-          </div>
-        </div>
-
-        {/* Right Summary Sidebar */}
-        <div className="lg:col-span-5 bg-surface border border-border p-6 rounded-xs sticky top-24">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-ink mb-6">
-            Order Review ({items.length} Items)
-          </h2>
-
-          <div className="divide-y divide-border/60 max-h-72 overflow-y-auto mb-6">
-            {items.map((it) => (
-              <div key={it.id} className="py-3 flex gap-3 items-center first:pt-0 last:pb-0">
-                <div className="relative w-12 h-14 bg-muted shrink-0 overflow-hidden border border-border/50">
-                  {it.imageUrl && (
-                    <Image
-                      src={it.imageUrl}
-                      alt={it.productTitle}
-                      fill
-                      className="object-cover object-center"
-                      sizes="48px"
-                    />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0 text-xs">
-                  <p className="font-medium text-ink truncate">{it.productTitle}</p>
-                  <p className="text-[11px] text-ink-secondary">{it.variantTitle} × {it.quantity}</p>
-                </div>
-                <span className="text-xs font-mono text-ink">{formatCurrency(it.lineTotal)}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (couponCode.trim()) {
+                      setCouponApplied(true);
+                      alert('Kupon diskon Rp 10.00 berhasil dipasang!');
+                    }
+                  }}
+                  className="px-4 py-2.5 bg-[#003d29] hover:bg-[#002b1d] text-white text-xs font-bold rounded-xl transition-colors"
+                >
+                  Terapkan
+                </button>
               </div>
-            ))}
+
+              {/* Payment Details (Methods from reference) */}
+              <div className="space-y-3">
+                <label className="text-xs font-bold text-gray-900 block">
+                  Metode Pembayaran
+                </label>
+
+                {/* Option 1: Cash on Delivery */}
+                <label
+                  className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${
+                    selectedPaymentMethod === PaymentMethod.CASH_ON_DELIVERY
+                      ? 'border-[#003d29] bg-emerald-50/40 text-gray-900'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    value={PaymentMethod.CASH_ON_DELIVERY}
+                    {...register('paymentMethod')}
+                    className="mt-0.5 text-[#003d29] focus:ring-[#003d29]"
+                  />
+                  <div>
+                    <span className="text-xs font-bold text-gray-900 block">
+                      Bayar di Tempat (COD)
+                    </span>
+                    <span className="text-[11px] text-gray-500 block mt-0.5">
+                      Bayar tunai aman ke kurir saat paket oleh-oleh tiba di rumahmu.
+                    </span>
+                  </div>
+                </label>
+
+                {/* Option 2: Manual Bank Transfer */}
+                <label
+                  className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${
+                    selectedPaymentMethod === PaymentMethod.MANUAL_BANK_TRANSFER
+                      ? 'border-[#003d29] bg-emerald-50/40 text-gray-900'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    value={PaymentMethod.MANUAL_BANK_TRANSFER}
+                    {...register('paymentMethod')}
+                    className="mt-0.5 text-[#003d29] focus:ring-[#003d29]"
+                  />
+                  <div>
+                    <span className="text-xs font-bold text-gray-900 block">
+                      Transfer Bank Manual (Demo BNI / BCA)
+                    </span>
+                    <span className="text-[11px] text-gray-500 block mt-0.5">
+                      Kirim bukti transfer untuk verifikasi pembayaran manual.
+                    </span>
+                  </div>
+                </label>
+              </div>
+
+              {/* Totals Breakdown */}
+              <div className="space-y-2.5 pt-4 border-t border-gray-100 text-xs">
+                <div className="flex justify-between text-gray-600">
+                  <span>Subtotal Belanja</span>
+                  <span className="font-mono font-semibold text-gray-900">
+                    {formatCurrency(subtotal)}
+                  </span>
+                </div>
+
+                <div className="flex justify-between text-gray-600">
+                  <span>Biaya Pengiriman</span>
+                  <span className="font-mono font-semibold text-gray-900">
+                    {shippingCost === 0 ? 'GRATIS' : formatCurrency(shippingCost)}
+                  </span>
+                </div>
+
+                {couponApplied && (
+                  <div className="flex justify-between text-emerald-700 font-semibold">
+                    <span>Potongan Kupon</span>
+                    <span className="font-mono">-{formatCurrency(discount)}</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between items-baseline pt-3 border-t border-gray-200 text-sm font-extrabold text-gray-900">
+                  <span>Total Bayar</span>
+                  <span className="text-lg font-mono text-[#003d29]">
+                    {formatCurrency(grandTotal)}
+                  </span>
+                </div>
+              </div>
+
+              {/* Submit CTA Button (Big Dark Green #003d29) */}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-4 px-6 bg-[#003d29] hover:bg-[#002b1d] text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-md transition-all flex items-center justify-center gap-2 hover:scale-102 disabled:opacity-50"
+              >
+                {isSubmitting ? (
+                  <span>Memproses Pesanan...</span>
+                ) : (
+                  <>
+                    <span>Bayar Sekarang (Pesan Sekarang)</span>
+                  </>
+                )}
+              </button>
+
+              <div className="text-center pt-2">
+                <span className="text-[10px] text-gray-400">
+                  🔒 Transaksi aman & terlindungi garansi keaslian pengrajin
+                </span>
+              </div>
+            </div>
           </div>
-
-          <div className="space-y-3 text-xs divide-y divide-border/60 border-t border-border pt-4">
-            <div className="flex justify-between text-ink-secondary pt-1">
-              <span>Subtotal</span>
-              <span className="font-mono text-ink">{formatCurrency(subtotal)}</span>
-            </div>
-
-            <div className="flex justify-between text-ink-secondary pt-3">
-              <span>Shipping</span>
-              <span className="font-mono text-ink">
-                {shippingCost === 0 ? 'Free' : formatCurrency(shippingCost)}
-              </span>
-            </div>
-
-            <div className="flex justify-between text-ink font-medium text-sm pt-4">
-              <span>Grand Total</span>
-              <span className="font-mono">{formatCurrency(grandTotal)}</span>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting || items.length === 0}
-            className="w-full mt-6 bg-ink text-white text-xs font-semibold uppercase tracking-wider py-3.5 px-4 rounded-xs hover:bg-ink/90 disabled:opacity-30 transition-all flex items-center justify-center gap-2 shadow-xs"
-          >
-            <ShieldCheck className="w-4 h-4" />
-            <span>{isSubmitting ? 'Processing Transaction...' : `Authorize & Place Order`}</span>
-          </button>
-
-          <p className="text-[11px] text-ink-tertiary text-center mt-3 leading-relaxed">
-            Payment will be marked PENDING until physical delivery or demo admin confirmation.
-          </p>
         </div>
       </form>
     </div>

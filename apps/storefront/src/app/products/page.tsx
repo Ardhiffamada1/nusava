@@ -5,25 +5,28 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
-import { ChevronDown, Plus, Check, ArrowRight } from 'lucide-react';
+import {
+  ChevronDown,
+  Heart,
+  Plus,
+  Check,
+  SlidersHorizontal,
+} from 'lucide-react';
 import { apiRequest } from '../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 import { useCartStore } from '../../stores/cart-store';
-import { useLanguageStore, translations } from '../../stores/language-store';
 
-function MindiCatalogContent() {
+function ShopcartCatalogContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { language } = useLanguageStore();
-  const t = translations[language];
 
   const categorySlug = searchParams.get('category') || '';
   const search = searchParams.get('q') || '';
   const sortBy = searchParams.get('sortBy') || 'newest';
   const page = parseInt(searchParams.get('page') || '1', 10);
 
-  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const [addedSlug, setAddedSlug] = useState<string | null>(null);
+  const [wishlist, setWishlist] = useState<Record<string, boolean>>({});
 
   const { data: categories } = useQuery({
     queryKey: ['categories'],
@@ -40,7 +43,7 @@ function MindiCatalogContent() {
       if (search) params.set('search', search);
       if (sortBy) params.set('sortBy', sortBy);
       params.set('page', page.toString());
-      params.set('limit', '18');
+      params.set('limit', '16');
       return apiRequest<{ items: any[]; meta: { total: number; page: number; totalPages: number } }>(
         `/products?${params.toString()}`,
       );
@@ -72,205 +75,186 @@ function MindiCatalogContent() {
     openCart();
   };
 
+  const toggleWishlist = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setWishlist((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12 md:py-16">
-      {/* Top Header of Catalog */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-8 border-b border-[#F0F0EE] mb-12">
+    <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10 font-sans space-y-8">
+      {/* Top Banner / Breadcrumb */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-gray-100">
         <div>
-          <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-gray-400 block mb-1">
-            {language === 'id' ? 'KURASI OLEH-OLEH & KRIYA' : 'ARCHIPELAGO CURATION'}
+          <span className="text-[11px] font-mono uppercase tracking-wider text-emerald-800 font-bold block mb-1">
+            KATALOG LENGKAP
           </span>
-          <h1 className="text-3xl font-light text-gray-900 tracking-tight">
-            {selectedCategory ? selectedCategory.name : t.catalog.title}
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+            {selectedCategory ? selectedCategory.name : 'Semua Pilihan Oleh-oleh'}
           </h1>
           <p className="text-xs text-gray-500 mt-1 max-w-lg">
-            {selectedCategory?.description || t.catalog.subtitle}
+            {selectedCategory?.description ||
+              'Koleksi lengkap kudapan tradisional, batik, dan kerajinan khas dari pengrajin daerah.'}
           </p>
         </div>
 
-        {/* Minimal Sort Dropdown (MINDI reference style) */}
-        <div className="flex items-center gap-4">
-          <span className="text-xs font-mono text-gray-400">
-            {productsData?.meta?.total ?? 0} {language === 'id' ? 'Karya' : 'Objects'}
-          </span>
-
-          <div className="relative">
-            <button
-              onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
-              type="button"
-              className="flex items-center gap-3 px-3.5 py-1.5 border border-gray-200 hover:border-gray-300 text-xs text-gray-700 bg-white rounded-lg transition-colors shadow-2xs"
-            >
-              <span className="font-medium">
-                {sortBy === 'newest'
-                  ? t.catalog.sortOptions.newest
-                  : sortBy === 'price_asc'
-                  ? t.catalog.sortOptions.price_asc
-                  : sortBy === 'price_desc'
-                  ? t.catalog.sortOptions.price_desc
-                  : t.catalog.sortOptions.popular}
-              </span>
-              <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
-            </button>
-
-            {sortDropdownOpen && (
-              <div className="absolute right-0 mt-1 w-44 bg-white border border-gray-200 rounded-xl shadow-lg py-1 z-30 text-xs">
-                {[
-                  { label: t.catalog.sortOptions.newest, val: 'newest' },
-                  { label: t.catalog.sortOptions.price_asc, val: 'price_asc' },
-                  { label: t.catalog.sortOptions.price_desc, val: 'price_desc' },
-                  { label: t.catalog.sortOptions.popular, val: 'popular' },
-                ].map((opt) => (
-                  <button
-                    key={opt.val}
-                    onClick={() => {
-                      updateParam('sortBy', opt.val);
-                      setSortDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-3.5 py-2 transition-colors ${
-                      sortBy === opt.val
-                        ? 'font-bold text-black bg-gray-50'
-                        : 'text-gray-600 hover:bg-gray-50'
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-gray-500">Urutkan:</span>
+          <select
+            value={sortBy}
+            onChange={(e) => updateParam('sortBy', e.target.value)}
+            className="text-xs font-semibold text-gray-800 bg-white border border-gray-200 rounded-full px-3.5 py-1.5 outline-none focus:border-[#003d29] cursor-pointer"
+          >
+            <option value="newest">Paling Sesuai</option>
+            <option value="price_asc">Harga: Rendah ke Tinggi</option>
+            <option value="price_desc">Harga: Tinggi ke Rendah</option>
+            <option value="popular">Paling Banyak Dibeli</option>
+          </select>
         </div>
       </div>
 
-      {/* Main MINDI Layout: Left Category Text List + Right 3-Column Studio Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
-        {/* Left Column: Quiet Vertical Text Category Navigation */}
-        <aside className="md:col-span-3 lg:col-span-2 space-y-3.5 select-none">
-          <span className="text-[10px] font-mono tracking-widest uppercase text-gray-400 block mb-2">
-            {language === 'id' ? 'KATEGORI' : 'CATEGORIES'}
-          </span>
+      {/* Filter Pills Strip */}
+      <div className="flex flex-wrap items-center gap-2 pb-2">
+        <button
+          onClick={() => updateParam('category', null)}
+          className={`px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+            !categorySlug
+              ? 'bg-[#003d29] text-white border-[#003d29]'
+              : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+          }`}
+        >
+          Semua Kategori
+        </button>
 
-          {/* All Products */}
+        {categories?.map((cat) => {
+          const isSelected = categorySlug === cat.slug;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => updateParam('category', cat.slug)}
+              className={`px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+                isSelected
+                  ? 'bg-[#003d29] text-white border-[#003d29]'
+                  : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+              }`}
+            >
+              {cat.name}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Products Grid (4 columns) */}
+      {isLoading ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 py-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="space-y-3 animate-pulse">
+              <div className="aspect-square bg-[#F5F6F6] rounded-2xl" />
+              <div className="h-4 bg-gray-100 rounded w-3/4" />
+              <div className="h-3 bg-gray-100 rounded w-1/2" />
+            </div>
+          ))}
+        </div>
+      ) : productsData?.items?.length === 0 ? (
+        <div className="py-24 text-center">
+          <p className="text-sm font-semibold text-gray-800">
+            Belum ada produk untuk kategori ini.
+          </p>
           <button
             onClick={() => updateParam('category', null)}
-            className={`block text-xs text-left tracking-wide transition-colors ${
-              !categorySlug
-                ? 'text-black font-bold'
-                : 'text-gray-500 hover:text-black font-normal'
-            }`}
+            className="mt-3 text-xs font-bold text-[#003d29] underline"
           >
-            {t.catalog.allProducts}
+            Tampilkan semua produk
           </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-8">
+          {productsData?.items?.map((product) => {
+            const defaultVariant = product.variants?.[0];
+            const price = Number(defaultVariant?.priceOverride || product.basePrice || 0);
+            const isFav = !!wishlist[product.id];
+            const imageUrl =
+              product.images?.[0]?.url ||
+              'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=600&q=80';
 
-          {/* Dynamic Categories from DB */}
-          {categories?.map((cat) => {
-            const isSelected = categorySlug === cat.slug;
             return (
-              <button
-                key={cat.id}
-                onClick={() => updateParam('category', cat.slug)}
-                className={`block text-xs text-left tracking-wide transition-colors ${
-                  isSelected
-                    ? 'text-black font-bold'
-                    : 'text-gray-500 hover:text-black font-normal'
-                }`}
-              >
-                {cat.name}
-              </button>
-            );
-          })}
-        </aside>
-
-        {/* Right Column: 3-Column Airy Studio Grid */}
-        <main className="md:col-span-9 lg:col-span-10">
-          {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="space-y-4 animate-pulse">
-                  <div className="aspect-square bg-[#F7F7F6] rounded-xl" />
-                  <div className="h-4 bg-gray-100 w-2/3 rounded" />
-                  <div className="h-3 bg-gray-100 w-1/4 rounded" />
-                </div>
-              ))}
-            </div>
-          ) : productsData?.items?.length === 0 ? (
-            <div className="py-24 text-center">
-              <p className="text-sm text-gray-500">{t.catalog.emptyState}</p>
-              <button
-                onClick={() => updateParam('category', null)}
-                className="mt-4 text-xs font-semibold text-black underline"
-              >
-                {t.catalog.clearFilters}
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-              {productsData?.items?.map((product) => {
-                const defaultVariant = product.variants?.[0];
-                const price = Number(defaultVariant?.priceOverride || product.basePrice || 0);
-                const imageUrl =
-                  product.images?.[0]?.url ||
-                  'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=600&q=80';
-
-                return (
-                  <div key={product.id} className="group flex flex-col text-left">
-                    {/* Square Image Backdrop (#F6F6F6 studio feel) */}
-                    <Link
-                      href={`/products/${product.slug}`}
-                      className="relative aspect-square w-full bg-[#F7F7F6] flex items-center justify-center overflow-hidden mb-4 rounded-xl transition-colors group-hover:bg-[#F2F1ED]"
+              <div key={product.id} className="group flex flex-col justify-between">
+                <div>
+                  {/* Square Image Box with Wishlist Heart */}
+                  <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-2xl flex items-center justify-center p-6 mb-3 overflow-hidden">
+                    <button
+                      onClick={(e) => toggleWishlist(e, product.id)}
+                      className={`absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white shadow-2xs flex items-center justify-center transition-colors z-10 ${
+                        isFav ? 'text-rose-500 fill-rose-500' : 'text-gray-400 hover:text-rose-500'
+                      }`}
+                      title="Simpan ke favorit"
                     >
+                      <Heart className={`w-4 h-4 ${isFav ? 'fill-current' : ''}`} />
+                    </button>
+
+                    <Link href={`/products/${product.slug}`} className="relative w-full h-full">
                       <Image
                         src={imageUrl}
                         alt={product.title}
                         fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-contain p-8 group-hover:scale-104 transition-transform duration-500 ease-out"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                        className="object-contain group-hover:scale-106 transition-transform duration-300"
                       />
-
-                      {/* Subtle hover quick add button */}
-                      <button
-                        onClick={(e) => handleQuickAdd(e, product)}
-                        className="absolute bottom-4 right-4 bg-white/95 text-gray-900 text-xs font-semibold px-3 py-1.5 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black hover:text-white flex items-center gap-1.5"
-                      >
-                        {addedSlug === product.slug ? (
-                          <>
-                            <Check className="w-3.5 h-3.5 text-emerald-600" />
-                            <span>{language === 'id' ? 'Ditambahkan' : 'Added'}</span>
-                          </>
-                        ) : (
-                          <>
-                            <Plus className="w-3.5 h-3.5" />
-                            <span>{language === 'id' ? '+ Keranjang' : '+ Add'}</span>
-                          </>
-                        )}
-                      </button>
                     </Link>
-
-                    {/* Product Name & Category */}
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <Link
-                          href={`/products/${product.slug}`}
-                          className="text-xs font-semibold text-gray-900 tracking-tight hover:underline block"
-                        >
-                          {product.title}
-                        </Link>
-                        <span className="text-[11px] text-gray-400 mt-0.5 block">
-                          {product.category?.name || 'Kriya Tradisi'}
-                        </span>
-                      </div>
-
-                      {/* Price */}
-                      <span className="text-xs font-semibold text-gray-900 font-mono">
-                        {formatCurrency(price)}
-                      </span>
-                    </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </main>
-      </div>
+
+                  {/* Title & Price */}
+                  <div className="flex items-start justify-between gap-2">
+                    <Link
+                      href={`/products/${product.slug}`}
+                      className="text-xs font-bold text-gray-900 group-hover:text-[#003d29] line-clamp-1 transition-colors"
+                    >
+                      {product.title}
+                    </Link>
+                    <span className="text-xs font-bold text-gray-900 font-mono whitespace-nowrap">
+                      {formatCurrency(price)}
+                    </span>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-[11px] text-gray-500 line-clamp-1 mt-0.5">
+                    {product.description}
+                  </p>
+
+                  {/* Green Star Rating */}
+                  <div className="flex items-center gap-1.5 mt-1.5">
+                    <div className="flex text-emerald-600 text-[11px]">
+                      {'★'.repeat(5)}
+                    </div>
+                    <span className="text-[10px] text-gray-400 font-semibold">(121)</span>
+                  </div>
+                </div>
+
+                {/* Add to Cart Pill Button */}
+                <div className="pt-3">
+                  <button
+                    onClick={(e) => handleQuickAdd(e, product)}
+                    className={`w-full py-2 px-4 rounded-full text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
+                      addedSlug === product.slug
+                        ? 'bg-[#003d29] text-white border-[#003d29]'
+                        : 'border-gray-300 text-gray-800 hover:bg-[#003d29] hover:text-white hover:border-[#003d29]'
+                    }`}
+                  >
+                    {addedSlug === product.slug ? (
+                      <>
+                        <Check className="w-3.5 h-3.5" />
+                        <span>Berhasil Masuk!</span>
+                      </>
+                    ) : (
+                      <span>Masukkan Keranjang</span>
+                    )}
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -284,7 +268,7 @@ export default function ProductsPage() {
         </div>
       }
     >
-      <MindiCatalogContent />
+      <ShopcartCatalogContent />
     </Suspense>
   );
 }

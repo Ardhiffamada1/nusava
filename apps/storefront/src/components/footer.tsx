@@ -87,15 +87,8 @@ export function Footer() {
 
         <div className="border-t border-[#EAE9E4] mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] text-gray-400">
           <p>© 2026 {t.brandName}. {t.footer.rights}</p>
-          <div className="flex gap-6 mt-4 sm:mt-0">
-            <a
-              href="http://localhost:3001"
-              target="_blank"
-              rel="noreferrer"
-              className="text-gray-600 hover:text-black font-medium transition-colors"
-            >
-              {t.footer.adminLink}
-            </a>
+          <div className="flex gap-6 mt-4 sm:mt-0 text-gray-400">
+            <span>Beli Oleh-oleh Khas Daerah Aman & Cepat</span>
           </div>
         </div>
       </div>

@@ -3,77 +3,86 @@
 import React from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { CheckCircle2, ArrowRight, Package, Truck, Calendar, CreditCard, ArrowLeft } from 'lucide-react';
-import { formatCurrency, formatDate } from '@commerceos/ui';
+import { CheckCircle2, ArrowRight, Package, Truck, ArrowLeft } from 'lucide-react';
+import { formatDate } from '@commerceos/ui';
 
 export default function OrderSuccessPage() {
   const params = useParams();
   const orderNumber = params?.orderNumber as string;
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-16">
-      <div className="border border-border p-8 md:p-12 bg-white text-center">
-        <CheckCircle2 className="w-12 h-12 text-ink mx-auto mb-4 stroke-[1.5]" />
-        <span className="text-[11px] uppercase tracking-widest text-ink-secondary">Order Confirmed</span>
-        <h1 className="text-3xl font-light text-ink tracking-tight mt-1 mb-2">Thank you for your order</h1>
-        <p className="text-xs text-ink-secondary max-w-md mx-auto leading-relaxed">
-          Your order has been recorded into our atomic transactional ledger. Inventory has been reserved and stock movements logged.
+    <div className="max-w-2xl mx-auto px-6 py-16 font-sans">
+      <div className="bg-white border border-gray-200/80 rounded-3xl p-8 sm:p-12 text-center shadow-xs">
+        <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center mx-auto mb-4 text-[#003d29]">
+          <CheckCircle2 className="w-9 h-9 stroke-[2]" />
+        </div>
+
+        <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-800 font-bold block mb-1">
+          PESANAN BERHASIL DITERIMA
+        </span>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight mb-2">
+          Terima kasih atas pesananmu!
+        </h1>
+        <p className="text-xs text-gray-600 max-w-md mx-auto leading-relaxed">
+          Pesananmu sudah masuk ke sistem dan stok produk sudah langsung diamankan. Kami akan segera
+          menyiapkan paket oleh-olehmu dengan kemasan aman.
         </p>
 
-        <div className="mt-8 p-4 bg-surface border border-border rounded-xs inline-flex items-center gap-6 text-xs">
+        {/* Order Reference Card */}
+        <div className="mt-8 p-4 bg-[#F9FAFA] border border-gray-200 rounded-2xl flex flex-wrap items-center justify-around gap-4 text-xs">
           <div>
-            <span className="text-ink-tertiary block text-[10px] uppercase tracking-wider">Order Reference</span>
-            <span className="font-mono font-medium text-ink mt-0.5 block">{orderNumber}</span>
+            <span className="text-gray-400 block text-[10px] uppercase font-bold tracking-wider">
+              Nomor Pesanan
+            </span>
+            <span className="font-mono font-bold text-gray-900 mt-0.5 block">{orderNumber}</span>
           </div>
-          <div className="h-6 w-px bg-border" />
+          <div className="hidden sm:block h-8 w-px bg-gray-200" />
           <div>
-            <span className="text-ink-tertiary block text-[10px] uppercase tracking-wider">Date</span>
-            <span className="font-mono text-ink mt-0.5 block">{formatDate(new Date())}</span>
+            <span className="text-gray-400 block text-[10px] uppercase font-bold tracking-wider">
+              Tanggal Pesan
+            </span>
+            <span className="font-mono text-gray-900 mt-0.5 block">{formatDate(new Date())}</span>
           </div>
-          <div className="h-6 w-px bg-border" />
+          <div className="hidden sm:block h-8 w-px bg-gray-200" />
           <div>
-            <span className="text-ink-tertiary block text-[10px] uppercase tracking-wider">Payment Status</span>
-            <span className="text-amber-800 font-medium mt-0.5 block">PENDING (Demo)</span>
+            <span className="text-gray-400 block text-[10px] uppercase font-bold tracking-wider">
+              Status Bayar
+            </span>
+            <span className="text-emerald-700 font-bold mt-0.5 block">Menunggu Konfirmasi</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 text-left text-xs border-t border-border pt-8">
-          <div className="p-4 bg-surface border border-border">
-            <div className="flex items-center gap-2 mb-2 font-medium text-ink">
-              <Truck className="w-4 h-4 text-ink" />
-              <span>Dispatch Information</span>
+        {/* Delivery Details Note */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 text-left text-xs">
+          <div className="p-4 bg-gray-50 border border-gray-200/60 rounded-2xl space-y-1">
+            <div className="flex items-center gap-2 font-bold text-gray-900">
+              <Truck className="w-4 h-4 text-[#003d29]" />
+              <span>Pengiriman Kurir</span>
             </div>
-            <p className="text-ink-secondary leading-relaxed text-[11px]">
-              Orders are packaged in recyclable archival cartons and dispatched from our logistics terminal within 24 hours.
+            <p className="text-[11px] text-gray-500 leading-relaxed">
+              Paketmu dibungkus bubble wrap tebal dan diserahkan ke pihak ekspedisi maksimal 1x24 jam.
             </p>
           </div>
 
-          <div className="p-4 bg-surface border border-border">
-            <div className="flex items-center gap-2 mb-2 font-medium text-ink">
-              <CreditCard className="w-4 h-4 text-ink" />
-              <span>Demo Settlement Action</span>
+          <div className="p-4 bg-gray-50 border border-gray-200/60 rounded-2xl space-y-1">
+            <div className="flex items-center gap-2 font-bold text-gray-900">
+              <Package className="w-4 h-4 text-[#003d29]" />
+              <span>Bayar di Tempat (COD)</span>
             </div>
-            <p className="text-ink-secondary leading-relaxed text-[11px]">
-              Payment status is intentionally set to PENDING. An administrator can mark this order as PAID or CANCELLED in the management console.
+            <p className="text-[11px] text-gray-500 leading-relaxed">
+              Jika memilih COD, siapkan uang pas sesuai total tagihan saat kurir datang mengantar paket.
             </p>
           </div>
         </div>
 
+        {/* CTA Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-4 mt-10">
           <Link
-            href="/account"
-            className="inline-flex items-center gap-2 bg-ink text-white text-xs font-semibold uppercase tracking-wider py-3 px-6 rounded-xs hover:bg-ink/90 transition-all shadow-xs"
-          >
-            <span>View Order in Account</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-
-          <Link
             href="/products"
-            className="inline-flex items-center gap-2 bg-white border border-border text-ink text-xs font-semibold uppercase tracking-wider py-3 px-6 rounded-xs hover:bg-muted transition-colors"
+            className="inline-flex items-center gap-2 bg-[#003d29] hover:bg-[#002b1d] text-white text-xs font-bold px-7 py-3.5 rounded-full transition-all shadow-xs"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Continue Shopping</span>
+            <span>Lanjut Belanja Oleh-oleh</span>
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </div>

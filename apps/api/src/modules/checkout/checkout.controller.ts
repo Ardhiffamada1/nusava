@@ -6,10 +6,13 @@ import {
 } from '@nestjs/common';
 import { CheckoutService } from './checkout.service';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Public } from '../../common/decorators/public.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import {
   CheckoutDto,
   CheckoutDtoSchema,
+  GuestCheckoutDto,
+  GuestCheckoutDtoSchema,
   AuthUserResponse,
 } from '@commerceos/contracts';
 
@@ -24,5 +27,12 @@ export class CheckoutController {
     @Body() dto: CheckoutDto,
   ) {
     return this.checkoutService.checkout(user.id, dto);
+  }
+
+  @Public()
+  @Post('guest')
+  @UsePipes(new ZodValidationPipe(GuestCheckoutDtoSchema))
+  async guestCheckout(@Body() dto: GuestCheckoutDto) {
+    return this.checkoutService.guestCheckout(dto);
   }
 }

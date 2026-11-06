@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { RegisterDto, RegisterDtoSchema } from '@commerceos/contracts';
 import { apiRequest } from '../../lib/api';
 import { useAuthStore } from '../../stores/auth-store';
-import { ArrowRight, AlertCircle } from 'lucide-react';
+import { ArrowRight, AlertCircle, ShoppingBag } from 'lucide-react';
 
 function RegisterContent() {
   const router = useRouter();
@@ -40,25 +40,27 @@ function RegisterContent() {
       setUser(res.user);
       router.push(redirect);
     } catch (err: any) {
-      setErrorMessage(err.message || 'Registration failed');
+      setErrorMessage(err.message || 'Pendaftaran gagal, coba periksa data Anda kembali.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto px-6 py-16">
-      <div className="border border-border bg-white p-8 rounded-xs shadow-xs">
+    <div className="max-w-md mx-auto px-6 py-14">
+      <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
         <div className="text-center mb-6">
-          <span className="text-[10px] uppercase tracking-widest text-ink-secondary">New Client</span>
-          <h1 className="text-2xl font-light text-ink tracking-tight mt-1">Create Account</h1>
-          <p className="text-xs text-ink-secondary mt-1">
-            Register to save addresses and track your orders.
+          <div className="w-12 h-12 mx-auto rounded-full bg-[#FCF0E4] flex items-center justify-center text-[#003d29] mb-3">
+            <ShoppingBag className="w-6 h-6" />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Daftar Akun Baru</h1>
+          <p className="text-xs text-gray-500 mt-1">
+            Simpan alamat pengiriman dan lacak kiriman oleh-oleh favoritmu.
           </p>
         </div>
 
         {errorMessage && (
-          <div className="mb-6 p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xs flex items-center gap-2">
+          <div className="mb-6 p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
             <span>{errorMessage}</span>
           </div>
@@ -67,72 +69,72 @@ function RegisterContent() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-ink font-medium mb-1">
-                First Name
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
+                Nama Depan
               </label>
               <input
                 type="text"
                 {...register('firstName')}
-                className="w-full text-xs p-2.5 border border-border bg-white rounded-xs focus:outline-hidden focus:border-ink"
-                placeholder="Elena"
+                className="w-full text-sm p-3 border border-gray-200 bg-white rounded-xl focus:outline-hidden focus:border-[#003d29] transition-colors"
+                placeholder="Rian"
               />
-              {errors.firstName && <p className="text-[10px] text-rose-600 mt-1">{errors.firstName.message}</p>}
+              {errors.firstName && <p className="text-[11px] text-rose-600 mt-1">{errors.firstName.message}</p>}
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-ink font-medium mb-1">
-                Last Name
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
+                Nama Belakang
               </label>
               <input
                 type="text"
                 {...register('lastName')}
-                className="w-full text-xs p-2.5 border border-border bg-white rounded-xs focus:outline-hidden focus:border-ink"
-                placeholder="Rostova"
+                className="w-full text-sm p-3 border border-gray-200 bg-white rounded-xl focus:outline-hidden focus:border-[#003d29] transition-colors"
+                placeholder="Pratama"
               />
-              {errors.lastName && <p className="text-[10px] text-rose-600 mt-1">{errors.lastName.message}</p>}
+              {errors.lastName && <p className="text-[11px] text-rose-600 mt-1">{errors.lastName.message}</p>}
             </div>
           </div>
 
           <div>
-            <label className="block text-[11px] uppercase tracking-wider text-ink font-medium mb-1">
-              Email Address
+            <label className="block text-xs font-semibold text-gray-700 mb-1">
+              Alamat Email
             </label>
             <input
               type="email"
               {...register('email')}
-              className="w-full text-xs p-2.5 border border-border bg-white rounded-xs focus:outline-hidden focus:border-ink"
-              placeholder="elena@example.com"
+              className="w-full text-sm p-3 border border-gray-200 bg-white rounded-xl focus:outline-hidden focus:border-[#003d29] transition-colors"
+              placeholder="nama@email.com"
             />
-            {errors.email && <p className="text-[10px] text-rose-600 mt-1">{errors.email.message}</p>}
+            {errors.email && <p className="text-[11px] text-rose-600 mt-1">{errors.email.message}</p>}
           </div>
 
           <div>
-            <label className="block text-[11px] uppercase tracking-wider text-ink font-medium mb-1">
-              Password (Min 8 Characters)
+            <label className="block text-xs font-semibold text-gray-700 mb-1">
+              Kata Sandi (Min. 8 Karakter)
             </label>
             <input
               type="password"
               {...register('password')}
-              className="w-full text-xs p-2.5 border border-border bg-white rounded-xs focus:outline-hidden focus:border-ink"
+              className="w-full text-sm p-3 border border-gray-200 bg-white rounded-xl focus:outline-hidden focus:border-[#003d29] transition-colors"
               placeholder="••••••••••••"
             />
-            {errors.password && <p className="text-[10px] text-rose-600 mt-1">{errors.password.message}</p>}
+            {errors.password && <p className="text-[11px] text-rose-600 mt-1">{errors.password.message}</p>}
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full mt-2 bg-ink text-white text-xs font-semibold uppercase tracking-wider py-3 px-4 rounded-xs hover:bg-ink/90 disabled:opacity-40 transition-all flex items-center justify-center gap-2 shadow-xs"
+            className="w-full mt-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-sm font-semibold py-3.5 px-4 rounded-full disabled:opacity-40 transition-all flex items-center justify-center gap-2 shadow-sm"
           >
-            <span>{isSubmitting ? 'Registering Account...' : 'Complete Registration'}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <span>{isSubmitting ? 'Mendaftarkan akun...' : 'Buat Akun Sekarang'}</span>
+            <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-border text-center text-xs text-ink-secondary">
-          Already have an account?{' '}
-          <Link href={`/login?redirect=${redirect}`} className="text-ink font-medium underline">
-            Sign in
+        <div className="mt-6 text-center text-xs text-gray-500">
+          Sudah punya akun?{' '}
+          <Link href={`/login?redirect=${redirect}`} className="text-[#003d29] font-semibold hover:underline">
+            Masuk di sini
           </Link>
         </div>
       </div>
@@ -142,7 +144,7 @@ function RegisterContent() {
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div className="max-w-md mx-auto px-6 py-20 text-xs">Loading registration...</div>}>
+    <Suspense fallback={<div className="max-w-md mx-auto px-6 py-20 text-xs text-gray-400">Memuat halaman pendaftaran...</div>}>
       <RegisterContent />
     </Suspense>
   );
