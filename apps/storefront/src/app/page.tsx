@@ -84,7 +84,7 @@ export default function ShopcartStorefrontHome() {
     openCart();
   };
 
-  // Curated Flash Sale items
+  // Curated Flash Sale items with authentic Indonesian product photos
   const flashSaleItems = [
     {
       id: 'fs-1',
@@ -95,7 +95,7 @@ export default function ShopcartStorefrontHome() {
       discount: 35,
       soldPercentage: 84,
       stockLeft: 4,
-      image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop&q=80',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/2/27/Bakpia_pathuk.jpg',
       category: 'Kudapan Khas',
     },
     {
@@ -107,7 +107,7 @@ export default function ShopcartStorefrontHome() {
       discount: 35,
       soldPercentage: 91,
       stockLeft: 3,
-      image: 'https://images.unsplash.com/photo-1519869325930-281384150729?w=600&auto=format&fit=crop&q=80',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Pie_Susu_Top_View.jpg',
       category: 'Kudapan Khas',
     },
     {
@@ -119,7 +119,7 @@ export default function ShopcartStorefrontHome() {
       discount: 35,
       soldPercentage: 76,
       stockLeft: 6,
-      image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Biji_Kopi.jpg',
       category: 'Kopi Nusantara',
     },
     {
@@ -131,7 +131,7 @@ export default function ShopcartStorefrontHome() {
       discount: 35,
       soldPercentage: 88,
       stockLeft: 5,
-      image: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&auto=format&fit=crop&q=80',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/5/5a/SAMBAL_BAWANG.jpg',
       category: 'Sambal Tradisional',
     },
   ];
@@ -141,43 +141,37 @@ export default function ShopcartStorefrontHome() {
       title: 'Kudapan & Makanan Khas',
       count: 'Bakpia, Bolu, Keripik & Lapis',
       slug: 'kudapan-khas',
-      image:
-        'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=300&q=80',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Bakpia_pathok.jpg',
     },
     {
       title: 'Kopi & Minuman Daerah',
       count: 'Gayo, Toraja & Wedang Uwuh',
       slug: 'kopi-minuman',
-      image:
-        'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=300&q=80',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/7/76/Wedang_Uwuh_Jawa.jpg',
     },
     {
       title: 'Batik & Wastra Nusantara',
       count: 'Batik Tulis Solo & Tenun Troso',
       slug: 'batik-wastra',
-      image:
-        'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=300&q=80',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Batik_pedalaman_-_parang_klithik.JPG',
     },
     {
       title: 'Kriya Kayu & Gerabah',
       count: 'Piring Jati & Tembikar Kasongan',
       slug: 'kriya-kerajinan',
-      image:
-        'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=300&q=80',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/d/d6/Cobek.jpg',
     },
     {
       title: 'Sambal & Bumbu Tradisional',
       count: 'Sambal Bu Rudy & Rendang Padang',
       slug: 'sambal-bumbu',
-      image:
-        'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=300&q=80',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/7/70/Rendang_daging_sapi_asli_Padang.JPG',
     },
     {
       title: 'Pie Susu & Kacang Bali',
       count: 'Pie Dhian & Kacang Disco Bali',
       slug: 'kudapan-khas',
-      image:
-        'https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=300&q=80',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Pie_Susu_Top_View.jpg',
     },
   ];
 
@@ -205,7 +199,7 @@ export default function ShopcartStorefrontHome() {
         {/* Right Product Craft Image */}
         <div className="relative w-72 h-72 sm:w-88 sm:h-88 shrink-0">
           <Image
-            src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=800&q=80"
+            src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Bakpia_pathok.jpg"
             alt="Oleh-oleh Tradisional Pilihan"
             fill
             priority

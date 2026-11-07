@@ -162,8 +162,7 @@ async function main() {
       categoryId: catKudapan.id,
       basePrice: 45000,
       images: [
-        'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&auto=format&fit=crop&q=80',
-        'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/2/27/Bakpia_pathuk.jpg',
       ],
       variants: [
         { title: 'Rasa Cokelat Lumer (10 pcs)', sku: 'BKTJ-COK-10', attributes: { rasa: 'Cokelat', isi: '10 pcs' }, stock: 65 },
@@ -178,7 +177,7 @@ async function main() {
       categoryId: catKudapan.id,
       basePrice: 55000,
       images: [
-        'https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/3/3c/Bakpia_pathok.jpg',
       ],
       variants: [
         { title: 'Kacang Hijau Klasik (Isi 15)', sku: 'BP25-KCH-15', attributes: { varian: 'Kacang Hijau', kemasan: 'Kotak' }, stock: 80 },
@@ -193,7 +192,7 @@ async function main() {
       categoryId: catKudapan.id,
       basePrice: 85000,
       images: [
-        'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/4/43/Kue_bika_ambon.JPG',
       ],
       variants: [
         { title: 'Rasa Original Pandan (Besar)', sku: 'BAZ-ORI-L', attributes: { rasa: 'Pandan Original', ukuran: 'Besar' }, stock: 35 },
@@ -207,7 +206,7 @@ async function main() {
       categoryId: catKudapan.id,
       basePrice: 95000,
       images: [
-        'https://images.unsplash.com/photo-1535141192574-5d4897c13136?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/a/a4/Bolu_Gulung_Semarang.JPG',
       ],
       variants: [
         { title: 'Bolu Gulung Standard Keju', sku: 'BGM-STD-KEJ', attributes: { rasa: 'Keju', varian: 'Standard' }, stock: 40 },
@@ -222,7 +221,7 @@ async function main() {
       categoryId: catKudapan.id,
       basePrice: 42000,
       images: [
-        'https://images.unsplash.com/photo-1549590143-d5855148a9d5?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/2/25/Lapis_Legit_Pontianak.jpg',
       ],
       variants: [
         { title: 'Original Keju (500g)', sku: 'LTS-ORI-500', attributes: { rasa: 'Original Keju', berat: '500g' }, stock: 75 },
@@ -237,7 +236,7 @@ async function main() {
       categoryId: catKudapan.id,
       basePrice: 185000,
       images: [
-        'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/5/5f/Spekkoek_naturel_en_pandan.jpg',
       ],
       variants: [
         { title: 'Ukuran 20x10 cm (Original Spekuk)', sku: 'LLW-ORI-2010', attributes: { ukuran: '20x10 cm', varian: 'Spekuk' }, stock: 20 },
@@ -248,6 +247,11 @@ async function main() {
       title: 'Keripik Tempe Rohani Sanan Khas Malang',
       slug: 'keripik-tempe-rohani-malang',
       description: 'Keripik tempe renyah gurih khas kampung Sanan Malang. Diiris tipis dengan balutan tepung rempah bawang putih sedap. Netto 250g.',
+      categoryId: catKudapan.id,
+      basePrice: 28000,
+      images: [
+        'https://upload.wikimedia.org/wikipedia/commons/2/2a/Keripik_tempe_Lombok.JPG',
+      ],
       categoryId: catKudapan.id,
       basePrice: 28000,
       images: [
@@ -280,7 +284,7 @@ async function main() {
       categoryId: catKudapan.id,
       basePrice: 80000,
       images: [
-        'https://images.unsplash.com/photo-1519869325930-281384150729?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/e/e3/Pie_Susu_Top_View.jpg',
       ],
       variants: [
         { title: 'Isi 50 pcs Rasa Original Susu', sku: 'PSD-ORI-50', attributes: { rasa: 'Original Susu', isi: '50 pcs' }, stock: 85 },
@@ -309,7 +313,7 @@ async function main() {
       categoryId: catKudapan.id,
       basePrice: 35000,
       images: [
-        'https://images.unsplash.com/photo-1582293041079-7814c2f12063?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/f/f9/Dodol_Garut_Cihampelas_Bandung.JPG',
       ],
       variants: [
         { title: 'Kotak Klasik Campur 500g', sku: 'DPG-MIX-500', attributes: { rasa: 'Campur Aneka Rasa', berat: '500g' }, stock: 100 },
@@ -323,7 +327,7 @@ async function main() {
       categoryId: catKudapan.id,
       basePrice: 48000,
       images: [
-        'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/9/9f/Amplang_from_Kotabaru%2C_South_Kalimantan_2015-05-23_02.jpg',
       ],
       variants: [
         { title: 'Kemasan Plastik Tebal 250g', sku: 'AKM-TNG-250', attributes: { bahan: 'Ikan Tenggiri', berat: '250g' }, stock: 70 },
@@ -351,7 +355,7 @@ async function main() {
       categoryId: catKudapan.id,
       basePrice: 165000,
       images: [
-        'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/c/c2/Pempek_campur.JPG',
       ],
       variants: [
         { title: 'Paket Campur 25 Pcs + Cuko 500ml', sku: 'PCP-CMP-25', attributes: { isi: '25 Pcs', cuko: 'Pedas Sedang' }, stock: 45 },
@@ -365,7 +369,7 @@ async function main() {
       categoryId: catKudapan.id,
       basePrice: 65000,
       images: [
-        'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/1/10/Otak-otak_Jakarta.JPG',
       ],
       variants: [
         { title: 'Isi 10 Pcs Vacuum + 2 Sambal Khas', sku: 'OOB-TNG-10', attributes: { isi: '10 pcs', kemasan: 'Frozen Vacuum' }, stock: 40 },
@@ -381,8 +385,7 @@ async function main() {
       categoryId: catKopi.id,
       basePrice: 75000,
       images: [
-        'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop&q=80',
-        'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/a/a5/Biji_Kopi.jpg',
       ],
       variants: [
         { title: 'Biji Kopi Sangrai (Whole Bean) 250g', sku: 'KGA-WHL-250', attributes: { bentuk: 'Biji Kopi Utuh', berat: '250g' }, stock: 90 },
@@ -425,7 +428,7 @@ async function main() {
       categoryId: catKopi.id,
       basePrice: 65000,
       images: [
-        'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=800&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=800&auto=format&fit=crop&q=80',
       ],
       variants: [
         { title: 'Botol Kaca Segel 1000ml', sku: 'SMN-BTL-1000', attributes: { kemasan: 'Botol 1 Liter', varian: 'Markisa Asli' }, stock: 55 },
@@ -439,7 +442,7 @@ async function main() {
       categoryId: catKopi.id,
       basePrice: 25000,
       images: [
-        'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/7/76/Wedang_Uwuh_Jawa.jpg',
       ],
       variants: [
         { title: 'Paket Isi 10 Kantong Seduh Komplit', sku: 'WUI-PKT-10', attributes: { isi: '10 Pcs', gula: 'Termasuk Gula Batu' }, stock: 150 },
@@ -455,8 +458,7 @@ async function main() {
       categoryId: catBatik.id,
       basePrice: 280000,
       images: [
-        'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&auto=format&fit=crop&q=80',
-        'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/f/f5/Batik_pedalaman_-_parang_klithik.JPG',
       ],
       variants: [
         { title: 'Motif Parang Rusak Cokelat Sogan (2.4m)', sku: 'BTS-PRS-24', attributes: { motif: 'Parang Rusak', warna: 'Cokelat Sogan' }, stock: 20 },
@@ -470,7 +472,7 @@ async function main() {
       categoryId: catBatik.id,
       basePrice: 195000,
       images: [
-        'https://images.unsplash.com/photo-1590736969955-71cc94801759?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/3/3c/Tenun_Ikat_Lombok.JPG',
       ],
       variants: [
         { title: 'Motif Etnik Dayak Merah Marun (2.2m)', sku: 'TIT-ETN-MRH', attributes: { motif: 'Etnik Dayak', warna: 'Marun' }, stock: 25 },
@@ -484,7 +486,7 @@ async function main() {
       categoryId: catBatik.id,
       basePrice: 350000,
       images: [
-        'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/d/de/Melestarikan_Songket_Palembang.jpg',
       ],
       variants: [
         { title: 'Set Kain + Selendang Songket Merah Emas', sku: 'SKP-ST-MRH', attributes: { warna: 'Merah Emas', set: 'Kain + Selendang' }, stock: 12 },
@@ -498,7 +500,7 @@ async function main() {
       categoryId: catBatik.id,
       basePrice: 220000,
       images: [
-        'https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/3/38/Tenun_Ikat_Kodi%2C_SBD%2C_NTT.jpg',
       ],
       variants: [
         { title: 'Motif Lagosi Tradisional Hitam Emas', sku: 'SSW-LAG-01', attributes: { motif: 'Lagosi', warna: 'Hitam Emas' }, stock: 18 },
@@ -529,7 +531,7 @@ async function main() {
       categoryId: catKriya.id,
       basePrice: 45000,
       images: [
-        'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1577937927133-66ef06acdf18?w=800&auto=format&fit=crop&q=80',
       ],
       variants: [
         { title: 'Set Cangkir + Tatakan + Tutup Tanah Liat', sku: 'CGK-SET-01', attributes: { isi: 'Cangkir + Tatakan + Tutup', bahan: 'Terracotta' }, stock: 60 },
@@ -557,7 +559,7 @@ async function main() {
       categoryId: catKriya.id,
       basePrice: 85000,
       images: [
-        'https://images.unsplash.com/photo-1590736969955-71cc94801759?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/d/d6/Cobek.jpg',
       ],
       variants: [
         { title: 'Cobek Diameter 20cm + Ulekan Munthu', sku: 'CBM-20-SET', attributes: { diameter: '20 cm', kelengkapan: 'Termasuk Ulekan' }, stock: 40 },
@@ -573,7 +575,7 @@ async function main() {
       categoryId: catSambal.id,
       basePrice: 85000,
       images: [
-        'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/5/5a/SAMBAL_BAWANG.jpg',
       ],
       variants: [
         { title: 'Paket 3 Botol (Bawang, Bajak, Terasi)', sku: 'SBR-SET-3', attributes: { isi: '3 Botol', varian: 'Mix 3 Varian' }, stock: 95 },
@@ -587,7 +589,7 @@ async function main() {
       categoryId: catSambal.id,
       basePrice: 110000,
       images: [
-        'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/7/70/Rendang_daging_sapi_asli_Padang.JPG',
       ],
       variants: [
         { title: 'Rendang Daging Sapi 250g (Isi 5 Potong)', sku: 'RDP-DGS-250', attributes: { berat: '250g', jenis: 'Daging Sapi' }, stock: 65 },
@@ -601,7 +603,7 @@ async function main() {
       categoryId: catSambal.id,
       basePrice: 75000,
       images: [
-        'https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/5/57/Abon_sapi.JPG',
       ],
       variants: [
         { title: 'Abon Sapi Rasa Manis Gurih (250g)', sku: 'ASM-MNS-250', attributes: { rasa: 'Manis Gurih', berat: '250g' }, stock: 70 },
@@ -615,7 +617,7 @@ async function main() {
       categoryId: catSambal.id,
       basePrice: 35000,
       images: [
-        'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop&q=80',
+        'https://upload.wikimedia.org/wikipedia/commons/8/8c/Terasi-dari-lombok.jpg',
       ],
       variants: [
         { title: 'Kotak Isi 10 Batang Terasi Matang (250g)', sku: 'TRC-SUP-250', attributes: { isi: '10 Batang', berat: '250g' }, stock: 85 },
