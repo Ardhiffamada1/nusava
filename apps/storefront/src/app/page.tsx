@@ -218,50 +218,50 @@ export default function ShopcartStorefrontHome() {
           />
           <div className="absolute -bottom-3 -left-3 bg-white py-2 px-4 rounded-xl shadow-md border border-gray-100 flex items-center gap-2">
             <span className="text-xs font-bold text-[#003d29]">100% Asli Pengrajin</span>
-            <span className="text-amber-500 font-bold">★ 4.9</span>
+            <span className="text-emerald-700 font-bold">★ 4.9</span>
           </div>
         </div>
       </section>
 
-      {/* 2. FLASH SALE SECTION (Live Countdown Timer & Heavy Discounts) */}
-      <section className="bg-gradient-to-r from-rose-900 via-rose-800 to-amber-900 rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
-        {/* Header Bar: Flame Badge & Live Countdown Timer */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/15 pb-6 mb-6">
+      {/* 2. FLASH SALE SECTION (Strict Shopcart Neutral & Forest Green Design) */}
+      <section className="bg-[#FAF9F5] border border-gray-200/80 rounded-3xl p-6 sm:p-8 text-gray-900 relative">
+        {/* Header Bar: Forest Green Badge & Live Countdown Timer */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200/80 pb-6 mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-400 text-rose-950 flex items-center justify-center font-black shadow-sm animate-pulse">
-              <Zap className="w-6 h-6 fill-current" />
+            <div className="w-10 h-10 rounded-xl bg-[#003d29] text-white flex items-center justify-center shadow-xs">
+              <Zap className="w-5 h-5 text-emerald-300" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white uppercase">
+              <div className="flex items-center gap-2.5">
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900">
                   Flash Sale Hari Ini
                 </h2>
-                <span className="bg-rose-500 text-white text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full animate-bounce">
+                <span className="bg-[#003d29] text-white text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full">
                   Diskon s/d 50%
                 </span>
               </div>
-              <p className="text-xs text-rose-100/80 mt-0.5">
-                Stok terbatas setiap hari dengan harga pas langsung dari dapur pengrajin.
+              <p className="text-xs text-gray-500 mt-0.5">
+                Harga promo spesial langsung dari pengrajin daerah, kuota terbatas setiap hari.
               </p>
             </div>
           </div>
 
-          {/* Countdown Clock */}
-          <div className="flex items-center gap-2 bg-black/30 backdrop-blur-xs px-4 py-2 rounded-2xl border border-white/10 self-start sm:self-auto">
-            <Clock className="w-4 h-4 text-amber-300" />
-            <span className="text-[11px] font-bold text-rose-100 uppercase tracking-wider mr-1">
+          {/* Countdown Clock (Matching Shopcart clean pill style) */}
+          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-gray-200 shadow-2xs self-start sm:self-auto">
+            <Clock className="w-4 h-4 text-[#003d29]" />
+            <span className="text-xs font-semibold text-gray-500 mr-1">
               Berakhir:
             </span>
-            <div className="flex items-center gap-1.5 font-bold text-xs">
-              <span className="bg-white text-rose-900 px-2 py-1 rounded-md min-w-[28px] text-center shadow-xs">
+            <div className="flex items-center gap-1.5 font-bold text-xs text-gray-900">
+              <span className="bg-[#003d29] text-white px-2 py-0.5 rounded-md min-w-[26px] text-center">
                 {String(timeLeft.hours).padStart(2, '0')}
               </span>
               <span>:</span>
-              <span className="bg-white text-rose-900 px-2 py-1 rounded-md min-w-[28px] text-center shadow-xs">
+              <span className="bg-[#003d29] text-white px-2 py-0.5 rounded-md min-w-[26px] text-center">
                 {String(timeLeft.minutes).padStart(2, '0')}
               </span>
               <span>:</span>
-              <span className="bg-white text-rose-900 px-2 py-1 rounded-md min-w-[28px] text-center shadow-xs">
+              <span className="bg-[#003d29] text-white px-2 py-0.5 rounded-md min-w-[26px] text-center">
                 {String(timeLeft.seconds).padStart(2, '0')}
               </span>
             </div>
@@ -273,7 +273,7 @@ export default function ShopcartStorefrontHome() {
           {flashSaleItems.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-2xl p-4 text-gray-900 shadow-sm flex flex-col justify-between group hover:-translate-y-1 transition-all duration-200"
+              className="bg-white rounded-2xl p-4 border border-gray-200/70 hover:border-gray-300 shadow-2xs flex flex-col justify-between group transition-all duration-200"
             >
               <div>
                 {/* Photo with Discount Ribbon */}
@@ -287,14 +287,13 @@ export default function ShopcartStorefrontHome() {
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     className="object-contain p-2 group-hover:scale-105 transition-transform"
                   />
-                  {/* Fiery Discount Tag */}
-                  <div className="absolute top-2 left-2 bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs flex items-center gap-0.5">
-                    <Flame className="w-3 h-3 fill-current" />
-                    <span>-{item.discount}%</span>
+                  {/* Clean Dark Green Discount Tag */}
+                  <div className="absolute top-2 left-2 bg-[#003d29] text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-2xs">
+                    -{item.discount}%
                   </div>
                 </div>
 
-                <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block">
+                <span className="text-[10px] font-bold text-[#003d29] uppercase tracking-wider block">
                   {item.category}
                 </span>
                 <Link
@@ -306,7 +305,7 @@ export default function ShopcartStorefrontHome() {
 
                 {/* Pricing: Strikethrough + Flash Price */}
                 <div className="flex items-baseline gap-2 mt-2">
-                  <span className="text-sm font-extrabold text-rose-600">
+                  <span className="text-sm font-bold text-[#003d29]">
                     {formatCurrency(item.flashPrice)}
                   </span>
                   <span className="text-[11px] text-gray-400 line-through">
@@ -318,11 +317,11 @@ export default function ShopcartStorefrontHome() {
                 <div className="mt-3 space-y-1">
                   <div className="flex justify-between text-[10px] font-semibold text-gray-500">
                     <span>Terjual {item.soldPercentage}%</span>
-                    <span className="text-rose-600 font-bold">Sisa {item.stockLeft} buah!</span>
+                    <span className="text-emerald-700 font-bold">Sisa {item.stockLeft} buah</span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
                     <div
-                      className="bg-gradient-to-r from-amber-500 to-rose-600 h-full rounded-full transition-all duration-500"
+                      className="bg-[#003d29] h-full rounded-full transition-all duration-500"
                       style={{ width: `${item.soldPercentage}%` }}
                     />
                   </div>
@@ -332,9 +331,9 @@ export default function ShopcartStorefrontHome() {
               {/* Action Button */}
               <Link
                 href={`/products/${item.slug}`}
-                className="mt-4 w-full bg-[#003d29] hover:bg-[#002b1d] text-white text-xs font-bold py-2.5 rounded-full transition-all text-center block shadow-2xs"
+                className="mt-4 w-full bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold py-2.5 rounded-full transition-all text-center block shadow-2xs"
               >
-                Beli Kilat
+                Beli Sekarang
               </Link>
             </div>
           ))}

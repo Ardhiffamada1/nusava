@@ -124,7 +124,7 @@ export function Navbar() {
             {/* Center Promo Text */}
             <div className="text-center font-medium flex-1 text-[11px] sm:text-xs">
               <span>Dapatkan Diskon Spesial s/d 50% Untuk Pilihan Oleh-oleh Nusantara | </span>
-              <Link href="/products" className="underline font-bold hover:text-amber-300 ml-1">
+              <Link href="/products" className="underline font-bold hover:text-emerald-200 ml-1">
                 Beli Sekarang
               </Link>
             </div>
