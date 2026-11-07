@@ -154,7 +154,7 @@ export default function CartPage() {
               <span>{isId ? 'Estimasi Ongkir' : 'Shipping'}</span>
               <span className="font-semibold text-gray-900">
                 {shippingCost === 0 ? (
-                  <span className="text-emerald-700 font-bold">{isId ? 'Gratis Ongkir' : 'Free'}</span>
+                  <span className="text-[#003d29] font-bold">{isId ? 'Gratis Ongkir' : 'Free'}</span>
                 ) : (
                   formatCurrency(shippingCost)
                 )}
@@ -168,7 +168,7 @@ export default function CartPage() {
           </div>
 
           <div className="mt-4 p-3 bg-white border border-gray-100 rounded-xl flex items-center gap-2.5 text-xs text-gray-600">
-            <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
+            <ShieldCheck className="w-5 h-5 text-[#003d29] shrink-0" />
             <span>{isId ? 'Bisa bayar di tempat (COD) & transfer bank aman.' : 'COD & Secure Bank Transfer available.'}</span>
           </div>
 

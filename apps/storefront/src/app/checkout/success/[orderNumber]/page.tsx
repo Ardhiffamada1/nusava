@@ -49,11 +49,11 @@ export default function OrderSuccessPage() {
   return (
     <div className="max-w-2xl mx-auto px-6 py-16 font-sans">
       <div className="bg-white border border-gray-200/80 rounded-3xl p-8 sm:p-12 text-center shadow-xs">
-        <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center mx-auto mb-4 text-[#003d29]">
+        <div className="w-16 h-16 rounded-full bg-[#F5F6F6] border border-gray-200 flex items-center justify-center mx-auto mb-4 text-[#003d29]">
           <CheckCircle2 className="w-9 h-9 stroke-[2]" />
         </div>
 
-        <span className="text-xs uppercase tracking-widest text-emerald-800 font-bold block mb-1">
+        <span className="text-xs uppercase tracking-widest text-[#003d29] font-bold block mb-1">
           PESANAN BERHASIL DITERIMA
         </span>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight mb-2">
@@ -88,7 +88,7 @@ export default function OrderSuccessPage() {
             </span>
             <span
               className={`font-bold mt-0.5 inline-flex items-center gap-1 ${
-                isPaid ? 'text-emerald-700' : 'text-amber-800'
+                isPaid ? 'text-[#003d29]' : 'text-gray-700'
               }`}
             >
               {isPaid ? (
@@ -153,7 +153,7 @@ export default function OrderSuccessPage() {
                 type="button"
                 onClick={() => confirmPaymentMutation.mutate()}
                 disabled={confirmPaymentMutation.isPending}
-                className="w-full sm:w-auto px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-full shadow-sm transition-all flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-5 py-2.5 bg-[#003d29] hover:bg-[#002b1c] text-white font-bold text-xs rounded-full shadow-sm transition-all flex items-center justify-center gap-2"
               >
                 {confirmPaymentMutation.isPending ? (
                   <span>Mengonfirmasi...</span>
@@ -170,11 +170,11 @@ export default function OrderSuccessPage() {
 
         {/* Paid Confirmation Success Notice */}
         {isPaid && (
-          <div className="mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-left text-xs flex items-center gap-3">
-            <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0" />
+          <div className="mt-6 p-4 bg-[#F5F6F6] border border-gray-200 rounded-2xl text-left text-xs flex items-center gap-3">
+            <CheckCircle2 className="w-5 h-5 text-[#003d29] shrink-0" />
             <div>
-              <p className="font-bold text-emerald-900">Pembayaran Berhasil Diverifikasi!</p>
-              <p className="text-emerald-700 mt-0.5">
+              <p className="font-bold text-gray-900">Pembayaran Berhasil Diverifikasi!</p>
+              <p className="text-[#003d29] mt-0.5">
                 Status pembayaran lunas. Paket oleh-olehmu saat ini sedang dipersiapkan untuk segera dikirim.
               </p>
             </div>

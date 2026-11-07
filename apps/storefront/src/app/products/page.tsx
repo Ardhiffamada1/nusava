@@ -86,7 +86,7 @@ function ShopcartCatalogContent() {
       {/* Top Banner / Breadcrumb */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-gray-100">
         <div>
-          <span className="text-[11px] font-mono uppercase tracking-wider text-emerald-800 font-bold block mb-1">
+          <span className="text-[11px] uppercase tracking-wider text-[#003d29] font-bold block mb-1">
             KATALOG LENGKAP
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
@@ -185,7 +185,7 @@ function ShopcartCatalogContent() {
                     <button
                       onClick={(e) => toggleWishlist(e, product.id)}
                       className={`absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white shadow-2xs flex items-center justify-center transition-colors z-10 ${
-                        isFav ? 'text-rose-500 fill-rose-500' : 'text-gray-400 hover:text-rose-500'
+                        isFav ? 'text-[#003d29] fill-current' : 'text-gray-400 hover:text-[#003d29]'
                       }`}
                       title="Simpan ke favorit"
                     >
@@ -223,7 +223,7 @@ function ShopcartCatalogContent() {
 
                   {/* Green Star Rating */}
                   <div className="flex items-center gap-1.5 mt-1.5">
-                    <div className="flex text-emerald-600 text-[11px]">
+                    <div className="flex text-[#003d29] text-[11px]">
                       {'★'.repeat(5)}
                     </div>
                     <span className="text-[10px] text-gray-400 font-semibold">(121)</span>

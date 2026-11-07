@@ -149,7 +149,7 @@ export default function ProductDetailPage() {
             <button
               onClick={() => setIsWishlisted(!isWishlisted)}
               className={`absolute top-6 right-6 w-10 h-10 rounded-full bg-white shadow-2xs flex items-center justify-center transition-colors z-10 ${
-                isWishlisted ? 'text-rose-500 fill-rose-500' : 'text-gray-400 hover:text-rose-500'
+                isWishlisted ? 'text-[#003d29] fill-[#003d29]' : 'text-gray-400 hover:text-[#003d29]'
               }`}
               title="Simpan ke favorit"
             >
@@ -200,9 +200,9 @@ export default function ProductDetailPage() {
             </h1>
             <p className="text-xs text-gray-500 mt-1 leading-relaxed">{product.description}</p>
 
-            {/* Star Rating */}
+            {/* Star Rating (Shopcart dark green stars) */}
             <div className="flex items-center gap-2 mt-2.5">
-              <div className="flex text-emerald-600 text-xs">{'★'.repeat(5)}</div>
+              <div className="flex text-[#003d29] text-xs">{'★'.repeat(5)}</div>
               <span className="text-xs text-gray-500 font-semibold">(121 ulasan pembeli)</span>
             </div>
 
@@ -211,7 +211,7 @@ export default function ProductDetailPage() {
               <span className="text-3xl font-extrabold text-gray-900">
                 {formatCurrency(currentPrice)}
               </span>
-              <span className="text-xs text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full">
+              <span className="text-xs text-[#003d29] font-semibold bg-[#F5F6F6] px-2.5 py-1 rounded-full">
                 Harga Pas Pengrajin
               </span>
             </div>

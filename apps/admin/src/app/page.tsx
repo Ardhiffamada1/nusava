@@ -251,8 +251,8 @@ export default function WiNkDashboardOverview() {
                   <span className="text-[10px] text-gray-400">24 Sep 2026</span>
                   <span className="text-xs font-bold text-gray-900">$387.54</span>
                 </div>
-                <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                  +2.4%
+                <span className="text-[10px] font-semibold text-[#27AE60] bg-[#E8F8F0] px-1.5 py-0.5 rounded">
+                  2.4%
                 </span>
               </div>
 

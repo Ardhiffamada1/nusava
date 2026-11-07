@@ -263,7 +263,7 @@ export function AdminSidebar() {
       <div className="pt-4 border-t border-[#E5E7EB] space-y-2">
         <div className="flex items-center justify-between p-2 rounded-xl hover:bg-gray-50 transition-colors">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-linear-to-tr from-amber-200 to-indigo-200 border border-gray-200 flex items-center justify-center text-xs font-semibold text-gray-700">
+            <div className="w-8 h-8 rounded-full bg-[#F5F6F6] border border-gray-200 flex items-center justify-center text-xs font-bold text-gray-800">
               JW
             </div>
             <div className="flex flex-col">

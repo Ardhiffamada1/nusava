@@ -183,13 +183,9 @@ export default function ShopcartStorefrontHome() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 font-sans space-y-12">
-      {/* 1. HERO BANNER */}
+      {/* 1. HERO BANNER (Strict Shopcart layout from reference image) */}
       <section className="bg-[#FCF0E4] rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="max-w-xl z-10 space-y-6">
-          <div className="inline-flex items-center gap-2 bg-emerald-100/80 text-[#003d29] px-3.5 py-1.5 rounded-full text-xs font-bold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Oleh-oleh Pilihan Langsung dari UMKM Nusantara</span>
-          </div>
           <h1 className="text-3xl sm:text-5xl lg:text-5xl font-black text-[#003d29] tracking-tight leading-[1.15]">
             Diskon Hingga 50% Untuk Pilihan Oleh-oleh Nusantara
           </h1>
@@ -199,14 +195,14 @@ export default function ShopcartStorefrontHome() {
           <div>
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 bg-[#003d29] hover:bg-[#002b1d] text-white text-sm font-bold px-8 py-3.5 rounded-full transition-all shadow-sm hover:scale-103"
+              className="inline-flex items-center gap-2 bg-[#003d29] hover:bg-[#002b1d] text-white text-sm font-bold px-8 py-3.5 rounded-full transition-all shadow-sm hover:scale-102"
             >
               <span>Beli Sekarang</span>
             </Link>
           </div>
         </div>
 
-        {/* Right Lifestyle Image (Loaded with Priority) */}
+        {/* Right Product Craft Image */}
         <div className="relative w-72 h-72 sm:w-88 sm:h-88 shrink-0">
           <Image
             src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=800&q=80"
@@ -214,12 +210,8 @@ export default function ShopcartStorefrontHome() {
             fill
             priority
             sizes="(max-width: 768px) 288px, 352px"
-            className="object-cover rounded-2xl shadow-md"
+            className="object-cover rounded-2xl shadow-sm"
           />
-          <div className="absolute -bottom-3 -left-3 bg-white py-2 px-4 rounded-xl shadow-md border border-gray-100 flex items-center gap-2">
-            <span className="text-xs font-bold text-[#003d29]">100% Asli Pengrajin</span>
-            <span className="text-emerald-700 font-bold">★ 4.9</span>
-          </div>
         </div>
       </section>
 
@@ -229,7 +221,7 @@ export default function ShopcartStorefrontHome() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200/80 pb-6 mb-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#003d29] text-white flex items-center justify-center shadow-xs">
-              <Zap className="w-5 h-5 text-emerald-300" />
+              <Zap className="w-5 h-5 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2.5">
@@ -317,7 +309,7 @@ export default function ShopcartStorefrontHome() {
                 <div className="mt-3 space-y-1">
                   <div className="flex justify-between text-[10px] font-semibold text-gray-500">
                     <span>Terjual {item.soldPercentage}%</span>
-                    <span className="text-emerald-700 font-bold">Sisa {item.stockLeft} buah</span>
+                    <span className="text-[#003d29] font-bold">Sisa {item.stockLeft} buah</span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
                     <div
@@ -506,7 +498,7 @@ export default function ShopcartStorefrontHome() {
                     <button
                       onClick={(e) => toggleWishlist(e, product.id)}
                       className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-xs transition-colors ${
-                        isFav ? 'text-rose-600' : 'text-gray-400 hover:text-rose-600'
+                        isFav ? 'text-[#003d29]' : 'text-gray-400 hover:text-[#003d29]'
                       }`}
                       aria-label="Tambah favorit"
                     >
@@ -534,9 +526,9 @@ export default function ShopcartStorefrontHome() {
                       {product.description}
                     </p>
 
-                    {/* Star Rating */}
+                    {/* Star Rating (Shopcart signature dark green stars) */}
                     <div className="flex items-center gap-1.5 mt-1.5">
-                      <div className="flex text-emerald-600 text-[11px]">
+                      <div className="flex text-[#003d29] text-[11px]">
                         {'★'.repeat(5)}
                       </div>
                       <span className="text-[10px] text-gray-400 font-semibold">(121)</span>
@@ -549,7 +541,7 @@ export default function ShopcartStorefrontHome() {
                       onClick={(e) => handleQuickAdd(e, product)}
                       className={`w-full py-2.5 px-4 rounded-full text-xs font-bold transition-all flex items-center justify-center gap-1.5 border ${
                         isAdded
-                          ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                          ? 'bg-[#003d29] text-white border-[#003d29]'
                           : 'bg-white text-gray-900 border-gray-300 hover:border-[#003d29] hover:bg-[#003d29] hover:text-white'
                       }`}
                     >

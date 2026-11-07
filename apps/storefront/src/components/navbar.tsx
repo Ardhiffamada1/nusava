@@ -117,19 +117,19 @@ export function Navbar() {
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
             {/* Left: Phone Contact */}
             <div className="hidden sm:flex items-center gap-2 text-white/90 shrink-0">
-              <Phone className="w-3.5 h-3.5 text-emerald-300" />
+              <Phone className="w-3.5 h-3.5 text-white/80" />
               <span className="font-semibold">+62 812-3456-7890</span>
             </div>
 
             {/* Center Promo Text */}
-            <div className="text-center font-medium flex-1 text-[11px] sm:text-xs">
+            <div className="text-center font-medium flex-1 text-[11px] sm:text-xs text-white">
               <span>Dapatkan Diskon Spesial s/d 50% Untuk Pilihan Oleh-oleh Nusantara | </span>
-              <Link href="/products" className="underline font-bold hover:text-emerald-200 ml-1">
+              <Link href="/products" className="underline font-bold hover:text-white/80 ml-1">
                 Beli Sekarang
               </Link>
             </div>
 
-            {/* Right: Language Selector with Globe & Flags + Close Button */}
+            {/* Right: Language Selector + Location + Close Button */}
             <div className="flex items-center gap-4 text-white/90 shrink-0">
               {/* Language Switcher Dropdown */}
               <div className="relative" ref={langDropdownRef}>
@@ -138,7 +138,7 @@ export function Navbar() {
                   onClick={() => setLangDropdownOpen(!langDropdownOpen)}
                   className="flex items-center gap-1.5 px-2 py-1 rounded-md hover:bg-white/10 transition-colors text-white font-semibold cursor-pointer"
                 >
-                  <Globe className="w-3.5 h-3.5 text-emerald-300" />
+                  <Globe className="w-3.5 h-3.5 text-white/80" />
                   <span>{language === 'id' ? '🇮🇩 ID' : '🇬🇧 EN'}</span>
                   <ChevronDown className="w-3 h-3 text-white/70" />
                 </button>
@@ -152,7 +152,7 @@ export function Navbar() {
                         setLangDropdownOpen(false);
                       }}
                       className={`w-full px-3 py-2 text-left text-xs flex items-center gap-2 hover:bg-gray-50 transition-colors ${
-                        language === 'id' ? 'font-bold text-[#003d29] bg-emerald-50/50' : 'text-gray-700'
+                        language === 'id' ? 'font-bold text-[#003d29] bg-[#F5F6F6]' : 'text-gray-700'
                       }`}
                     >
                       <span className="text-base">🇮🇩</span>
@@ -165,7 +165,7 @@ export function Navbar() {
                         setLangDropdownOpen(false);
                       }}
                       className={`w-full px-3 py-2 text-left text-xs flex items-center gap-2 hover:bg-gray-50 transition-colors ${
-                        language === 'en' ? 'font-bold text-[#003d29] bg-emerald-50/50' : 'text-gray-700'
+                        language === 'en' ? 'font-bold text-[#003d29] bg-[#F5F6F6]' : 'text-gray-700'
                       }`}
                     >
                       <span className="text-base">🇬🇧</span>
@@ -175,11 +175,17 @@ export function Navbar() {
                 )}
               </div>
 
+              {/* Location Pill (Matching Shopcart reference) */}
+              <div className="hidden md:flex items-center gap-1 text-white/80 text-xs">
+                <span>Indonesia</span>
+                <ChevronDown className="w-3 h-3 text-white/70" />
+              </div>
+
               {/* Dismiss (Close) Button */}
               <button
                 type="button"
                 onClick={dismissTopBar}
-                className="p-1 text-white/70 hover:text-white rounded-md hover:bg-white/10 transition-colors"
+                className="p-1 text-white/70 hover:text-white rounded-md hover:bg-white/10 transition-colors cursor-pointer"
                 title="Tutup informasi"
                 aria-label="Tutup bar pengumuman"
               >
@@ -191,21 +197,14 @@ export function Navbar() {
       )}
 
       {/* 2. Main Navigation Bar */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-3.5 flex items-center justify-between gap-6">
-        {/* Brand Logo: Shopcart style */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex items-center justify-between gap-6">
+        {/* Brand Logo: Clean Shopcart with Green Cart icon */}
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-xl bg-[#003d29] text-white flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
-              <ShoppingCart className="w-5 h-5 text-emerald-300" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-black text-[#003d29] tracking-tight leading-none">
-                Shopcart<span className="text-emerald-600">.</span>
-              </span>
-              <span className="text-[10px] text-gray-500 font-medium tracking-wide">
-                Oleh-oleh Nusantara
-              </span>
-            </div>
+            <ShoppingCart className="w-7 h-7 text-[#003d29] shrink-0" />
+            <span className="text-2xl font-black text-[#003d29] tracking-tight">
+              Shopcart
+            </span>
           </Link>
         </div>
 
@@ -279,7 +278,7 @@ export function Navbar() {
             <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden z-50 animate-in fade-in zoom-in-95">
               <div className="p-3 bg-gray-50/70 border-b border-gray-100 flex items-center justify-between text-xs">
                 <span className="font-semibold text-gray-500 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                  <Sparkles className="w-3.5 h-3.5 text-[#003d29]" />
                   <span>Saran Pencarian</span>
                 </span>
                 {isSearching && <span className="text-[11px] text-gray-400">Mencari...</span>}
@@ -327,7 +326,7 @@ export function Navbar() {
                   <button
                     type="button"
                     onClick={handleSearchSubmit}
-                    className="w-full p-2.5 text-center text-xs font-semibold text-[#003d29] hover:bg-emerald-50 transition-colors flex items-center justify-center gap-1.5"
+                    className="w-full p-2.5 text-center text-xs font-semibold text-[#003d29] hover:bg-[#F5F6F6] transition-colors flex items-center justify-center gap-1.5"
                   >
                     <span>Lihat semua hasil untuk &ldquo;{searchQuery}&rdquo;</span>
                     <ArrowRight className="w-3.5 h-3.5" />

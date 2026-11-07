@@ -229,7 +229,7 @@ export default function CheckoutPage() {
                 <h2 className="text-base font-bold text-gray-900">
                   Ringkasan Item Belanja ({items.length} Macam)
                 </h2>
-                <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
+                <span className="text-xs font-semibold text-[#003d29] bg-[#F5F6F6] px-2.5 py-1 rounded-full">
                   Stok Terverifikasi
                 </span>
               </div>
@@ -291,7 +291,7 @@ export default function CheckoutPage() {
                   </p>
                 </div>
                 {!user && (
-                  <span className="text-[11px] font-semibold bg-emerald-50 text-emerald-800 px-3 py-1 rounded-full border border-emerald-100">
+                  <span className="text-[11px] font-semibold bg-[#F5F6F6] text-[#003d29] px-3 py-1 rounded-full border border-gray-200">
                     Beli Langsung (Tamu)
                   </span>
                 )}
@@ -472,7 +472,7 @@ export default function CheckoutPage() {
                 <label
                   className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
                     selectedPaymentMethod === PaymentMethod.CASH_ON_DELIVERY
-                      ? 'border-[#003d29] bg-emerald-50/40 text-gray-900 ring-1 ring-[#003d29]'
+                      ? 'border-[#003d29] bg-[#F5F6F6] text-gray-900 ring-1 ring-[#003d29]'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
@@ -499,7 +499,7 @@ export default function CheckoutPage() {
                 <label
                   className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
                     selectedPaymentMethod === PaymentMethod.MANUAL_BANK_TRANSFER
-                      ? 'border-[#003d29] bg-emerald-50/40 text-gray-900 ring-1 ring-[#003d29]'
+                      ? 'border-[#003d29] bg-[#F5F6F6] text-gray-900 ring-1 ring-[#003d29]'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
@@ -522,7 +522,7 @@ export default function CheckoutPage() {
 
                     {/* Bank Account Details Card when selected */}
                     {selectedPaymentMethod === PaymentMethod.MANUAL_BANK_TRANSFER && (
-                      <div className="mt-3 p-3 bg-white border border-emerald-200 rounded-xl space-y-2 text-xs">
+                      <div className="mt-3 p-3 bg-white border border-gray-200 rounded-xl space-y-2 text-xs">
                         <div className="flex justify-between items-center text-gray-700">
                           <span className="font-semibold">Bank BCA:</span>
                           <span className="font-bold text-gray-900">873-019-2819</span>
@@ -557,7 +557,7 @@ export default function CheckoutPage() {
                   <span>Biaya Pengiriman Kurir</span>
                   <span className="font-semibold text-gray-900">
                     {shippingCost === 0 ? (
-                      <span className="text-emerald-700 font-bold">GRATIS ONGKIR</span>
+                      <span className="text-[#003d29] font-bold">GRATIS ONGKIR</span>
                     ) : (
                       formatCurrency(shippingCost)
                     )}
@@ -565,7 +565,7 @@ export default function CheckoutPage() {
                 </div>
 
                 {couponApplied && (
-                  <div className="flex justify-between text-emerald-700 font-semibold">
+                  <div className="flex justify-between text-[#003d29] font-semibold">
                     <span>Potongan Kupon Promo</span>
                     <span>-{formatCurrency(discount)}</span>
                   </div>
@@ -594,7 +594,7 @@ export default function CheckoutPage() {
 
               <div className="text-center pt-1">
                 <span className="text-[11px] text-gray-500 flex items-center justify-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <ShieldCheck className="w-4 h-4 text-[#003d29]" />
                   <span>Jaminan garansi produk asli & pengemasan higienis</span>
                 </span>
               </div>

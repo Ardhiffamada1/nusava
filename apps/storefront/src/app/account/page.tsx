@@ -432,9 +432,9 @@ export default function AccountPage() {
 
         {/* Right Sidebar: Send us a message & Address Book (Matching uploaded reference) */}
         <div className="lg:col-span-4 space-y-6">
-          {/* Send us a message card */}
+          {/* Send us a message card (Matching Onestore reference image) */}
           <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-2xs space-y-3">
-            <div className="w-10 h-10 rounded-full bg-emerald-50 text-[#003d29] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-[#F5F6F6] text-[#003d29] flex items-center justify-center">
               <MessageSquare className="w-5 h-5" />
             </div>
             <h3 className="text-base font-bold text-gray-900">
@@ -468,7 +468,7 @@ export default function AccountPage() {
                   <div className="flex justify-between items-start mb-1">
                     <span className="font-bold text-gray-900">{addr.fullName}</span>
                     {addr.isDefaultShipping && (
-                      <span className="text-[10px] font-semibold bg-emerald-100 text-emerald-800 rounded-full px-2 py-0.5">
+                      <span className="text-[10px] font-semibold bg-[#F5F6F6] text-[#003d29] rounded-full px-2 py-0.5">
                         Alamat Utama
                       </span>
                     )}
