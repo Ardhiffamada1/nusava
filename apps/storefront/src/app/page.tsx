@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
@@ -15,6 +15,10 @@ import {
   ShieldCheck,
   Truck,
   RotateCcw,
+  Zap,
+  Flame,
+  Clock,
+  Sparkles,
 } from 'lucide-react';
 import { apiRequest } from '../lib/api';
 import { formatCurrency } from '@commerceos/ui';
@@ -27,6 +31,30 @@ export default function ShopcartStorefrontHome() {
   const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('');
   const [sortOption, setSortOption] = useState<string>('newest');
 
+  // Flash Sale Live Countdown Timer (Hours, Minutes, Seconds)
+  const [timeLeft, setTimeLeft] = useState({
+    hours: 7,
+    minutes: 42,
+    seconds: 18,
+  });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev.seconds > 0) {
+          return { ...prev, seconds: prev.seconds - 1 };
+        } else if (prev.minutes > 0) {
+          return { ...prev, minutes: 59, seconds: 59 };
+        } else if (prev.hours > 0) {
+          return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        }
+        return { hours: 12, minutes: 0, seconds: 0 };
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Fetch featured catalog products
   const { data: productsData, isLoading } = useQuery({
     queryKey: ['featured-products', activeCategoryFilter, sortOption],
     queryFn: () => {
@@ -55,6 +83,58 @@ export default function ShopcartStorefrontHome() {
     setTimeout(() => setAddedId(null), 1200);
     openCart();
   };
+
+  // Curated Flash Sale items
+  const flashSaleItems = [
+    {
+      id: 'fs-1',
+      title: 'Bakpia Kukus Tugu Jogja Cokelat',
+      slug: 'bakpia-kukus-tugu-jogja',
+      originalPrice: 45000,
+      flashPrice: 29000,
+      discount: 35,
+      soldPercentage: 84,
+      stockLeft: 4,
+      image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop&q=80',
+      category: 'Kudapan Khas',
+    },
+    {
+      id: 'fs-2',
+      title: 'Pie Susu Dhian Khas Bali Asli Isi 50',
+      slug: 'pie-susu-dhian-bali-50',
+      originalPrice: 80000,
+      flashPrice: 52000,
+      discount: 35,
+      soldPercentage: 91,
+      stockLeft: 3,
+      image: 'https://images.unsplash.com/photo-1519869325930-281384150729?w=600&auto=format&fit=crop&q=80',
+      category: 'Kudapan Khas',
+    },
+    {
+      id: 'fs-3',
+      title: 'Kopi Arabika Gayo Aceh 250g',
+      slug: 'kopi-arabika-gayo-aceh',
+      originalPrice: 75000,
+      flashPrice: 49000,
+      discount: 35,
+      soldPercentage: 76,
+      stockLeft: 6,
+      image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80',
+      category: 'Kopi Nusantara',
+    },
+    {
+      id: 'fs-4',
+      title: 'Sambal Bu Rudy Surabaya Set 3',
+      slug: 'sambal-bu-rudy-surabaya-set3',
+      originalPrice: 85000,
+      flashPrice: 55000,
+      discount: 35,
+      soldPercentage: 88,
+      stockLeft: 5,
+      image: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&auto=format&fit=crop&q=80',
+      category: 'Sambal Tradisional',
+    },
+  ];
 
   const popularCategories = [
     {
@@ -103,9 +183,13 @@ export default function ShopcartStorefrontHome() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 font-sans space-y-12">
-      {/* 1. HERO BANNER (Exact Style: Peach / Cream card with Dark Green Typography) */}
+      {/* 1. HERO BANNER */}
       <section className="bg-[#FCF0E4] rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="max-w-xl z-10 space-y-6">
+          <div className="inline-flex items-center gap-2 bg-emerald-100/80 text-[#003d29] px-3.5 py-1.5 rounded-full text-xs font-bold">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Oleh-oleh Pilihan Langsung dari UMKM Nusantara</span>
+          </div>
           <h1 className="text-3xl sm:text-5xl lg:text-5xl font-black text-[#003d29] tracking-tight leading-[1.15]">
             Diskon Hingga 50% Untuk Pilihan Oleh-oleh Nusantara
           </h1>
@@ -122,13 +206,14 @@ export default function ShopcartStorefrontHome() {
           </div>
         </div>
 
-        {/* Right Lifestyle Image */}
+        {/* Right Lifestyle Image (Loaded with Priority) */}
         <div className="relative w-72 h-72 sm:w-88 sm:h-88 shrink-0">
           <Image
             src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=800&q=80"
             alt="Oleh-oleh Tradisional Pilihan"
             fill
             priority
+            sizes="(max-width: 768px) 288px, 352px"
             className="object-cover rounded-2xl shadow-md"
           />
           <div className="absolute -bottom-3 -left-3 bg-white py-2 px-4 rounded-xl shadow-md border border-gray-100 flex items-center gap-2">
@@ -138,7 +223,125 @@ export default function ShopcartStorefrontHome() {
         </div>
       </section>
 
-      {/* 2. FILTER PILLS BAR (Exact Shopcart Horizontal Filter Pills) */}
+      {/* 2. FLASH SALE SECTION (Live Countdown Timer & Heavy Discounts) */}
+      <section className="bg-gradient-to-r from-rose-900 via-rose-800 to-amber-900 rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
+        {/* Header Bar: Flame Badge & Live Countdown Timer */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/15 pb-6 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-400 text-rose-950 flex items-center justify-center font-black shadow-sm animate-pulse">
+              <Zap className="w-6 h-6 fill-current" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white uppercase">
+                  Flash Sale Hari Ini
+                </h2>
+                <span className="bg-rose-500 text-white text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full animate-bounce">
+                  Diskon s/d 50%
+                </span>
+              </div>
+              <p className="text-xs text-rose-100/80 mt-0.5">
+                Stok terbatas setiap hari dengan harga pas langsung dari dapur pengrajin.
+              </p>
+            </div>
+          </div>
+
+          {/* Countdown Clock */}
+          <div className="flex items-center gap-2 bg-black/30 backdrop-blur-xs px-4 py-2 rounded-2xl border border-white/10 self-start sm:self-auto">
+            <Clock className="w-4 h-4 text-amber-300" />
+            <span className="text-[11px] font-bold text-rose-100 uppercase tracking-wider mr-1">
+              Berakhir:
+            </span>
+            <div className="flex items-center gap-1.5 font-bold text-xs">
+              <span className="bg-white text-rose-900 px-2 py-1 rounded-md min-w-[28px] text-center shadow-xs">
+                {String(timeLeft.hours).padStart(2, '0')}
+              </span>
+              <span>:</span>
+              <span className="bg-white text-rose-900 px-2 py-1 rounded-md min-w-[28px] text-center shadow-xs">
+                {String(timeLeft.minutes).padStart(2, '0')}
+              </span>
+              <span>:</span>
+              <span className="bg-white text-rose-900 px-2 py-1 rounded-md min-w-[28px] text-center shadow-xs">
+                {String(timeLeft.seconds).padStart(2, '0')}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Flash Sale Product Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {flashSaleItems.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white rounded-2xl p-4 text-gray-900 shadow-sm flex flex-col justify-between group hover:-translate-y-1 transition-all duration-200"
+            >
+              <div>
+                {/* Photo with Discount Ribbon */}
+                <div className="relative w-full aspect-square bg-[#F5F6F6] rounded-xl overflow-hidden mb-3">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    loading="lazy"
+                    decoding="async"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-contain p-2 group-hover:scale-105 transition-transform"
+                  />
+                  {/* Fiery Discount Tag */}
+                  <div className="absolute top-2 left-2 bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs flex items-center gap-0.5">
+                    <Flame className="w-3 h-3 fill-current" />
+                    <span>-{item.discount}%</span>
+                  </div>
+                </div>
+
+                <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block">
+                  {item.category}
+                </span>
+                <Link
+                  href={`/products/${item.slug}`}
+                  className="text-xs font-bold text-gray-900 hover:text-[#003d29] line-clamp-1 transition-colors mt-0.5 block"
+                >
+                  {item.title}
+                </Link>
+
+                {/* Pricing: Strikethrough + Flash Price */}
+                <div className="flex items-baseline gap-2 mt-2">
+                  <span className="text-sm font-extrabold text-rose-600">
+                    {formatCurrency(item.flashPrice)}
+                  </span>
+                  <span className="text-[11px] text-gray-400 line-through">
+                    {formatCurrency(item.originalPrice)}
+                  </span>
+                </div>
+
+                {/* Progress Bar of Sold Items */}
+                <div className="mt-3 space-y-1">
+                  <div className="flex justify-between text-[10px] font-semibold text-gray-500">
+                    <span>Terjual {item.soldPercentage}%</span>
+                    <span className="text-rose-600 font-bold">Sisa {item.stockLeft} buah!</span>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className="bg-gradient-to-r from-amber-500 to-rose-600 h-full rounded-full transition-all duration-500"
+                      style={{ width: `${item.soldPercentage}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Button */}
+              <Link
+                href={`/products/${item.slug}`}
+                className="mt-4 w-full bg-[#003d29] hover:bg-[#002b1d] text-white text-xs font-bold py-2.5 rounded-full transition-all text-center block shadow-2xs"
+              >
+                Beli Kilat
+              </Link>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 3. FILTER PILLS BAR */}
       <section className="flex flex-wrap items-center justify-between gap-4 pt-2 pb-4 border-b border-gray-100">
         {/* Left Filter Dropdowns */}
         <div className="flex flex-wrap items-center gap-2.5">
@@ -238,7 +441,7 @@ export default function ShopcartStorefrontHome() {
         </div>
       </section>
 
-      {/* 3. MAIN PRODUCT GRID ("Oleh-oleh Pilihan Buat Kamu!") */}
+      {/* 4. MAIN PRODUCT GRID WITH LAZY LOADED IMAGES & SKELETONS */}
       <section className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
@@ -248,57 +451,72 @@ export default function ShopcartStorefrontHome() {
             href="/products"
             className="text-xs font-semibold text-[#003d29] hover:underline flex items-center gap-1"
           >
-            <span>Lihat Semua Produk</span>
+            <span>Lihat Semua Produk ({productsData?.items?.length || 32})</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
+        {/* Loading Skeletons for Zero CLS (Cumulative Layout Shift) */}
         {isLoading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, i) => (
               <div key={i} className="space-y-3 animate-pulse">
-                <div className="aspect-square bg-[#F5F6F6] rounded-2xl" />
-                <div className="h-4 bg-gray-100 rounded w-3/4" />
-                <div className="h-3 bg-gray-100 rounded w-1/2" />
+                <div className="aspect-square bg-gray-100 rounded-2xl" />
+                <div className="h-4 bg-gray-100 rounded-md w-3/4" />
+                <div className="h-3 bg-gray-100 rounded-md w-1/2" />
+                <div className="h-8 bg-gray-100 rounded-full w-full" />
               </div>
             ))}
           </div>
+        ) : productsData?.items?.length === 0 ? (
+          <div className="text-center py-16 bg-gray-50 rounded-2xl">
+            <p className="text-gray-500 text-sm">Tidak ada produk ditemukan untuk filter ini.</p>
+          </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-8">
-            {productsData?.items?.map((product) => {
-              const defaultVariant = product.variants?.[0];
-              const price = Number(defaultVariant?.priceOverride || product.basePrice || 0);
-              const isFav = !!wishlist[product.id];
-              const imageUrl =
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {productsData?.items?.map((product: any) => {
+              const primaryImage =
+                product.images?.find((img: any) => img.isThumbnail)?.url ||
                 product.images?.[0]?.url ||
-                'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=600&q=80';
+                'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&auto=format&fit=crop&q=80';
+
+              const price = Number(product.basePrice);
+              const isAdded = addedId === product.id;
+              const isFav = wishlist[product.id];
 
               return (
-                <div key={product.id} className="group flex flex-col justify-between">
-                  <div>
-                    {/* Square Image Box with Wishlist Heart */}
-                    <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-2xl flex items-center justify-center p-6 mb-3 overflow-hidden">
-                      <button
-                        onClick={(e) => toggleWishlist(e, product.id)}
-                        className={`absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white shadow-2xs flex items-center justify-center transition-colors z-10 ${
-                          isFav ? 'text-rose-500 fill-rose-500' : 'text-gray-400 hover:text-rose-500'
-                        }`}
-                        title="Simpan ke favorit"
-                      >
-                        <Heart className={`w-4 h-4 ${isFav ? 'fill-current' : ''}`} />
-                      </button>
+                <div
+                  key={product.id}
+                  className="flex flex-col justify-between group"
+                >
+                  {/* Photo Container */}
+                  <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-2xl overflow-hidden border border-gray-100/60 p-4 flex items-center justify-center">
+                    <Link href={`/products/${product.slug}`} className="relative w-full h-full block">
+                      <Image
+                        src={primaryImage}
+                        alt={product.title}
+                        fill
+                        loading="lazy"
+                        decoding="async"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-contain group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </Link>
 
-                      <Link href={`/products/${product.slug}`} className="relative w-full h-full">
-                        <Image
-                          src={imageUrl}
-                          alt={product.title}
-                          fill
-                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                          className="object-contain group-hover:scale-106 transition-transform duration-300"
-                        />
-                      </Link>
-                    </div>
+                    {/* Wishlist Heart Button */}
+                    <button
+                      onClick={(e) => toggleWishlist(e, product.id)}
+                      className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-xs transition-colors ${
+                        isFav ? 'text-rose-600' : 'text-gray-400 hover:text-rose-600'
+                      }`}
+                      aria-label="Tambah favorit"
+                    >
+                      <Heart className={`w-4 h-4 ${isFav ? 'fill-current' : ''}`} />
+                    </button>
+                  </div>
 
+                  {/* Product Metadata */}
+                  <div className="mt-3.5 space-y-1">
                     {/* Top Row: Title on Left, Price on Right */}
                     <div className="flex items-start justify-between gap-2">
                       <Link
@@ -317,7 +535,7 @@ export default function ShopcartStorefrontHome() {
                       {product.description}
                     </p>
 
-                    {/* Star Rating (Green ★★★★★ like image) */}
+                    {/* Star Rating */}
                     <div className="flex items-center gap-1.5 mt-1.5">
                       <div className="flex text-emerald-600 text-[11px]">
                         {'★'.repeat(5)}
@@ -326,20 +544,20 @@ export default function ShopcartStorefrontHome() {
                     </div>
                   </div>
 
-                  {/* Add to Cart Pill Button (Style from image) */}
-                  <div className="pt-3">
+                  {/* Pill Add to Cart CTA */}
+                  <div className="mt-4">
                     <button
                       onClick={(e) => handleQuickAdd(e, product)}
-                      className={`w-full py-2 px-4 rounded-full text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
-                        addedId === product.id
-                          ? 'bg-[#003d29] text-white border-[#003d29]'
-                          : 'border-gray-300 text-gray-800 hover:bg-[#003d29] hover:text-white hover:border-[#003d29]'
+                      className={`w-full py-2.5 px-4 rounded-full text-xs font-bold transition-all flex items-center justify-center gap-1.5 border ${
+                        isAdded
+                          ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                          : 'bg-white text-gray-900 border-gray-300 hover:border-[#003d29] hover:bg-[#003d29] hover:text-white'
                       }`}
                     >
-                      {addedId === product.id ? (
+                      {isAdded ? (
                         <>
                           <Check className="w-3.5 h-3.5" />
-                          <span>Berhasil Masuk!</span>
+                          <span>Sudah di Keranjang</span>
                         </>
                       ) : (
                         <span>Masukkan Keranjang</span>
@@ -353,7 +571,7 @@ export default function ShopcartStorefrontHome() {
         )}
       </section>
 
-      {/* 4. POPULAR CATEGORIES (From right-side preview in reference image) */}
+      {/* 5. POPULAR CATEGORIES (Lazy loaded images) */}
       <section className="space-y-6 pt-6">
         <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Kategori Terpopuler</h2>
 
@@ -369,6 +587,9 @@ export default function ShopcartStorefrontHome() {
                   src={cat.image}
                   alt={cat.title}
                   fill
+                  loading="lazy"
+                  decoding="async"
+                  sizes="64px"
                   className="object-cover group-hover:scale-105 transition-transform"
                 />
               </div>
@@ -383,7 +604,7 @@ export default function ShopcartStorefrontHome() {
         </div>
       </section>
 
-      {/* 5. GUEST BENEFITS & ASSURANCES (Trust Badges) */}
+      {/* 6. GUEST BENEFITS & ASSURANCES */}
       <section className="bg-[#FAF9F5] border border-gray-200/60 rounded-3xl p-8 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center sm:text-left">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-[#003d29] text-white flex items-center justify-center shrink-0">

@@ -65,6 +65,12 @@ export class CatalogController {
   }
 
   @Public()
+  @Get('products/search/suggest')
+  async searchSuggest(@Query('q') q: string) {
+    return this.catalogService.searchSuggest(q || '');
+  }
+
+  @Public()
   @Get('products/:slugOrId')
   async getProduct(@Param('slugOrId') slugOrId: string) {
     return this.catalogService.getProductBySlugOrId(slugOrId);

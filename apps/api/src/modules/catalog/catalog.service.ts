@@ -121,11 +121,19 @@ export class CatalogService {
     }
 
     if (query.search) {
-      where.OR = [
-        { title: { contains: query.search, mode: 'insensitive' } },
-        { description: { contains: query.search, mode: 'insensitive' } },
-        { variants: { some: { sku: { contains: query.search, mode: 'insensitive' } } } },
-      ];
+      const searchTerms = query.search.trim().split(/\s+/).filter(Boolean);
+      if (searchTerms.length > 0) {
+        where.AND = searchTerms.map((term) => ({
+          OR: [
+            { title: { contains: term, mode: 'insensitive' } },
+            { description: { contains: term, mode: 'insensitive' } },
+            { category: { name: { contains: term, mode: 'insensitive' } } },
+            { category: { slug: { contains: term, mode: 'insensitive' } } },
+            { variants: { some: { title: { contains: term, mode: 'insensitive' } } } },
+            { variants: { some: { sku: { contains: term, mode: 'insensitive' } } } },
+          ],
+        }));
+      }
     }
 
     if (query.minPrice !== undefined || query.maxPrice !== undefined) {
@@ -186,6 +194,43 @@ export class CatalogService {
         totalPages: Math.ceil(total / limit),
       },
     };
+  }
+
+  async searchSuggest(rawQuery: string) {
+    if (!rawQuery || rawQuery.trim().length === 0) return [];
+    const searchTerms = rawQuery.trim().split(/\s+/).filter(Boolean);
+    const where: Prisma.ProductWhereInput = {
+      status: ProductStatus.ACTIVE,
+      AND: searchTerms.map((term) => ({
+        OR: [
+          { title: { contains: term, mode: 'insensitive' } },
+          { description: { contains: term, mode: 'insensitive' } },
+          { category: { name: { contains: term, mode: 'insensitive' } } },
+          { variants: { some: { title: { contains: term, mode: 'insensitive' } } } },
+          { variants: { some: { sku: { contains: term, mode: 'insensitive' } } } },
+        ],
+      })),
+    };
+
+    return this.prisma.product.findMany({
+      where,
+      take: 6,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        basePrice: true,
+        category: {
+          select: { name: true, slug: true },
+        },
+        images: {
+          orderBy: [{ isThumbnail: 'desc' }, { displayOrder: 'asc' }],
+          take: 1,
+          select: { url: true },
+        },
+      },
+    });
   }
 
   async getProductBySlugOrId(identifier: string) {
