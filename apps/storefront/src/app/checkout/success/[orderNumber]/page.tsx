@@ -80,8 +80,8 @@ export default function OrderSuccessPage() {
   );
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-14 font-sans">
-      <div className="bg-white border border-gray-200/80 rounded-3xl p-6 sm:p-10 shadow-xs">
+    <div className="max-w-3xl mx-auto px-6 py-12 font-sans">
+      <div className="bg-white border border-stone-200 rounded-2xl p-6 sm:p-10 shadow-xs">
         {/* Header Icon & Title */}
         <div className="text-center">
           <div className="w-16 h-16 rounded-full bg-[#F5F6F6] border border-gray-200 flex items-center justify-center mx-auto mb-4 text-[#003d29]">

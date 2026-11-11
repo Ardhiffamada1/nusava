@@ -109,9 +109,9 @@ export default function OrderTrackingPage() {
         </Link>
       </div>
 
-      <div className="bg-white border border-gray-200/80 rounded-3xl p-6 sm:p-10 shadow-xs space-y-8">
+      <div className="bg-white border border-stone-200 rounded-2xl p-6 sm:p-10 shadow-xs space-y-8">
         {/* Header Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200 pb-6">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#003d29] block">
               PELACAKAN PAKET EKSPEDISI REAL-TIME
@@ -124,7 +124,7 @@ export default function OrderTrackingPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3 bg-[#FAF9F5] p-3 rounded-2xl border border-gray-200 shrink-0">
+          <div className="flex items-center gap-3 bg-[#FAF9F5] p-3 rounded-xl border border-stone-200 shrink-0">
             <CourierLogo courierId={courierName} className="h-7 w-auto" />
             <div>
               <span className="text-[10px] font-bold text-gray-400 block uppercase">Ekspedisi Resmi</span>
@@ -134,7 +134,7 @@ export default function OrderTrackingPage() {
         </div>
 
         {/* Resi & Status Strip */}
-        <div className="p-4 bg-[#F5F6F6] rounded-2xl border border-gray-200/70 flex flex-wrap items-center justify-between gap-4 text-xs">
+        <div className="p-4 bg-[#F5F6F6] rounded-xl border border-stone-200 flex flex-wrap items-center justify-between gap-4 text-xs">
           <div className="flex items-center gap-2">
             <span className="text-gray-500 font-medium">Nomor Resi:</span>
             <span className="font-mono font-bold text-gray-900 text-sm">{resiNumber}</span>
@@ -208,7 +208,7 @@ export default function OrderTrackingPage() {
         </div>
 
         {/* Destination & Buyer Details */}
-        <div className="p-5 bg-[#FAF9F5] border border-gray-200 rounded-2xl grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div className="p-5 bg-[#FAF9F5] border border-stone-200 rounded-xl grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           <div className="space-y-1">
             <span className="text-gray-400 text-[10px] font-bold uppercase tracking-wider block">
               Alamat Pengiriman
@@ -224,7 +224,7 @@ export default function OrderTrackingPage() {
             </p>
           </div>
 
-          <div className="space-y-1 border-t sm:border-t-0 sm:border-l border-gray-200 sm:pl-4 pt-3 sm:pt-0">
+          <div className="space-y-1 border-t sm:border-t-0 sm:border-l border-stone-200 sm:pl-4 pt-3 sm:pt-0">
             <span className="text-gray-400 text-[10px] font-bold uppercase tracking-wider block">
               Jaminan Pengiriman
             </span>
@@ -239,7 +239,7 @@ export default function OrderTrackingPage() {
         </div>
 
         {/* Action Button */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-xs">
+        <div className="flex items-center justify-between pt-4 border-t border-stone-200 text-xs">
           <Link
             href="/account"
             className="text-gray-600 hover:text-black font-semibold flex items-center gap-1.5"
@@ -250,7 +250,7 @@ export default function OrderTrackingPage() {
 
           <Link
             href="/products"
-            className="bg-[#003d29] hover:bg-[#002b1c] text-white font-bold py-2.5 px-6 rounded-full transition-colors shadow-2xs"
+            className="bg-[#003d29] hover:bg-[#002b1c] text-white font-bold py-2.5 px-6 rounded-lg transition-colors shadow-xs"
           >
             Belanja Oleh-oleh Lain
           </Link>

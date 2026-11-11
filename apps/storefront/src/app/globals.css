@@ -3,16 +3,30 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --brand-forest: #003D29;
+    --brand-forest-dark: #002B1D;
+    --brand-peach: #FCF0E4;
+    --surface-card: #FAF9F5;
+    --surface-photo: #F5F6F6;
+  }
+
   body {
     background-color: #FFFFFF;
-    color: #09090B;
+    color: #1C1917;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
-    background-color: #09090B;
+    background-color: #003D29;
     color: #FFFFFF;
+  }
+}
+
+@layer utilities {
+  .focus-ring {
+    @apply focus:outline-none focus:ring-1 focus:ring-[#003D29] focus:border-[#003D29];
   }
 }

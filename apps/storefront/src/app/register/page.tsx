@@ -48,9 +48,9 @@ function RegisterContent() {
 
   return (
     <div className="max-w-md mx-auto px-6 py-14">
-      <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+      <div className="bg-white p-8 rounded-2xl border border-stone-200 shadow-xs">
         <div className="text-center mb-6">
-          <div className="w-12 h-12 mx-auto rounded-full bg-[#FCF0E4] flex items-center justify-center text-[#003d29] mb-3">
+          <div className="w-12 h-12 mx-auto rounded-xl bg-[#FCF0E4] flex items-center justify-center text-[#003d29] mb-3">
             <ShoppingBag className="w-6 h-6" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Daftar Akun Baru</h1>
@@ -60,7 +60,7 @@ function RegisterContent() {
         </div>
 
         {errorMessage && (
-          <div className="mb-6 p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl flex items-center gap-2">
+          <div className="mb-6 p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-lg flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
             <span>{errorMessage}</span>
           </div>
@@ -75,7 +75,7 @@ function RegisterContent() {
               <input
                 type="text"
                 {...register('firstName')}
-                className="w-full text-sm p-3 border border-gray-200 bg-white rounded-xl focus:outline-hidden focus:border-[#003d29] transition-colors"
+                className="w-full text-sm p-3 border border-stone-200 bg-white rounded-lg focus:outline-hidden focus:border-[#003d29] transition-colors"
                 placeholder="Rian"
               />
               {errors.firstName && <p className="text-[11px] text-rose-600 mt-1">{errors.firstName.message}</p>}
@@ -88,7 +88,7 @@ function RegisterContent() {
               <input
                 type="text"
                 {...register('lastName')}
-                className="w-full text-sm p-3 border border-gray-200 bg-white rounded-xl focus:outline-hidden focus:border-[#003d29] transition-colors"
+                className="w-full text-sm p-3 border border-stone-200 bg-white rounded-lg focus:outline-hidden focus:border-[#003d29] transition-colors"
                 placeholder="Pratama"
               />
               {errors.lastName && <p className="text-[11px] text-rose-600 mt-1">{errors.lastName.message}</p>}
@@ -102,7 +102,7 @@ function RegisterContent() {
             <input
               type="email"
               {...register('email')}
-              className="w-full text-sm p-3 border border-gray-200 bg-white rounded-xl focus:outline-hidden focus:border-[#003d29] transition-colors"
+              className="w-full text-sm p-3 border border-stone-200 bg-white rounded-lg focus:outline-hidden focus:border-[#003d29] transition-colors"
               placeholder="nama@email.com"
             />
             {errors.email && <p className="text-[11px] text-rose-600 mt-1">{errors.email.message}</p>}
@@ -115,7 +115,7 @@ function RegisterContent() {
             <input
               type="password"
               {...register('password')}
-              className="w-full text-sm p-3 border border-gray-200 bg-white rounded-xl focus:outline-hidden focus:border-[#003d29] transition-colors"
+              className="w-full text-sm p-3 border border-stone-200 bg-white rounded-lg focus:outline-hidden focus:border-[#003d29] transition-colors"
               placeholder="••••••••••••"
             />
             {errors.password && <p className="text-[11px] text-rose-600 mt-1">{errors.password.message}</p>}
@@ -124,7 +124,7 @@ function RegisterContent() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full mt-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-sm font-semibold py-3.5 px-4 rounded-full disabled:opacity-40 transition-all flex items-center justify-center gap-2 shadow-sm"
+            className="w-full mt-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold uppercase tracking-wider py-3.5 px-4 rounded-lg disabled:opacity-40 transition-colors flex items-center justify-center gap-2 shadow-xs"
           >
             <span>{isSubmitting ? 'Mendaftarkan akun...' : 'Buat Akun Sekarang'}</span>
             <ArrowRight className="w-4 h-4" />

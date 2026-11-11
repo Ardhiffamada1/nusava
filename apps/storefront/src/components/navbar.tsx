@@ -144,24 +144,24 @@ export function Navbar() {
                   className="flex items-center gap-1.5 px-2 py-1 rounded-md hover:bg-white/10 transition-colors text-white font-semibold cursor-pointer"
                 >
                   <Globe className="w-3.5 h-3.5 text-white/80" />
-                  <span>{language === 'id' ? '🇮🇩 ID' : '🇬🇧 EN'}</span>
+                  <span>{language === 'id' ? 'ID' : 'EN'}</span>
                   <ChevronDown className="w-3 h-3 text-white/70" />
                 </button>
 
                 {langDropdownOpen && (
-                  <div className="absolute right-0 mt-1.5 w-40 bg-white text-gray-800 rounded-xl shadow-xl border border-gray-100 py-1.5 z-50 animate-in fade-in zoom-in-95">
+                  <div className="absolute right-0 mt-1.5 w-36 bg-white text-gray-800 rounded-xl shadow-xl border border-stone-200 py-1.5 z-50 animate-in fade-in zoom-in-95">
                     <button
                       type="button"
                       onClick={() => {
                         setLanguage('id');
                         setLangDropdownOpen(false);
                       }}
-                      className={`w-full px-3 py-2 text-left text-xs flex items-center gap-2 hover:bg-gray-50 transition-colors ${
-                        language === 'id' ? 'font-bold text-[#003d29] bg-[#F5F6F6]' : 'text-gray-700'
+                      className={`w-full px-3 py-2 text-left text-xs flex items-center justify-between hover:bg-stone-50 transition-colors ${
+                        language === 'id' ? 'font-bold text-[#003d29] bg-stone-50' : 'text-stone-700'
                       }`}
                     >
-                      <span className="text-base">🇮🇩</span>
                       <span>Indonesia (ID)</span>
+                      {language === 'id' && <span className="w-1.5 h-1.5 rounded-full bg-[#003d29]" />}
                     </button>
                     <button
                       type="button"
@@ -169,12 +169,12 @@ export function Navbar() {
                         setLanguage('en');
                         setLangDropdownOpen(false);
                       }}
-                      className={`w-full px-3 py-2 text-left text-xs flex items-center gap-2 hover:bg-gray-50 transition-colors ${
-                        language === 'en' ? 'font-bold text-[#003d29] bg-[#F5F6F6]' : 'text-gray-700'
+                      className={`w-full px-3 py-2 text-left text-xs flex items-center justify-between hover:bg-stone-50 transition-colors ${
+                        language === 'en' ? 'font-bold text-[#003d29] bg-stone-50' : 'text-stone-700'
                       }`}
                     >
-                      <span className="text-base">🇬🇧</span>
                       <span>English (EN)</span>
+                      {language === 'en' && <span className="w-1.5 h-1.5 rounded-full bg-[#003d29]" />}
                     </button>
                   </div>
                 )}

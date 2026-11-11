@@ -302,10 +302,10 @@ export default function AccountPage() {
                 return (
                   <div
                     key={order.id}
-                    className="border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-2xs"
+                    className="border border-stone-200 rounded-2xl overflow-hidden bg-white shadow-2xs"
                   >
-                    {/* Header Strip (From uploaded reference image) */}
-                    <div className="bg-[#F9FAFA] border-b border-gray-200/90 px-6 py-4 flex flex-wrap items-center justify-between gap-4 text-xs">
+                    {/* Header Strip */}
+                    <div className="bg-[#FAF9F5] border-b border-stone-200 px-6 py-4 flex flex-wrap items-center justify-between gap-4 text-xs">
                       {/* Left: Metadata columns */}
                       <div className="flex flex-wrap items-center gap-6 sm:gap-10">
                         <div>
@@ -362,7 +362,7 @@ export default function AccountPage() {
 
                     {/* Card Body */}
                     <div className="p-6 space-y-6">
-                      {/* Review encouragement yellow banner (exact style from uploaded reference image) */}
+                      {/* Review encouragement yellow banner */}
                       {isDelivered && !bannerDismissed && (
                         <div className="p-3.5 bg-[#FFF9E6] border border-[#FFE8A3] text-gray-800 text-xs rounded-xl flex items-center justify-between">
                           <button
@@ -411,8 +411,8 @@ export default function AccountPage() {
                         const productSlug = item.slug || item.variant?.product?.slug || 'bakpia-pathok-25-yogyakarta';
 
                         return (
-                          <div key={item.id || idx} className="space-y-3 pt-4 first:pt-0 border-t first:border-t-0 border-gray-100">
-                            {/* Delivery Heading (From reference image: 'Delivered June 5') */}
+                          <div key={item.id || idx} className="space-y-3 pt-4 first:pt-0 border-t first:border-t-0 border-stone-200">
+                            {/* Delivery Heading */}
                             <div>
                               <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                                 {item.deliveredDate ||
@@ -430,7 +430,7 @@ export default function AccountPage() {
                             {/* Product Item Content */}
                             <div className="flex flex-col sm:flex-row items-start gap-4">
                               {/* Square Photo on Left */}
-                              <div className="relative w-24 h-24 bg-[#F5F6F6] rounded-xl overflow-hidden shrink-0 border border-gray-100 p-2 flex items-center justify-center">
+                              <div className="relative w-24 h-24 bg-[#F5F6F6] rounded-xl overflow-hidden shrink-0 border border-stone-200 p-2 flex items-center justify-center">
                                 <Image
                                   src={productImg}
                                   alt={productTitle}
@@ -440,7 +440,7 @@ export default function AccountPage() {
                                 />
                               </div>
 
-                              {/* Details & Button Actions (Exact match to reference image) */}
+                              {/* Details & Button Actions */}
                               <div className="flex-1 min-w-0 space-y-1.5">
                                 <Link
                                   href={`/products/${productSlug}`}
@@ -456,13 +456,13 @@ export default function AccountPage() {
                                       : 'Return or replace items: Eligible through 7 days after delivery')}
                                 </p>
 
-                                {/* Action Buttons Row matching uploaded screenshot */}
+                                {/* Action Buttons Row */}
                                 <div className="flex flex-wrap items-center gap-2.5 pt-2">
-                                  {/* 1. Buy it again button (Solid Dark Green #003d29) */}
+                                  {/* 1. Buy it again button */}
                                   <button
                                     type="button"
                                     onClick={() => handleBuyAgain(item)}
-                                    className="bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-2xs"
+                                    className="bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5 shadow-2xs"
                                   >
                                     <RotateCcw className="w-3.5 h-3.5" />
                                     <span>{isId ? 'Beli lagi' : 'Buy it again'}</span>
@@ -471,7 +471,7 @@ export default function AccountPage() {
                                   {/* 2. View your item button */}
                                   <Link
                                     href={`/products/${productSlug}`}
-                                    className="bg-white border border-gray-200 hover:bg-gray-50 text-gray-800 text-xs font-semibold px-4 py-2 rounded-lg transition-colors"
+                                    className="bg-white border border-stone-200 hover:bg-stone-50 text-gray-800 text-xs font-semibold px-4 py-2 rounded-lg transition-colors"
                                   >
                                     {isId ? 'Lihat produk' : 'View your item'}
                                   </Link>
@@ -480,7 +480,7 @@ export default function AccountPage() {
                                   <button
                                     type="button"
                                     onClick={() => setTrackingOrder({ ...order, currentItem: item })}
-                                    className="bg-white border border-gray-200 hover:bg-gray-50 text-gray-800 text-xs font-semibold px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5"
+                                    className="bg-white border border-stone-200 hover:bg-stone-50 text-gray-800 text-xs font-semibold px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5"
                                   >
                                     <Truck className="w-3.5 h-3.5 text-gray-500" />
                                     <span>{isId ? 'Lacak paket' : 'Track package'}</span>
@@ -493,14 +493,14 @@ export default function AccountPage() {
                                       onClick={() =>
                                         setMenuOpenId(menuOpenId === item.id ? null : item.id)
                                       }
-                                      className="bg-white border border-gray-200 hover:bg-gray-50 text-gray-600 px-2.5 py-2 rounded-lg transition-colors flex items-center justify-center"
+                                      className="bg-white border border-stone-200 hover:bg-stone-50 text-gray-600 px-2.5 py-2 rounded-lg transition-colors flex items-center justify-center"
                                       aria-label="Opsi lainnya"
                                     >
                                       <MoreHorizontal className="w-4 h-4" />
                                     </button>
 
                                     {menuOpenId === item.id && (
-                                      <div className="absolute left-0 mt-1.5 w-48 bg-white border border-gray-200 rounded-xl shadow-lg py-1 z-20 text-xs font-semibold text-gray-700">
+                                      <div className="absolute left-0 mt-1.5 w-48 bg-white border border-stone-200 rounded-xl shadow-lg py-1 z-20 text-xs font-semibold text-gray-700">
                                         <button
                                           onClick={() => {
                                             setMenuOpenId(null);
@@ -512,7 +512,7 @@ export default function AccountPage() {
                                             });
                                             setReviewSuccess(false);
                                           }}
-                                          className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center gap-2 text-gray-700"
+                                          className="w-full text-left px-4 py-2 hover:bg-stone-50 flex items-center gap-2 text-gray-700"
                                         >
                                           <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                                           <span>{isId ? 'Tulis Ulasan Produk' : 'Write Product Review'}</span>
@@ -522,7 +522,7 @@ export default function AccountPage() {
                                             setMenuOpenId(null);
                                             setSelectedOrderId(order.id);
                                           }}
-                                          className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center gap-2"
+                                          className="w-full text-left px-4 py-2 hover:bg-stone-50 flex items-center gap-2"
                                         >
                                           <FileText className="w-3.5 h-3.5 text-gray-400" />
                                           <span>{isId ? 'Cetak Invoice' : 'Print Invoice'}</span>
@@ -531,7 +531,7 @@ export default function AccountPage() {
                                           href="https://wa.me/6281234567890"
                                           target="_blank"
                                           rel="noreferrer"
-                                          className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center gap-2 text-emerald-800"
+                                          className="w-full text-left px-4 py-2 hover:bg-stone-50 flex items-center gap-2 text-emerald-800"
                                         >
                                           <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
                                           <span>{isId ? 'Bantuan Pesanan' : 'Get Help'}</span>
@@ -553,11 +553,11 @@ export default function AccountPage() {
           )}
         </div>
 
-        {/* Right Sidebar: Send us a message (Matching uploaded reference image) */}
+        {/* Right Sidebar: Send us a message */}
         <div className="lg:col-span-4 space-y-6">
           {/* 1. Send us a message card */}
-          <div className="bg-white border border-gray-200/90 rounded-2xl p-6 shadow-2xs space-y-4">
-            <div className="w-12 h-12 rounded-full bg-[#003d29]/10 text-[#003d29] flex items-center justify-center">
+          <div className="bg-white border border-stone-200 rounded-xl p-6 shadow-2xs space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-[#003d29]/10 text-[#003d29] flex items-center justify-center">
               <MessageSquare className="w-6 h-6 text-[#003d29]" />
             </div>
 
@@ -576,14 +576,14 @@ export default function AccountPage() {
               href="https://wa.me/6281234567890?text=Halo%20Admin%20Onestore,%20saya%20butuh%20bantuan%20seputar%20pesanan%20saya."
               target="_blank"
               rel="noreferrer"
-              className="w-full bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold py-3.5 px-4 rounded-xl text-center block transition-all shadow-2xs"
+              className="w-full bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold py-3.5 px-4 rounded-lg text-center block transition-colors shadow-2xs"
             >
               {isId ? 'Kirim Pesan Sekarang' : 'Send us a message'}
             </a>
           </div>
 
           {/* 2. Customer Trust & Guarantee Card */}
-          <div className="bg-[#FAF9F5] border border-gray-200/80 rounded-2xl p-5 space-y-3.5 text-xs text-gray-600">
+          <div className="bg-[#FAF9F5] border border-stone-200 rounded-xl p-5 space-y-3.5 text-xs text-gray-600">
             <div className="flex items-center gap-2 text-gray-900 font-bold">
               <ShieldCheck className="w-4 h-4 text-[#003d29]" />
               <span>{isId ? 'Jaminan Belanja Aman' : 'Buyer Protection'}</span>
@@ -605,8 +605,8 @@ export default function AccountPage() {
       {/* Track Package Modal */}
       {activeTracking && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-          <div className="bg-white border border-gray-200 max-w-lg w-full rounded-2xl shadow-2xl p-6 space-y-5 animate-in fade-in">
-            <div className="flex justify-between items-start border-b border-gray-100 pb-4">
+          <div className="bg-white border border-stone-200 max-w-lg w-full rounded-2xl shadow-2xl p-6 space-y-5 animate-in fade-in">
+            <div className="flex justify-between items-start border-b border-stone-200 pb-4">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#003d29]">
                   {isId ? 'PELACAKAN REAL-TIME' : 'LIVE PACKAGE TRACKING'}
@@ -620,7 +620,7 @@ export default function AccountPage() {
               </div>
               <button
                 onClick={() => setTrackingOrder(null)}
-                className="p-1 text-gray-400 hover:text-gray-900 rounded-full hover:bg-gray-100 transition-colors"
+                className="p-1 text-gray-400 hover:text-gray-900 rounded-full hover:bg-stone-100 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -644,7 +644,7 @@ export default function AccountPage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-3 h-3 rounded-full bg-gray-300 mt-1 shrink-0" />
+                <div className="w-3 h-3 rounded-full bg-stone-300 mt-1 shrink-0" />
                 <div>
                   <p className="font-semibold text-gray-700">
                     {isId ? 'Kurir Membawa Paket Menuju Lokasi' : 'With delivery courier'}
@@ -657,7 +657,7 @@ export default function AccountPage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-3 h-3 rounded-full bg-gray-300 mt-1 shrink-0" />
+                <div className="w-3 h-3 rounded-full bg-stone-300 mt-1 shrink-0" />
                 <div>
                   <p className="font-semibold text-gray-700">
                     {isId ? 'Paket Tiba di Sentra Hub Kota Tujuan' : 'Arrived at destination sorting center'}
@@ -667,7 +667,7 @@ export default function AccountPage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-3 h-3 rounded-full bg-gray-300 mt-1 shrink-0" />
+                <div className="w-3 h-3 rounded-full bg-stone-300 mt-1 shrink-0" />
                 <div>
                   <p className="font-semibold text-gray-700">
                     {isId ? 'Paket Dikirim dari Sentra Pengrajin' : 'Departed from artisan origin center'}
@@ -677,7 +677,7 @@ export default function AccountPage() {
               </div>
             </div>
 
-            <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+            <div className="pt-3 border-t border-stone-200 flex items-center justify-between">
               <Link
                 href={`/orders/track/${activeTracking.orderNumber || '112-0822160-5390023'}`}
                 className="text-xs font-semibold text-[#003d29] hover:underline flex items-center gap-1"
@@ -687,7 +687,7 @@ export default function AccountPage() {
               </Link>
               <button
                 onClick={() => setTrackingOrder(null)}
-                className="px-5 py-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold rounded-full transition-colors"
+                className="px-5 py-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold rounded-lg transition-colors"
               >
                 {isId ? 'Tutup' : 'Close'}
               </button>
@@ -699,8 +699,8 @@ export default function AccountPage() {
       {/* Write a Product Review Modal (Feature 2) */}
       {reviewingItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-          <div className="bg-white border border-gray-200 max-w-md w-full rounded-2xl shadow-2xl p-6 space-y-5 animate-in fade-in">
-            <div className="flex justify-between items-start border-b border-gray-100 pb-3">
+          <div className="bg-white border border-stone-200 max-w-md w-full rounded-2xl shadow-2xl p-6 space-y-5 animate-in fade-in">
+            <div className="flex justify-between items-start border-b border-stone-200 pb-3">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#003d29]">
                   {isId ? 'ULASAN PEMBELI' : 'PRODUCT REVIEW'}
@@ -711,7 +711,7 @@ export default function AccountPage() {
               </div>
               <button
                 onClick={() => setReviewingItem(null)}
-                className="p-1 text-gray-400 hover:text-gray-900 rounded-full hover:bg-gray-100 transition-colors"
+                className="p-1 text-gray-400 hover:text-gray-900 rounded-full hover:bg-stone-100 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -729,7 +729,7 @@ export default function AccountPage() {
                 <button
                   type="button"
                   onClick={() => setReviewingItem(null)}
-                  className="mt-4 px-6 py-2.5 bg-[#003d29] text-white text-xs font-bold rounded-full hover:bg-[#002b1c] transition-colors"
+                  className="mt-4 px-6 py-2.5 bg-[#003d29] text-white text-xs font-bold rounded-lg hover:bg-[#002b1c] transition-colors"
                 >
                   Tutup
                 </button>
@@ -737,8 +737,8 @@ export default function AccountPage() {
             ) : (
               <div className="space-y-4 text-xs">
                 {/* Item Thumbnail & Title */}
-                <div className="flex items-center gap-3 p-3 bg-[#FAF9F5] border border-gray-200/80 rounded-xl">
-                  <div className="relative w-12 h-12 bg-white rounded-lg overflow-hidden shrink-0 border border-gray-200">
+                <div className="flex items-center gap-3 p-3 bg-[#FAF9F5] border border-stone-200 rounded-xl">
+                  <div className="relative w-12 h-12 bg-white rounded-lg overflow-hidden shrink-0 border border-stone-200">
                     <Image
                       src={reviewingItem.image}
                       alt={reviewingItem.title}
@@ -767,7 +767,7 @@ export default function AccountPage() {
                           onMouseEnter={() => setReviewHoverRating(star)}
                           onMouseLeave={() => setReviewHoverRating(0)}
                           onClick={() => setReviewRating(star)}
-                          className="p-1 hover:scale-115 transition-transform"
+                          className="p-1 transition-colors"
                           aria-label={`Beri ${star} bintang`}
                         >
                           <Star
@@ -819,10 +819,10 @@ export default function AccountPage() {
                               setReviewTags([...reviewTags, tag]);
                             }
                           }}
-                          className={`px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all border ${
+                          className={`px-3 py-1 rounded-lg text-[11px] font-semibold transition-colors border ${
                             isSelected
                               ? 'bg-[#003d29] text-white border-[#003d29]'
-                              : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+                              : 'bg-white text-gray-600 border-stone-200 hover:border-stone-400'
                           }`}
                         >
                           {tag}
@@ -842,7 +842,7 @@ export default function AccountPage() {
                     value={reviewText}
                     onChange={(e) => setReviewText(e.target.value)}
                     placeholder="Bagikan ulasan tentang kelezatan rasa, kerapian kemasan, atau pelayanan penjual..."
-                    className="w-full text-xs p-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#003d29] resize-none"
+                    className="w-full text-xs p-3 rounded-lg border border-stone-200 focus:outline-none focus:ring-1 focus:ring-[#003d29] resize-none"
                   />
                 </div>
 
@@ -862,7 +862,7 @@ export default function AccountPage() {
                       setReviewText('');
                       setReviewTags([]);
                     }}
-                    className="px-5 py-2.5 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold rounded-full transition-colors shadow-2xs"
+                    className="px-5 py-2.5 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold rounded-lg transition-colors shadow-2xs"
                   >
                     Kirim Ulasan
                   </button>
@@ -876,8 +876,8 @@ export default function AccountPage() {
       {/* Order Details & Invoice Modal */}
       {selectedOrderId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-          <div className="bg-white border border-gray-200 max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl p-6 space-y-6">
-            <div className="flex justify-between items-start border-b border-gray-100 pb-4">
+          <div className="bg-white border border-stone-200 max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl p-6 space-y-6">
+            <div className="flex justify-between items-start border-b border-stone-200 pb-4">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#003d29]">
                   {isId ? 'RINCIAN TRANSAKSI' : 'ORDER DETAILS & INVOICE'}
@@ -891,14 +891,14 @@ export default function AccountPage() {
               </div>
               <button
                 onClick={() => setSelectedOrderId(null)}
-                className="p-1 hover:bg-gray-100 text-gray-400 hover:text-gray-900 rounded-full transition-colors"
+                className="p-1 hover:bg-stone-100 text-gray-400 hover:text-gray-900 rounded-full transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Financial Summary */}
-            <div className="p-4 bg-[#F9FAFA] border border-gray-200/80 rounded-xl text-xs space-y-2">
+            <div className="p-4 bg-[#FAF9F5] border border-stone-200 rounded-xl text-xs space-y-2">
               <div className="flex justify-between text-gray-600">
                 <span>{isId ? 'Subtotal Barang:' : 'Items Subtotal:'}</span>
                 <span className="font-semibold text-gray-900">
@@ -911,7 +911,7 @@ export default function AccountPage() {
                   {selectedOrderDetail ? formatCurrency(selectedOrderDetail.shippingCost) : formatCurrency(22990)}
                 </span>
               </div>
-              <div className="flex justify-between text-gray-900 font-bold text-sm pt-2 border-t border-gray-200">
+              <div className="flex justify-between text-gray-900 font-bold text-sm pt-2 border-t border-stone-200">
                 <span>{isId ? 'Total Tagihan:' : 'Grand Total:'}</span>
                 <span className="text-[#003d29]">
                   {selectedOrderDetail ? formatCurrency(selectedOrderDetail.grandTotal) : formatCurrency(157990)}
@@ -926,7 +926,7 @@ export default function AccountPage() {
               </span>
               <button
                 onClick={() => setSelectedOrderId(null)}
-                className="text-xs font-bold bg-[#003d29] hover:bg-[#002b1c] text-white px-6 py-2.5 rounded-full transition-colors shadow-2xs"
+                className="text-xs font-bold bg-[#003d29] hover:bg-[#002b1c] text-white px-6 py-2.5 rounded-lg transition-colors shadow-2xs"
               >
                 {isId ? 'Tutup Rincian' : 'Close Details'}
               </button>

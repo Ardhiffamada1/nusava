@@ -7,7 +7,6 @@ import { useQuery } from '@tanstack/react-query';
 import {
   Heart,
   ChevronDown,
-  SlidersHorizontal,
   Check,
   ArrowRight,
   ShieldCheck,
@@ -39,7 +38,7 @@ export default function MarketplaceStorefrontHome() {
   const [activeOriginFilter, setActiveOriginFilter] = useState<string>('');
   const [sortOption, setSortOption] = useState<string>('newest');
 
-  // Flash Sale Live Countdown Timer (Shopee / Blibli style)
+  // Flash Sale Live Countdown Timer
   const [timeLeft, setTimeLeft] = useState({
     hours: 5,
     minutes: 38,
@@ -106,7 +105,7 @@ export default function MarketplaceStorefrontHome() {
     openCart();
   };
 
-  // Curated Flash Sale items with authentic photos and marketplace pricing
+  // Curated Flash Sale items
   const flashSaleItems = [
     {
       id: 'fs-1',
@@ -174,64 +173,64 @@ export default function MarketplaceStorefrontHome() {
   const visualCategories = [
     {
       title: 'Kudapan & Kue Tradisional',
-      subtitle: 'Bakpia, Pie Susu, Bolu & Lapis',
+      subtitle: 'Bakpia, Pie Susu & Lapis',
       slug: 'kudapan-khas',
       itemCount: '240+ Produk',
       image: 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Bakpia_pathok.jpg',
     },
     {
       title: 'Batik & Tenun Nusantara',
-      subtitle: 'Batik Tulis Solo, Tenun Troso & Sutra',
+      subtitle: 'Batik Tulis Solo & Tenun Troso',
       slug: 'batik-wastra',
       itemCount: '180+ Produk',
       image: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Batik_pedalaman_-_parang_klithik.JPG',
     },
     {
-      title: 'Kriya Kayu & Kerajinan Anyaman',
-      subtitle: 'Piring Jati, Besek Bambu & Tembikar',
+      title: 'Kriya Kayu & Kerajinan',
+      subtitle: 'Piring Jati & Besek Bambu',
       slug: 'kriya-kerajinan',
       itemCount: '150+ Produk',
       image: 'https://upload.wikimedia.org/wikipedia/commons/d/d6/Cobek.jpg',
     },
     {
-      title: 'Kopi & Minuman Herbal Daerah',
-      subtitle: 'Gayo, Toraja & Wedang Uwuh Rempah',
+      title: 'Kopi & Minuman Herbal',
+      subtitle: 'Gayo, Toraja & Wedang Uwuh',
       slug: 'kopi-minuman',
       itemCount: '95+ Produk',
       image: 'https://upload.wikimedia.org/wikipedia/commons/7/76/Wedang_Uwuh_Jawa.jpg',
     },
     {
-      title: 'Sambal & Bumbu Masakan Khas',
-      subtitle: 'Sambal Bu Rudy, Rendang Padang & Bumbu',
+      title: 'Sambal & Bumbu Daerah',
+      subtitle: 'Sambal Bu Rudy & Rendang',
       slug: 'sambal-bumbu',
       itemCount: '110+ Produk',
       image: 'https://upload.wikimedia.org/wikipedia/commons/7/70/Rendang_daging_sapi_asli_Padang.JPG',
     },
     {
-      title: 'Dekorasi & Keramik Seni Budaya',
-      subtitle: 'Gerabah Kasongan & Cinderamata Antik',
+      title: 'Dekorasi & Keramik Seni',
+      subtitle: 'Gerabah Kasongan & Kerajinan',
       slug: 'kriya-kerajinan',
       itemCount: '80+ Produk',
       image: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Pie_Susu_Top_View.jpg',
     },
   ];
 
-  // Verified Artisans & Official Makers (Etsy Makers / Shopee Mall / Blibli Official Store style)
+  // Verified Artisans & Official Makers
   const verifiedMakers = [
     {
       name: 'Dapur Bakpia Pathok 25',
       city: 'Yogyakarta',
       badge: 'Pengrajin Legendaris (Est. 1948)',
       sales: '12.4k Terjual',
-      rating: '4.9 ★',
+      rating: '4.9',
       image: 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Bakpia_pathok.jpg',
     },
     {
       name: 'Sentra Tenun Ikat Troso',
       city: 'Jepara',
-      badge: 'Karya Alat Tenun Bukan Mesin (ATBM)',
+      badge: 'Alat Tenun Bukan Mesin (ATBM)',
       sales: '4.8k Terjual',
-      rating: '5.0 ★',
+      rating: '5.0',
       image: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Batik_pedalaman_-_parang_klithik.JPG',
     },
     {
@@ -239,107 +238,115 @@ export default function MarketplaceStorefrontHome() {
       city: 'Surabaya',
       badge: 'Resep Asli Jawa Timur Terkurasi',
       sales: '18.9k Terjual',
-      rating: '4.9 ★',
+      rating: '4.9',
       image: 'https://upload.wikimedia.org/wikipedia/commons/5/5a/SAMBAL_BAWANG.jpg',
     },
     {
       name: 'Kopi Gayo Single Origin Roastery',
       city: 'Aceh Takengon',
-      badge: 'Petani Kopi Dataran Tinggi Gayo',
+      badge: 'Kemitraan Petani Dataran Tinggi',
       sales: '7.2k Terjual',
-      rating: '4.9 ★',
+      rating: '4.9',
       image: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Biji_Kopi.jpg',
     },
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6 font-sans space-y-12">
-      {/* 1. TOP MARKETPLACE TRUST STRIP (Blibli / Shopee Style) */}
-      <section className="bg-white border border-gray-200/80 rounded-2xl p-3.5 shadow-2xs">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-semibold text-gray-700">
-          <div className="flex items-center gap-2.5">
-            <Truck className="w-4 h-4 text-[#003d29] shrink-0" />
+    <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 font-sans space-y-12">
+      {/* 1. TOP MARKETPLACE BENEFIT STRIP */}
+      <section className="bg-white border border-stone-200 rounded-xl p-4 shadow-xs">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-semibold text-stone-700">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center shrink-0">
+              <Truck className="w-4 h-4 text-[#003d29]" />
+            </div>
             <div>
-              <span className="font-bold text-gray-900 block text-[11px]">Bebas Ongkir Nasional</span>
-              <span className="text-[10px] text-gray-400">Min. belanja Rp 150.000</span>
+              <span className="font-bold text-stone-900 block text-xs">Bebas Ongkir Nasional</span>
+              <span className="text-xs text-stone-400 font-normal">Min. belanja Rp 150.000</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5">
-            <ShieldCheck className="w-4 h-4 text-[#003d29] shrink-0" />
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-4 h-4 text-[#003d29]" />
+            </div>
             <div>
-              <span className="font-bold text-gray-900 block text-[11px]">100% Produk Otentik</span>
-              <span className="text-[10px] text-gray-400">Langsung dari pengrajin lokal</span>
+              <span className="font-bold text-stone-900 block text-xs">100% Produk Otentik</span>
+              <span className="text-xs text-stone-400 font-normal">Langsung dari pengrajin daerah</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5">
-            <RotateCcw className="w-4 h-4 text-[#003d29] shrink-0" />
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center shrink-0">
+              <RotateCcw className="w-4 h-4 text-[#003d29]" />
+            </div>
             <div>
-              <span className="font-bold text-gray-900 block text-[11px]">Garansi Sampai Aman</span>
-              <span className="text-[10px] text-gray-400">Ganti baru jika produk remuk/rusak</span>
+              <span className="font-bold text-stone-900 block text-xs">Garansi Sampai Aman</span>
+              <span className="text-xs text-stone-400 font-normal">Ganti baru jika barang rusak</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5">
-            <Tag className="w-4 h-4 text-[#003d29] shrink-0" />
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center shrink-0">
+              <Tag className="w-4 h-4 text-[#003d29]" />
+            </div>
             <div>
-              <span className="font-bold text-gray-900 block text-[11px]">Bisa Bayar di Tempat (COD)</span>
-              <span className="text-[10px] text-gray-400">Belanja praktis & aman</span>
+              <span className="font-bold text-stone-900 block text-xs">Bisa Bayar di Tempat (COD)</span>
+              <span className="text-xs text-stone-400 font-normal">Belanja tenang dan nyaman</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. HERO MARKETPLACE BANNER (Etsy Craft Aesthetic + Blibli Campaign Promo) */}
-      <section className="bg-[#FCF0E4] rounded-3xl p-8 sm:p-12 lg:p-14 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+      {/* 2. HERO MARKETPLACE BANNER */}
+      <section className="bg-[#FCF0E4] border border-stone-200/60 rounded-2xl p-8 sm:p-12 lg:p-14 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="max-w-xl z-10 space-y-5">
-          <div className="inline-flex items-center gap-2 bg-[#003d29] text-white text-[10px] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-2xs">
+          <div className="inline-flex items-center gap-2 bg-[#003d29] text-white text-xs font-semibold px-3 py-1 rounded-md shadow-xs">
             <Sparkles className="w-3.5 h-3.5 text-white" />
-            <span>Pasar Oleh-Oleh & Kerajinan Nusantara Terbesar</span>
+            <span>Pasar Karya & Oleh-Oleh Nusantara</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black text-[#003d29] tracking-tight leading-[1.15]">
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-[#003d29] tracking-tight leading-[1.15]">
             Temukan Citarasa & Karya Otentik Langsung dari Daerah
           </h1>
 
-          <p className="text-xs sm:text-sm text-gray-700 font-medium leading-relaxed max-w-lg">
-            Jelajahi aneka kudapan khas legendaris, batik tulis, kopi single-origin, dan kriya tangan yang diproduksi dengan cinta oleh para perajin dan dapur UMKM terbaik di seluruh Indonesia.
+          <p className="text-sm text-stone-700 leading-relaxed max-w-lg">
+            Jelajahi aneka kudapan khas legendaris, batik tulis, kopi single-origin, dan kriya tangan yang diproduksi dengan integritas oleh perajin dan dapur UMKM terpercaya di Indonesia.
           </p>
 
-          {/* Quick Coupon Claim Chips (Marketplace Promo Voucher Style) */}
-          <div className="pt-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 block mb-2">
-              Klaim Voucher Diskon Belanja Hari Ini:
+          {/* Quick Coupon Claim Chips */}
+          <div className="pt-1 space-y-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500 block">
+              Voucher Diskon Siap Pakai di Checkout:
             </span>
             <div className="flex flex-wrap gap-2">
-              <span className="inline-flex items-center gap-1.5 bg-white border border-[#003d29]/20 px-3 py-1.5 rounded-xl text-xs font-mono font-bold text-[#003d29] shadow-2xs">
+              <div className="inline-flex items-center gap-1.5 bg-white border border-stone-300 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-[#003d29] shadow-xs">
                 <Tag className="w-3.5 h-3.5 text-[#003d29]" />
                 <span>NUSANTARA (Diskon 15%)</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 bg-white border border-[#003d29]/20 px-3 py-1.5 rounded-xl text-xs font-mono font-bold text-[#003d29] shadow-2xs">
+              </div>
+              <div className="inline-flex items-center gap-1.5 bg-white border border-stone-300 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-[#003d29] shadow-xs">
                 <Tag className="w-3.5 h-3.5 text-[#003d29]" />
                 <span>ONGKIRGRATIS</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 bg-white border border-[#003d29]/20 px-3 py-1.5 rounded-xl text-xs font-mono font-bold text-[#003d29] shadow-2xs">
+              </div>
+              <div className="inline-flex items-center gap-1.5 bg-white border border-stone-300 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-[#003d29] shadow-xs">
                 <Tag className="w-3.5 h-3.5 text-[#003d29]" />
                 <span>DISKON50</span>
-              </span>
+              </div>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 bg-[#003d29] hover:bg-[#002b1d] text-white text-xs font-bold px-8 py-3.5 rounded-full transition-all shadow-sm"
+              className="inline-flex items-center gap-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-semibold px-7 py-3 rounded-lg transition-colors shadow-xs"
             >
-              <span>Mulai Belanja Oleh-Oleh</span>
+              <span>Mulai Belanja</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
 
             <Link
               href="/products?category=kudapan-khas"
-              className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-900 border border-gray-300 text-xs font-bold px-6 py-3.5 rounded-full transition-all shadow-2xs"
+              className="inline-flex items-center gap-2 bg-white hover:bg-stone-50 text-stone-800 border border-stone-300 text-xs font-semibold px-6 py-3 rounded-lg transition-colors"
             >
               <ShoppingBag className="w-4 h-4 text-[#003d29]" />
               <span>Kudapan Terpopuler</span>
@@ -355,48 +362,48 @@ export default function MarketplaceStorefrontHome() {
             fill
             priority
             sizes="(max-width: 768px) 288px, 352px"
-            className="object-cover rounded-3xl shadow-sm border border-emerald-900/10"
+            className="object-cover rounded-2xl shadow-sm border border-stone-200"
           />
-          <div className="absolute -bottom-2 -left-2 bg-white p-3 rounded-2xl border border-gray-200/90 shadow-md text-xs flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#FAF9F5] flex items-center justify-center text-[#003d29] font-bold">
+          <div className="absolute -bottom-2 -left-2 bg-white p-3.5 rounded-xl border border-stone-200 shadow-md text-xs flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-[#FAF9F5] border border-stone-200 flex items-center justify-center text-[#003d29] font-bold">
               4.9
             </div>
             <div>
-              <span className="font-bold text-gray-900 block text-[11px]">Rating Kepuasan Pembeli</span>
-              <span className="text-[10px] text-gray-400">Dari 15.000+ ulasan terverifikasi</span>
+              <span className="font-bold text-stone-900 block text-xs">Rating Kepuasan Pembeli</span>
+              <span className="text-xs text-stone-400">Dari 15.000+ pesanan terkirim</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 3. KATEGORI PILIHAN (Shopee / Blibli Visual Categories Grid) */}
-      <section className="space-y-6">
-        <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+      {/* 3. KATEGORI PILIHAN */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between border-b border-stone-200 pb-3">
           <div>
-            <span className="text-[10px] font-bold text-[#003d29] uppercase tracking-wider block">
-              KATEGORI POPULER
+            <span className="text-xs font-semibold text-[#003d29] uppercase tracking-wider block">
+              KATEGORI PILIHAN
             </span>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight mt-0.5">
-              Jelajahi Pilihan Nusantara
+            <h2 className="text-xl font-bold text-stone-900 tracking-tight mt-0.5">
+              Jelajahi Berdasarkan Produk
             </h2>
           </div>
           <Link
             href="/products"
-            className="text-xs font-bold text-[#003d29] hover:underline flex items-center gap-1"
+            className="text-xs font-semibold text-[#003d29] hover:underline flex items-center gap-1"
           >
             <span>Semua Kategori</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {visualCategories.map((cat, idx) => (
             <Link
               key={idx}
               href={`/products?category=${cat.slug}`}
-              className="bg-[#FAF9F5] hover:bg-white border border-gray-200/70 hover:border-[#003d29] rounded-2xl p-3 flex flex-col items-center text-center transition-all hover:shadow-xs group"
+              className="bg-[#FAF9F5] hover:bg-white border border-stone-200 hover:border-[#003d29] rounded-xl p-3.5 flex flex-col items-center text-center transition-colors group"
             >
-              <div className="relative w-16 h-16 rounded-2xl bg-white overflow-hidden mb-2.5 border border-gray-100 p-1 flex items-center justify-center">
+              <div className="relative w-16 h-16 rounded-xl bg-white overflow-hidden mb-2.5 border border-stone-200 p-1 flex items-center justify-center">
                 <Image
                   src={cat.image}
                   alt={cat.title}
@@ -404,56 +411,56 @@ export default function MarketplaceStorefrontHome() {
                   loading="lazy"
                   decoding="async"
                   sizes="64px"
-                  className="object-cover group-hover:scale-108 transition-transform duration-300 rounded-xl"
+                  className="object-cover group-hover:scale-105 transition-transform duration-200 rounded-lg"
                 />
               </div>
-              <h3 className="text-xs font-bold text-gray-900 group-hover:text-[#003d29] line-clamp-2 transition-colors">
+              <h3 className="text-xs font-bold text-stone-900 group-hover:text-[#003d29] line-clamp-2 transition-colors">
                 {cat.title}
               </h3>
-              <span className="text-[10px] text-gray-400 mt-1 font-semibold">{cat.itemCount}</span>
+              <span className="text-xs text-stone-400 mt-1 font-medium">{cat.itemCount}</span>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* 4. FLASH SALE HARIAN (Shopee / Blibli Style with Live Countdown Timer) */}
-      <section className="bg-[#FAF9F5] border border-gray-200/80 rounded-3xl p-6 sm:p-8 text-gray-900 relative">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200/80 pb-6 mb-6">
+      {/* 4. FLASH SALE HARIAN */}
+      <section className="bg-[#FAF9F5] border border-stone-200 rounded-2xl p-6 sm:p-8 text-stone-900 relative">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200 pb-5 mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#003d29] text-white flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-lg bg-[#003d29] text-white flex items-center justify-center shadow-xs">
               <Zap className="w-5 h-5 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2.5">
-                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900">
+                <h2 className="text-xl font-bold tracking-tight text-stone-900">
                   Flash Sale Hari Ini
                 </h2>
-                <span className="bg-[#003d29] text-white text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full">
+                <span className="bg-[#003d29] text-white text-xs font-semibold uppercase px-2.5 py-0.5 rounded-md">
                   Diskon s/d 50%
                 </span>
               </div>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Harga promo kilat langsung dari dapur dan bengkel pengrajin daerah, kuota terbatas.
+              <p className="text-xs text-stone-500 mt-0.5">
+                Penawaran terbatas langsung dari bengkel dan dapur pengrajin daerah.
               </p>
             </div>
           </div>
 
           {/* Countdown Clock */}
-          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-gray-200 shadow-2xs self-start sm:self-auto">
+          <div className="flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-lg border border-stone-200 shadow-xs self-start sm:self-auto">
             <Clock className="w-4 h-4 text-[#003d29]" />
-            <span className="text-xs font-semibold text-gray-500 mr-1">
-              Berakhir Dalam:
+            <span className="text-xs font-semibold text-stone-500 mr-1">
+              Berakhir:
             </span>
-            <div className="flex items-center gap-1.5 font-bold text-xs text-gray-900">
-              <span className="bg-[#003d29] text-white px-2 py-0.5 rounded-md min-w-[26px] text-center">
+            <div className="flex items-center gap-1.5 font-bold text-xs text-stone-900">
+              <span className="bg-[#003d29] text-white px-2 py-0.5 rounded-md min-w-[26px] text-center font-mono">
                 {String(timeLeft.hours).padStart(2, '0')}
               </span>
               <span>:</span>
-              <span className="bg-[#003d29] text-white px-2 py-0.5 rounded-md min-w-[26px] text-center">
+              <span className="bg-[#003d29] text-white px-2 py-0.5 rounded-md min-w-[26px] text-center font-mono">
                 {String(timeLeft.minutes).padStart(2, '0')}
               </span>
               <span>:</span>
-              <span className="bg-[#003d29] text-white px-2 py-0.5 rounded-md min-w-[26px] text-center">
+              <span className="bg-[#003d29] text-white px-2 py-0.5 rounded-md min-w-[26px] text-center font-mono">
                 {String(timeLeft.seconds).padStart(2, '0')}
               </span>
             </div>
@@ -465,10 +472,10 @@ export default function MarketplaceStorefrontHome() {
           {flashSaleItems.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-2xl p-4 border border-gray-200/70 hover:border-gray-300 shadow-2xs flex flex-col justify-between group transition-all duration-200"
+              className="bg-white rounded-xl p-4 border border-stone-200 hover:border-stone-300 shadow-xs flex flex-col justify-between group transition-colors"
             >
               <div>
-                <div className="relative w-full aspect-square bg-[#F5F6F6] rounded-xl overflow-hidden mb-3">
+                <div className="relative w-full aspect-square bg-[#F5F6F6] rounded-lg overflow-hidden mb-3 border border-stone-100">
                   <Image
                     src={item.image}
                     alt={item.title}
@@ -476,53 +483,53 @@ export default function MarketplaceStorefrontHome() {
                     loading="lazy"
                     decoding="async"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="object-contain p-2 group-hover:scale-105 transition-transform"
+                    className="object-contain p-2 group-hover:scale-105 transition-transform duration-200"
                   />
-                  <div className="absolute top-2 left-2 bg-[#003d29] text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-2xs">
+                  <div className="absolute top-2 left-2 bg-[#003d29] text-white text-xs font-bold px-2 py-0.5 rounded-md shadow-xs">
                     -{item.discount}%
                   </div>
-                  <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-2xs text-gray-700 text-[9px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 shadow-2xs">
-                    <MapPin className="w-2.5 h-2.5 text-[#003d29]" />
+                  <div className="absolute top-2 right-2 bg-white/95 text-stone-700 text-xs font-semibold px-2 py-0.5 rounded-md flex items-center gap-1 shadow-xs border border-stone-200">
+                    <MapPin className="w-3 h-3 text-[#003d29]" />
                     <span>{item.origin}</span>
                   </div>
                 </div>
 
-                <span className="text-[10px] font-bold text-[#003d29] uppercase tracking-wider block">
+                <span className="text-xs font-semibold text-[#003d29] uppercase tracking-wider block">
                   {item.category}
                 </span>
                 <Link
                   href={`/products/${item.slug}`}
-                  className="text-xs font-bold text-gray-900 hover:text-[#003d29] line-clamp-2 transition-colors mt-0.5 block leading-snug"
+                  className="text-xs font-bold text-stone-900 hover:text-[#003d29] line-clamp-2 transition-colors mt-0.5 block leading-snug"
                 >
                   {item.title}
                 </Link>
 
                 {/* Rating & Review */}
-                <div className="flex items-center gap-1 mt-1.5 text-[11px] text-gray-500">
-                  <span className="font-bold text-gray-900">{item.rating}</span>
-                  <div className="flex text-amber-500 text-[10px]">{'★'.repeat(5)}</div>
-                  <span className="text-gray-400">({item.reviewsCount})</span>
+                <div className="flex items-center gap-1 mt-1 text-xs text-stone-500">
+                  <span className="font-bold text-stone-900">{item.rating}</span>
+                  <div className="flex text-amber-500 text-xs">{'★'.repeat(5)}</div>
+                  <span className="text-stone-400">({item.reviewsCount})</span>
                 </div>
 
-                {/* Pricing: Strikethrough + Flash Price */}
+                {/* Pricing */}
                 <div className="flex items-baseline gap-2 mt-2">
                   <span className="text-base font-bold text-[#003d29]">
                     {formatCurrency(item.flashPrice)}
                   </span>
-                  <span className="text-[11px] text-gray-400 line-through">
+                  <span className="text-xs text-stone-400 line-through">
                     {formatCurrency(item.originalPrice)}
                   </span>
                 </div>
 
-                {/* Progress Bar of Sold Items */}
+                {/* Progress Bar */}
                 <div className="mt-3 space-y-1">
-                  <div className="flex justify-between text-[10px] font-semibold text-gray-500">
+                  <div className="flex justify-between text-xs font-medium text-stone-500">
                     <span>Terjual {item.soldPercentage}%</span>
                     <span className="text-[#003d29] font-bold">Sisa {item.stockLeft} pcs</span>
                   </div>
-                  <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                  <div className="w-full bg-stone-100 rounded-full h-1.5 overflow-hidden">
                     <div
-                      className="bg-[#003d29] h-full rounded-full transition-all duration-500"
+                      className="bg-[#003d29] h-full rounded-full transition-all duration-300"
                       style={{ width: `${item.soldPercentage}%` }}
                     />
                   </div>
@@ -532,7 +539,7 @@ export default function MarketplaceStorefrontHome() {
               {/* Action Button */}
               <Link
                 href={`/products/${item.slug}`}
-                className="mt-4 w-full bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold py-2.5 rounded-full transition-all text-center block shadow-2xs"
+                className="mt-4 w-full bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-semibold py-2.5 rounded-lg transition-colors text-center block shadow-xs"
               >
                 Beli Sekarang
               </Link>
@@ -541,22 +548,22 @@ export default function MarketplaceStorefrontHome() {
         </div>
       </section>
 
-      {/* 5. PILIHAN PENGRAJIN & DAPUR RESMI (Etsy Makers / Shopee Mall / Blibli Official Store) */}
-      <section className="bg-white border border-gray-200/80 rounded-3xl p-6 sm:p-8 space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-gray-100 pb-4">
+      {/* 5. PILIHAN PENGRAJIN & DAPUR DAERAH RESMI */}
+      <section className="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-stone-200 pb-4">
           <div className="flex items-center gap-2.5">
             <Store className="w-5 h-5 text-[#003d29]" />
             <div>
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900 tracking-tight">
+              <h2 className="text-xl font-bold text-stone-900 tracking-tight">
                 Pilihan Pengrajin & Dapur Daerah Resmi
               </h2>
-              <p className="text-xs text-gray-500 mt-0.5">
-                UMKM binaan terverifikasi dengan jaminan resep otentik dan kemasan higienis.
+              <p className="text-xs text-stone-500 mt-0.5">
+                UMKM binaan terverifikasi dengan komitmen resep otentik dan kemasan higienis.
               </p>
             </div>
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#003d29] bg-[#003d29]/10 px-3 py-1 rounded-full">
-            100% Verified Artisan
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#003d29] bg-[#003d29]/10 px-3 py-1 rounded-md">
+            Verified Artisan
           </span>
         </div>
 
@@ -564,11 +571,11 @@ export default function MarketplaceStorefrontHome() {
           {verifiedMakers.map((maker, idx) => (
             <div
               key={idx}
-              className="p-4 bg-[#FAF9F5] border border-gray-200/80 rounded-2xl flex flex-col justify-between hover:border-gray-300 transition-all"
+              className="p-4 bg-[#FAF9F5] border border-stone-200 rounded-xl flex flex-col justify-between hover:border-stone-300 transition-colors"
             >
               <div>
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="relative w-12 h-12 rounded-xl bg-white overflow-hidden shrink-0 border border-gray-200">
+                  <div className="relative w-12 h-12 rounded-lg bg-white overflow-hidden shrink-0 border border-stone-200">
                     <Image
                       src={maker.image}
                       alt={maker.name}
@@ -577,27 +584,27 @@ export default function MarketplaceStorefrontHome() {
                     />
                   </div>
                   <div>
-                    <h3 className="text-xs font-bold text-gray-900">{maker.name}</h3>
-                    <span className="text-[10px] text-gray-500 flex items-center gap-1 mt-0.5">
+                    <h3 className="text-xs font-bold text-stone-900">{maker.name}</h3>
+                    <span className="text-xs text-stone-500 flex items-center gap-1 mt-0.5">
                       <MapPin className="w-3 h-3 text-[#003d29]" />
                       <span>{maker.city}</span>
                     </span>
                   </div>
                 </div>
 
-                <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded block">
+                <span className="text-xs font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded block border border-emerald-200/60">
                   {maker.badge}
                 </span>
 
-                <div className="flex items-center justify-between text-xs text-gray-500 mt-3 pt-2 border-t border-gray-200/70">
-                  <span className="font-semibold text-gray-700">{maker.sales}</span>
-                  <span className="font-bold text-[#003d29]">{maker.rating}</span>
+                <div className="flex items-center justify-between text-xs text-stone-500 mt-3 pt-2 border-t border-stone-200">
+                  <span className="font-semibold text-stone-700">{maker.sales}</span>
+                  <span className="font-bold text-[#003d29]">{maker.rating} ★</span>
                 </div>
               </div>
 
               <Link
                 href="/products"
-                className="mt-4 w-full py-2 bg-white hover:bg-[#003d29] hover:text-white border border-gray-200 text-gray-800 rounded-xl text-xs font-bold text-center block transition-colors"
+                className="mt-4 w-full py-2 bg-white hover:bg-[#003d29] hover:text-white border border-stone-200 text-stone-800 rounded-lg text-xs font-semibold text-center block transition-colors"
               >
                 Kunjungi Toko
               </Link>
@@ -607,24 +614,24 @@ export default function MarketplaceStorefrontHome() {
       </section>
 
       {/* 6. PETA RASA DAERAH & FILTER BELANJA NUSANTARA */}
-      <section className="space-y-4 pt-2 pb-4 border-b border-gray-100">
+      <section className="space-y-4 pt-2 pb-2 border-b border-stone-200">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <span className="text-[10px] font-bold text-[#003d29] uppercase tracking-wider block">
-              KATALOG UTAMA OLEH-OLEH
+            <span className="text-xs font-semibold text-[#003d29] uppercase tracking-wider block">
+              KATALOG UTAMA
             </span>
-            <h2 className="text-xl font-bold text-gray-900 mt-0.5">
+            <h2 className="text-xl font-bold text-stone-900 mt-0.5">
               Koleksi Terbaik dari Seluruh Nusantara
             </h2>
           </div>
 
           {/* Right Sort Selector */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500">Urutkan:</span>
+            <span className="text-xs text-stone-500 font-medium">Urutkan:</span>
             <select
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
-              className="text-xs font-semibold text-gray-800 bg-white border border-gray-200 rounded-full px-3.5 py-1.5 outline-none focus:border-[#003d29] cursor-pointer"
+              className="text-xs font-semibold text-stone-800 bg-white border border-stone-200 rounded-lg px-3 py-1.5 outline-none focus:border-[#003d29] cursor-pointer"
             >
               <option value="newest">Paling Sesuai</option>
               <option value="popular">Paling Banyak Dibeli</option>
@@ -634,7 +641,7 @@ export default function MarketplaceStorefrontHome() {
           </div>
         </div>
 
-        {/* Origin City Filter Pills (Shopee / Blibli regional filter) */}
+        {/* Origin City Filter Pills */}
         <div className="pt-2 flex items-center gap-2 overflow-x-auto scrollbar-none pb-1">
           <span className="text-xs font-bold text-[#003d29] uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1.5">
             <Compass className="w-3.5 h-3.5 text-[#003d29]" />
@@ -646,10 +653,10 @@ export default function MarketplaceStorefrontHome() {
               <button
                 key={tab.id || 'all'}
                 onClick={() => setActiveOriginFilter(tab.city)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border shrink-0 ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors border shrink-0 ${
                   isSelected
-                    ? 'bg-[#003d29] text-white border-[#003d29] shadow-2xs'
-                    : 'bg-[#FAF9F5] text-gray-700 border-gray-200 hover:border-gray-400'
+                    ? 'bg-[#003d29] text-white border-[#003d29] shadow-xs'
+                    : 'bg-[#FAF9F5] text-stone-700 border-stone-200 hover:border-stone-400'
                 }`}
               >
                 {tab.label}
@@ -659,15 +666,15 @@ export default function MarketplaceStorefrontHome() {
         </div>
       </section>
 
-      {/* 7. MAIN PRODUCT GRID (Etsy Handmade Cards & Shopee Clean Product Style) */}
+      {/* 7. MAIN PRODUCT GRID */}
       <section className="space-y-6">
         <div className="flex items-center justify-between">
-          <p className="text-xs text-gray-500 font-medium">
+          <p className="text-xs text-stone-500 font-medium">
             Menampilkan produk pilihan terkurasi dari berbagai sentra UMKM Indonesia.
           </p>
           <Link
             href="/products"
-            className="text-xs font-bold text-[#003d29] hover:underline flex items-center gap-1"
+            className="text-xs font-semibold text-[#003d29] hover:underline flex items-center gap-1"
           >
             <span>Lihat Semua Produk ({productsData?.items?.length || 32})</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -679,16 +686,16 @@ export default function MarketplaceStorefrontHome() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => (
               <div key={i} className="space-y-3 animate-pulse">
-                <div className="aspect-square bg-gray-100 rounded-2xl" />
-                <div className="h-4 bg-gray-100 rounded-md w-3/4" />
-                <div className="h-3 bg-gray-100 rounded-md w-1/2" />
-                <div className="h-8 bg-gray-100 rounded-full w-full" />
+                <div className="aspect-square bg-stone-100 rounded-xl" />
+                <div className="h-4 bg-stone-100 rounded-md w-3/4" />
+                <div className="h-3 bg-stone-100 rounded-md w-1/2" />
+                <div className="h-8 bg-stone-100 rounded-lg w-full" />
               </div>
             ))}
           </div>
         ) : productsData?.items?.length === 0 ? (
-          <div className="text-center py-16 bg-gray-50 rounded-2xl">
-            <p className="text-gray-500 text-sm">Tidak ada produk ditemukan untuk filter ini.</p>
+          <div className="text-center py-16 bg-stone-50 rounded-xl border border-stone-200">
+            <p className="text-stone-500 text-xs">Tidak ada produk ditemukan untuk filter ini.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -706,11 +713,11 @@ export default function MarketplaceStorefrontHome() {
               return (
                 <div
                   key={product.id}
-                  className="flex flex-col justify-between group bg-white border border-gray-200/80 hover:border-gray-300 rounded-2xl p-4 shadow-2xs transition-all"
+                  className="flex flex-col justify-between group bg-white border border-stone-200 hover:border-stone-300 rounded-xl p-4 shadow-xs transition-colors"
                 >
                   <div>
-                    {/* Photo Container with Wishlist Heart */}
-                    <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-xl overflow-hidden mb-3 border border-gray-100 p-2 flex items-center justify-center">
+                    {/* Photo Container */}
+                    <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-lg overflow-hidden mb-3 border border-stone-100 p-2 flex items-center justify-center">
                       <Link href={`/products/${product.slug}`} className="relative w-full h-full block">
                         <Image
                           src={primaryImage}
@@ -719,72 +726,68 @@ export default function MarketplaceStorefrontHome() {
                           loading="lazy"
                           decoding="async"
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                          className="object-contain group-hover:scale-105 transition-transform duration-300"
+                          className="object-contain group-hover:scale-105 transition-transform duration-200"
                         />
                       </Link>
 
                       {/* Wishlist Button */}
                       <button
                         onClick={(e) => toggleWishlist(e, product)}
-                        className={`absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-xs transition-colors ${
-                          isFav ? 'text-rose-600' : 'text-gray-400 hover:text-rose-600'
+                        className={`absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-xs transition-colors border border-stone-200 ${
+                          isFav ? 'text-rose-600' : 'text-stone-400 hover:text-rose-600'
                         }`}
                         aria-label="Simpan ke favorit"
                       >
                         <Heart className={`w-3.5 h-3.5 ${isFav ? 'fill-current text-rose-600' : ''}`} />
                       </button>
 
-                      {/* Authentic Artisan Badge */}
-                      <div className="absolute bottom-2 left-2 bg-[#003d29] text-white text-[9px] font-bold px-2 py-0.5 rounded-md">
+                      {/* Artisan Badge */}
+                      <div className="absolute bottom-2 left-2 bg-[#003d29] text-white text-xs font-semibold px-2 py-0.5 rounded-md shadow-xs">
                         Asli UMKM
                       </div>
                     </div>
 
                     {/* Metadata */}
                     <div className="space-y-1">
-                      {/* Origin Badge */}
                       <div className="flex items-center justify-between gap-1 mb-1">
-                        <span className="text-[10px] font-bold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                        <span className="text-xs font-semibold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-md inline-flex items-center gap-1">
                           <MapPin className="w-2.5 h-2.5 text-[#003d29]" />
                           <span>{origin.badge}</span>
                         </span>
-                        <span className="text-[10px] text-gray-400 font-medium truncate">
+                        <span className="text-xs text-stone-400 font-medium truncate">
                           {product.category?.name || 'Oleh-Oleh Khas'}
                         </span>
                       </div>
 
-                      {/* Title */}
                       <Link
                         href={`/products/${product.slug}`}
-                        className="text-xs font-bold text-gray-900 group-hover:text-[#003d29] line-clamp-2 transition-colors block leading-snug"
+                        className="text-xs font-bold text-stone-900 group-hover:text-[#003d29] line-clamp-2 transition-colors block leading-snug"
                       >
                         {product.title}
                       </Link>
 
-                      {/* Pricing */}
                       <div className="flex items-baseline gap-1.5 pt-1">
-                        <span className="text-base font-extrabold text-gray-900">
+                        <span className="text-base font-bold text-stone-900">
                           {formatCurrency(price)}
                         </span>
                       </div>
 
-                      {/* Ratings */}
-                      <div className="flex items-center gap-1 text-[11px] text-gray-500 pt-0.5">
-                        <span className="font-bold text-gray-800">4.9</span>
-                        <div className="flex text-[#003d29] text-[10px]">{'★'.repeat(5)}</div>
-                        <span className="text-gray-400 text-[10px]">(128 terjual)</span>
+                      <div className="flex items-center gap-1 text-xs text-stone-500 pt-0.5">
+                        <span className="font-bold text-stone-800">4.9</span>
+                        <div className="flex text-[#003d29] text-xs">{'★'.repeat(5)}</div>
+                        <span className="text-stone-400">({product.variants?.length ? 'Banyak varian' : '128 terjual'})</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Add to Cart CTA Button */}
-                  <div className="mt-4 pt-2 border-t border-gray-100">
+                  {/* Add to Cart CTA */}
+                  <div className="mt-4 pt-2 border-t border-stone-100">
                     <button
                       onClick={(e) => handleQuickAdd(e, product)}
-                      className={`w-full py-2.5 px-4 rounded-full text-xs font-bold transition-all flex items-center justify-center gap-1.5 border ${
+                      className={`w-full py-2 px-3 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 border ${
                         isAdded
                           ? 'bg-[#003d29] text-white border-[#003d29]'
-                          : 'bg-white text-gray-900 border-gray-300 hover:border-[#003d29] hover:bg-[#002b1c] hover:text-white'
+                          : 'bg-white text-stone-900 border-stone-300 hover:border-[#003d29] hover:bg-[#002b1c] hover:text-white'
                       }`}
                     >
                       {isAdded ? (
@@ -804,60 +807,60 @@ export default function MarketplaceStorefrontHome() {
         )}
       </section>
 
-      {/* 8. MARKETPLACE SHOPPING ASSURANCES (Shopee / Blibli Guarantees) */}
-      <section className="bg-[#FAF9F5] border border-gray-200/80 rounded-3xl p-8 grid grid-cols-1 sm:grid-cols-4 gap-6 text-center sm:text-left">
+      {/* 8. MARKETPLACE SHOPPING ASSURANCES */}
+      <section className="bg-[#FAF9F5] border border-stone-200 rounded-2xl p-8 grid grid-cols-1 sm:grid-cols-4 gap-6 text-center sm:text-left">
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#003d29] text-white flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-[#003d29] text-white flex items-center justify-center shrink-0">
             <Truck className="w-5 h-5 text-emerald-300" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide">
-              Pengiriman Cepat Ekspedisi
+            <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wide">
+              Pengiriman Terlacak
             </h4>
-            <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">
-              Didukung kurir resmi JNE, J&T, dan SiCepat dengan nomor resi otomatis terlacak.
+            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
+              Didukung kurir resmi JNE, J&T, dan SiCepat dengan nomor resi otomatis terverifikasi.
             </p>
           </div>
         </div>
 
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#003d29] text-white flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-[#003d29] text-white flex items-center justify-center shrink-0">
             <ShieldCheck className="w-5 h-5 text-emerald-300" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide">
-              100% Produk Asli Pengrajin
+            <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wide">
+              100% Produk Pengrajin Asli
             </h4>
-            <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">
+            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
               Terkurasi langsung dari bengkel kriya dan dapur kuliner daerah terpercaya.
             </p>
           </div>
         </div>
 
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#003d29] text-white flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-[#003d29] text-white flex items-center justify-center shrink-0">
             <RotateCcw className="w-5 h-5 text-emerald-300" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide">
+            <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wide">
               Garansi Ganti Baru
             </h4>
-            <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">
-              Jaminan ganti baru atau uang kembali jika paket remuk atau rusak selama di jalan.
+            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
+              Jaminan ganti baru atau uang kembali jika paket remuk atau rusak selama di perjalanan.
             </p>
           </div>
         </div>
 
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#003d29] text-white flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-[#003d29] text-white flex items-center justify-center shrink-0">
             <Award className="w-5 h-5 text-emerald-300" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide">
-              Dukungan UMKM Nusantara
+            <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wide">
+              Dukungan UMKM Lokal
             </h4>
-            <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">
-              Setiap pembelianmu turut memberdayakan ekonomi para pengrajin lokal Indonesia.
+            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
+              Setiap pesanan Anda turut memberdayakan ekonomi para pengrajin daerah di Indonesia.
             </p>
           </div>
         </div>

@@ -174,13 +174,13 @@ export default function CartPage() {
         </div>
 
         {/* Order Summary Box */}
-        <div className="lg:col-span-4 bg-[#F9FAFA] border border-gray-100 p-6 rounded-2xl sticky top-24">
-          <h2 className="text-base font-bold text-gray-900 mb-4">
+        <div className="lg:col-span-4 bg-[#FAF9F5] border border-stone-200 p-6 rounded-xl sticky top-24">
+          <h2 className="text-base font-bold text-stone-900 mb-4">
             {isId ? 'Ringkasan Belanja' : 'Order Summary'}
           </h2>
 
           {/* Gift Wrap / Hampers Section */}
-          <div className="mb-4 p-3.5 bg-white border border-gray-200 rounded-xl">
+          <div className="mb-4 p-3.5 bg-white border border-stone-200 rounded-lg">
             <label className="flex items-start gap-2.5 cursor-pointer select-none">
               <input
                 type="checkbox"
@@ -190,13 +190,13 @@ export default function CartPage() {
               />
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-gray-900 flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
                     <Gift className="w-3.5 h-3.5 text-[#003d29]" />
                     <span>{isId ? 'Kemas Sebagai Hampers / Kado' : 'Gift Packaging & Card'}</span>
                   </span>
                   <span className="text-xs font-semibold text-[#003d29]">+{formatCurrency(GIFT_WRAP_COST)}</span>
                 </div>
-                <p className="text-[11px] text-gray-500 mt-0.5">
+                <p className="text-xs text-stone-500 mt-0.5">
                   {isId
                     ? 'Kemasan rapi dengan pita serta kartu ucapan kustom untuk penerima.'
                     : 'Authentic gift packaging with ribbon and customized greeting card.'}
@@ -205,41 +205,41 @@ export default function CartPage() {
             </label>
 
             {giftDetails.isGiftWrap && (
-              <div className="mt-3 pt-3 border-t border-gray-100 space-y-2.5">
+              <div className="mt-3 pt-3 border-t border-stone-100 space-y-2.5">
                 <div>
-                  <label className="text-[10px] font-semibold text-gray-600 block mb-1">
+                  <label className="text-xs font-medium text-stone-600 block mb-1">
                     {isId ? 'Pilihan Jenis Wadah Kemasan:' : 'Packaging Style:'}
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
                       onClick={() => setGiftDetails({ packagingType: 'besek' })}
-                      className={`py-2 px-2.5 rounded-lg text-left border transition-all text-xs ${
+                      className={`py-2 px-2.5 rounded-md text-left border transition-colors text-xs ${
                         giftDetails.packagingType === 'besek'
-                          ? 'border-[#003d29] bg-[#FAF9F5] font-bold text-[#003d29]'
-                          : 'border-gray-200 hover:border-gray-300 text-gray-700 bg-white'
+                          ? 'border-[#003d29] bg-stone-50 font-bold text-[#003d29]'
+                          : 'border-stone-200 hover:border-stone-300 text-stone-700 bg-white'
                       }`}
                     >
-                      <span className="block text-[11px] font-bold">Besek Tradisional</span>
-                      <span className="text-[10px] text-gray-400 font-normal">Anyaman Bambu & Pita</span>
+                      <span className="block text-xs font-bold">Besek Tradisional</span>
+                      <span className="text-xs text-stone-400 font-normal">Anyaman Bambu</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setGiftDetails({ packagingType: 'hardbox' })}
-                      className={`py-2 px-2.5 rounded-lg text-left border transition-all text-xs ${
+                      className={`py-2 px-2.5 rounded-md text-left border transition-colors text-xs ${
                         giftDetails.packagingType === 'hardbox'
-                          ? 'border-[#003d29] bg-[#FAF9F5] font-bold text-[#003d29]'
-                          : 'border-gray-200 hover:border-gray-300 text-gray-700 bg-white'
+                          ? 'border-[#003d29] bg-stone-50 font-bold text-[#003d29]'
+                          : 'border-stone-200 hover:border-stone-300 text-stone-700 bg-white'
                       }`}
                     >
-                      <span className="block text-[11px] font-bold">Hardbox Eksklusif</span>
-                      <span className="text-[10px] text-gray-400 font-normal">Warna Hijau & Emas</span>
+                      <span className="block text-xs font-bold">Hardbox Eksklusif</span>
+                      <span className="text-xs text-stone-400 font-normal">Warna Hijau & Emas</span>
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-semibold text-gray-600 block mb-1">
+                  <label className="text-xs font-medium text-stone-600 block mb-1">
                     {isId ? 'Tuliskan Pesan Kartu Ucapan:' : 'Gift Card Message:'}
                   </label>
                   <textarea
@@ -251,7 +251,7 @@ export default function CartPage() {
                         ? 'Contoh: Selamat menikmati oleh-oleh khas Nusantara dari Jogja!'
                         : 'Your warm greeting message...'
                     }
-                    className="w-full text-xs p-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#003d29] resize-none"
+                    className="w-full text-xs p-2.5 rounded-md border border-stone-200 focus:outline-none focus:ring-1 focus:ring-[#003d29] resize-none"
                   />
                 </div>
               </div>
@@ -259,21 +259,21 @@ export default function CartPage() {
           </div>
 
           {/* Coupon Code Section */}
-          <div className="mb-5 p-3.5 bg-white border border-dashed border-gray-200 rounded-xl">
+          <div className="mb-5 p-3.5 bg-white border border-stone-200 rounded-lg">
             <div className="flex items-center gap-1.5 text-xs font-semibold text-[#003d29] mb-2.5">
               <Tag className="w-3.5 h-3.5" />
               <span>{isId ? 'Kupon & Voucher Belanja' : 'Discount Voucher'}</span>
             </div>
 
             {appliedCoupon ? (
-              <div className="flex items-center justify-between p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg">
+              <div className="flex items-center justify-between p-2.5 bg-emerald-50 border border-emerald-200 rounded-md">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">✓</span>
+                  <span className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs">✓</span>
                   <div>
                     <span className="text-xs font-bold text-emerald-800 tracking-wider font-mono">
                       {appliedCoupon.code}
                     </span>
-                    <p className="text-[11px] text-emerald-700">
+                    <p className="text-xs text-emerald-700">
                       {appliedCoupon.description} (-{formatCurrency(couponDiscount)})
                     </p>
                   </div>
@@ -301,31 +301,31 @@ export default function CartPage() {
                       }
                     }}
                     placeholder={isId ? 'Masukkan kode kupon' : 'Enter voucher code'}
-                    className="flex-1 px-3 py-2 text-xs uppercase font-mono font-bold tracking-wider rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#003d29] focus:border-[#003d29] bg-gray-50/50"
+                    className="flex-1 px-3 py-2 text-xs uppercase font-mono font-bold tracking-wider rounded-md border border-stone-200 focus:outline-none focus:ring-1 focus:ring-[#003d29] focus:border-[#003d29] bg-stone-50/50"
                   />
                   <button
                     type="button"
                     onClick={() => handleApplyCoupon()}
-                    className="px-3.5 py-2 text-xs font-semibold bg-[#003d29] hover:bg-[#002b1c] text-white rounded-lg transition-colors shrink-0"
+                    className="px-3.5 py-2 text-xs font-semibold bg-[#003d29] hover:bg-[#002b1c] text-white rounded-md transition-colors shrink-0"
                   >
                     {isId ? 'Pakai' : 'Apply'}
                   </button>
                 </div>
 
                 {couponError && (
-                  <p className="text-[11px] text-rose-600 font-medium">{couponError}</p>
+                  <p className="text-xs text-rose-600 font-medium">{couponError}</p>
                 )}
 
                 {/* Quick Chips */}
                 <div className="pt-1">
-                  <p className="text-[10px] text-gray-400 mb-1.5 font-medium">{isId ? 'Kupon tersedia:' : 'Available vouchers:'}</p>
+                  <p className="text-xs text-stone-400 mb-1.5 font-medium">{isId ? 'Kupon tersedia:' : 'Available vouchers:'}</p>
                   <div className="flex flex-wrap gap-1.5">
                     {AVAILABLE_COUPONS.map((cp) => (
                       <button
                         key={cp.code}
                         type="button"
                         onClick={() => handleApplyCoupon(cp.code)}
-                        className="text-[10px] font-mono font-bold px-2 py-1 bg-gray-100 hover:bg-[#FCF0E4] hover:text-[#003d29] text-gray-700 rounded transition-colors border border-gray-200"
+                        className="text-xs font-mono font-bold px-2 py-1 bg-stone-100 hover:bg-[#FCF0E4] hover:text-[#003d29] text-stone-700 rounded-md transition-colors border border-stone-200"
                         title={cp.description}
                       >
                         {cp.code}
@@ -337,15 +337,15 @@ export default function CartPage() {
             )}
           </div>
 
-          <div className="space-y-3.5 text-sm divide-y divide-gray-100">
-            <div className="flex justify-between text-gray-600 pt-1">
+          <div className="space-y-3.5 text-sm divide-y divide-stone-200">
+            <div className="flex justify-between text-stone-600 pt-1">
               <span>{isId ? 'Subtotal Produk' : 'Item Subtotal'}</span>
-              <span className="font-semibold text-gray-900">{formatCurrency(subtotal)}</span>
+              <span className="font-semibold text-stone-900">{formatCurrency(subtotal)}</span>
             </div>
 
-            <div className="flex justify-between text-gray-600 pt-3.5">
+            <div className="flex justify-between text-stone-600 pt-3.5">
               <span>{isId ? 'Estimasi Ongkir' : 'Shipping'}</span>
-              <span className="font-semibold text-gray-900">
+              <span className="font-semibold text-stone-900">
                 {shippingCost === 0 ? (
                   <span className="text-[#003d29] font-bold">{isId ? 'Gratis Ongkir' : 'Free'}</span>
                 ) : (
@@ -374,20 +374,20 @@ export default function CartPage() {
               </div>
             )}
 
-            <div className="flex justify-between text-gray-900 font-bold text-lg pt-4">
+            <div className="flex justify-between text-stone-900 font-bold text-lg pt-4">
               <span>{isId ? 'Total Tagihan' : 'Grand Total'}</span>
               <span className="text-[#003d29]">{formatCurrency(grandTotal)}</span>
             </div>
           </div>
 
-          <div className="mt-4 p-3 bg-white border border-gray-100 rounded-xl flex items-center gap-2.5 text-xs text-gray-600">
-            <ShieldCheck className="w-5 h-5 text-[#003d29] shrink-0" />
+          <div className="mt-4 p-3 bg-white border border-stone-200 rounded-lg flex items-center gap-2.5 text-xs text-stone-600">
+            <ShieldCheck className="w-4 h-4 text-[#003d29] shrink-0" />
             <span>{isId ? 'Bisa bayar di tempat (COD) & transfer bank aman.' : 'COD & Secure Bank Transfer available.'}</span>
           </div>
 
           <Link
             href="/checkout"
-            className="w-full mt-6 flex items-center justify-center gap-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-sm font-semibold py-3.5 px-4 rounded-full transition-all shadow-sm"
+            className="w-full mt-5 flex items-center justify-center gap-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-semibold py-3 px-4 rounded-lg transition-colors shadow-xs"
           >
             <span>{isId ? 'Lanjut ke Pembayaran' : 'Proceed to Checkout'}</span>
             <ArrowRight className="w-4 h-4" />
@@ -405,7 +405,7 @@ export default function CartPage() {
             })}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full mt-2.5 flex items-center justify-center gap-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-900 text-xs font-bold py-3 px-4 rounded-full transition-all shadow-2xs"
+            className="w-full mt-2.5 flex items-center justify-center gap-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-900 text-xs font-bold py-2.5 px-4 rounded-lg transition-colors shadow-2xs"
           >
             <MessageSquare className="w-4 h-4 text-emerald-600" />
             <span>{isId ? 'Checkout Cepat via WhatsApp' : 'Order via WhatsApp'}</span>

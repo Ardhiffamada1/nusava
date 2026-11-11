@@ -160,7 +160,7 @@ export function CartDrawer() {
             <Link
               href="/checkout"
               onClick={closeCart}
-              className="w-full flex items-center justify-center gap-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-semibold uppercase tracking-wider py-3.5 px-4 transition-all rounded-full shadow-sm"
+              className="w-full flex items-center justify-center gap-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-semibold uppercase tracking-wider py-3.5 px-4 transition-colors rounded-lg shadow-xs"
             >
               <span>{isId ? 'Lanjut ke Pembayaran' : 'Proceed to Checkout'}</span>
               <ArrowRight className="w-3.5 h-3.5" />

@@ -222,38 +222,38 @@ function ShopcartCatalogContent() {
               'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=600&q=80';
 
             return (
-              <div key={product.id} className="group flex flex-col justify-between">
+              <div key={product.id} className="group flex flex-col justify-between bg-white border border-stone-200 hover:border-stone-300 rounded-xl p-3.5 shadow-xs transition-colors">
                 <div>
-                  {/* Square Image Box with Wishlist Heart */}
-                  <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-2xl flex items-center justify-center p-6 mb-3 overflow-hidden">
+                  {/* Image Box with Wishlist Heart */}
+                  <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-lg flex items-center justify-center p-4 mb-3 overflow-hidden border border-stone-100">
                     <button
                       onClick={(e) => toggleWishlist(e, product)}
-                      className={`absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white shadow-2xs flex items-center justify-center transition-colors z-10 ${
-                        isFav ? 'text-rose-600' : 'text-gray-400 hover:text-rose-600'
+                      className={`absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white shadow-xs flex items-center justify-center transition-colors z-10 border border-stone-200 ${
+                        isFav ? 'text-rose-600' : 'text-stone-400 hover:text-rose-600'
                       }`}
                       title="Simpan ke favorit"
                     >
-                      <Heart className={`w-4 h-4 ${isFav ? 'fill-current text-rose-600' : ''}`} />
+                      <Heart className={`w-3.5 h-3.5 ${isFav ? 'fill-current text-rose-600' : ''}`} />
                     </button>
 
-                    <Link href={`/products/${product.slug}`} className="relative w-full h-full">
+                    <Link href={`/products/${product.slug}`} className="relative w-full h-full block">
                       <Image
                         src={imageUrl}
                         alt={product.title}
                         fill
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                        className="object-contain group-hover:scale-106 transition-transform duration-300"
+                        className="object-contain group-hover:scale-105 transition-transform duration-200"
                       />
                     </Link>
                   </div>
 
                   {/* Origin Badge & Category */}
                   <div className="flex items-center justify-between gap-1 mb-1">
-                    <span className="text-[10px] font-bold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                    <span className="text-xs font-semibold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-md inline-flex items-center gap-1">
                       <MapPin className="w-2.5 h-2.5 text-[#003d29]" />
                       <span>{getProductOrigin(product).badge}</span>
                     </span>
-                    <span className="text-[10px] text-gray-400 font-medium truncate">
+                    <span className="text-xs text-stone-400 font-medium truncate">
                       {product.category?.name}
                     </span>
                   </div>
@@ -262,37 +262,38 @@ function ShopcartCatalogContent() {
                   <div className="flex items-start justify-between gap-2">
                     <Link
                       href={`/products/${product.slug}`}
-                      className="text-xs font-bold text-gray-900 group-hover:text-[#003d29] line-clamp-1 transition-colors"
+                      className="text-xs font-bold text-stone-900 group-hover:text-[#003d29] line-clamp-1 transition-colors"
                     >
                       {product.title}
                     </Link>
-                    <span className="text-sm font-bold text-gray-900 whitespace-nowrap">
+                    <span className="text-sm font-bold text-stone-900 whitespace-nowrap">
                       {formatCurrency(price)}
                     </span>
                   </div>
 
                   {/* Description */}
-                  <p className="text-[11px] text-gray-500 line-clamp-1 mt-0.5">
+                  <p className="text-xs text-stone-500 line-clamp-1 mt-0.5">
                     {product.description}
                   </p>
 
-                  {/* Green Star Rating */}
-                  <div className="flex items-center gap-1.5 mt-1.5">
-                    <div className="flex text-[#003d29] text-[11px]">
+                  {/* Rating */}
+                  <div className="flex items-center gap-1.5 mt-1 text-xs text-stone-500">
+                    <span className="font-bold text-stone-800">4.9</span>
+                    <div className="flex text-[#003d29] text-xs">
                       {'★'.repeat(5)}
                     </div>
-                    <span className="text-[10px] text-gray-400 font-semibold">(121)</span>
+                    <span className="text-stone-400">(121)</span>
                   </div>
                 </div>
 
-                {/* Add to Cart Pill Button */}
-                <div className="pt-3">
+                {/* Add to Cart Button */}
+                <div className="pt-3 border-t border-stone-100 mt-2">
                   <button
                     onClick={(e) => handleQuickAdd(e, product)}
-                    className={`w-full py-2 px-4 rounded-full text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
+                    className={`w-full py-2 px-3 rounded-lg text-xs font-semibold border transition-colors flex items-center justify-center gap-1.5 ${
                       addedSlug === product.slug
                         ? 'bg-[#003d29] text-white border-[#003d29]'
-                        : 'border-gray-300 text-gray-800 hover:bg-[#003d29] hover:text-white hover:border-[#003d29]'
+                        : 'border-stone-300 text-stone-800 hover:bg-[#003d29] hover:text-white hover:border-[#003d29]'
                     }`}
                   >
                     {addedSlug === product.slug ? (

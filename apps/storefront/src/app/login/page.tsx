@@ -58,9 +58,9 @@ function LoginContent() {
 
   return (
     <div className="max-w-md mx-auto px-6 py-16">
-      <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+      <div className="bg-white p-8 rounded-2xl border border-stone-200 shadow-xs">
         <div className="text-center mb-6">
-          <div className="w-12 h-12 mx-auto rounded-full bg-[#FCF0E4] flex items-center justify-center text-[#003d29] mb-3">
+          <div className="w-12 h-12 mx-auto rounded-xl bg-[#FCF0E4] flex items-center justify-center text-[#003d29] mb-3">
             <ShoppingBag className="w-6 h-6" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Masuk ke Akun</h1>
@@ -70,7 +70,7 @@ function LoginContent() {
         </div>
 
         {errorMessage && (
-          <div className="mb-6 p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl flex items-center gap-2">
+          <div className="mb-6 p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-lg flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
             <span>{errorMessage}</span>
           </div>
@@ -84,7 +84,7 @@ function LoginContent() {
             <input
               type="email"
               {...register('email')}
-              className="w-full text-sm p-3 border border-gray-200 bg-white rounded-xl focus:outline-hidden focus:border-[#003d29] transition-colors"
+              className="w-full text-sm p-3 border border-stone-200 bg-white rounded-lg focus:outline-hidden focus:border-[#003d29] transition-colors"
               placeholder="nama@email.com"
             />
             {errors.email && <p className="text-[11px] text-rose-600 mt-1">{errors.email.message}</p>}
@@ -97,7 +97,7 @@ function LoginContent() {
             <input
               type="password"
               {...register('password')}
-              className="w-full text-sm p-3 border border-gray-200 bg-white rounded-xl focus:outline-hidden focus:border-[#003d29] transition-colors"
+              className="w-full text-sm p-3 border border-stone-200 bg-white rounded-lg focus:outline-hidden focus:border-[#003d29] transition-colors"
               placeholder="••••••••••••"
             />
             {errors.password && <p className="text-[11px] text-rose-600 mt-1">{errors.password.message}</p>}
@@ -106,7 +106,7 @@ function LoginContent() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full mt-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-sm font-semibold py-3.5 px-4 rounded-full disabled:opacity-40 transition-all flex items-center justify-center gap-2 shadow-sm"
+            className="w-full mt-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold uppercase tracking-wider py-3.5 px-4 rounded-lg disabled:opacity-40 transition-colors flex items-center justify-center gap-2 shadow-xs"
           >
             <span>{isSubmitting ? 'Memeriksa data...' : 'Masuk Sekarang'}</span>
             <ArrowRight className="w-4 h-4" />
@@ -114,14 +114,14 @@ function LoginContent() {
         </form>
 
         {/* Demo Credentials Helper */}
-        <div className="mt-6 pt-6 border-t border-gray-100">
+        <div className="mt-6 pt-6 border-t border-stone-200">
           <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2">
             Coba Akun Demo
           </p>
           <button
             type="button"
             onClick={fillDemoCustomer}
-            className="w-full text-left text-xs p-3 bg-[#F9FAFA] border border-gray-200 rounded-xl hover:border-[#003d29] transition-colors"
+            className="w-full text-left text-xs p-3 bg-[#FAF9F5] border border-stone-200 rounded-lg hover:border-[#003d29] transition-colors"
           >
             <div className="font-semibold text-gray-900">Isi Otomatis Akun Pelanggan Demo</div>
             <div className="text-[11px] text-gray-500 font-mono mt-0.5">customer@commerceos.dev / Customer12345!</div>

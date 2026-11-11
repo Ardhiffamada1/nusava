@@ -72,7 +72,7 @@ export default function ProductDetailPage() {
     return (
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16 animate-pulse font-sans">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div className="aspect-square bg-[#F5F6F6] rounded-3xl" />
+          <div className="aspect-square bg-[#F5F6F6] rounded-2xl" />
           <div className="space-y-4">
             <div className="h-4 bg-gray-100 w-1/4 rounded" />
             <div className="h-8 bg-gray-100 w-3/4 rounded" />
@@ -93,7 +93,7 @@ export default function ProductDetailPage() {
         </p>
         <Link
           href="/products"
-          className="inline-flex px-6 py-3 bg-[#003d29] text-white text-xs font-bold rounded-full"
+          className="inline-flex px-6 py-3 bg-[#003d29] text-white text-xs font-bold rounded-lg"
         >
           Kembali ke Katalog
         </Link>
@@ -192,7 +192,7 @@ export default function ProductDetailPage() {
         {/* Left: Product Images with Preview Swatches */}
         <div className="lg:col-span-7 space-y-4">
           {/* Main Large Visual Display */}
-          <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-3xl overflow-hidden flex items-center justify-center p-12">
+          <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-2xl overflow-hidden flex items-center justify-center p-12 border border-stone-200">
             <button
               onClick={() => setIsWishlisted(!isWishlisted)}
               className={`absolute top-6 right-6 w-10 h-10 rounded-full bg-white shadow-2xs flex items-center justify-center transition-colors z-10 ${
@@ -220,10 +220,10 @@ export default function ProductDetailPage() {
                 <button
                   key={img.id || idx}
                   onClick={() => setSelectedImageIndex(idx)}
-                  className={`relative w-20 h-20 bg-[#F5F6F6] rounded-2xl overflow-hidden border-2 transition-all shrink-0 ${
+                  className={`relative w-20 h-20 bg-[#F5F6F6] rounded-xl overflow-hidden border-2 transition-all shrink-0 ${
                     selectedImageIndex === idx
                       ? 'border-[#003d29] shadow-xs'
-                      : 'border-transparent hover:border-gray-300'
+                      : 'border-transparent hover:border-stone-300'
                   }`}
                 >
                   <Image
@@ -356,7 +356,7 @@ export default function ProductDetailPage() {
               <button
                 onClick={handleBuyNow}
                 disabled={isOutOfStock || isAdding}
-                className="flex-1 py-3 px-6 bg-[#003d29] hover:bg-[#002b1d] text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-md transition-all text-center hover:scale-102 disabled:opacity-40"
+                className="flex-1 py-3 px-6 bg-[#003d29] hover:bg-[#002b1d] text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-xs transition-colors text-center disabled:opacity-40"
               >
                 Beli Sekarang
               </button>
@@ -364,7 +364,7 @@ export default function ProductDetailPage() {
               <button
                 onClick={handleAddToCart}
                 disabled={isOutOfStock || isAdding}
-                className="flex-1 py-3 px-6 bg-white hover:bg-[#F5F6F6] text-gray-900 border border-gray-300 text-xs font-bold uppercase tracking-wider rounded-full transition-all text-center flex items-center justify-center gap-2 disabled:opacity-40"
+                className="flex-1 py-3 px-6 bg-white hover:bg-[#F5F6F6] text-gray-900 border border-stone-200 text-xs font-bold uppercase tracking-wider rounded-lg transition-colors text-center flex items-center justify-center gap-2 disabled:opacity-40"
               >
                 <ShoppingCart className="w-4 h-4 text-gray-600" />
                 <span>Tambah ke Keranjang</span>
@@ -382,7 +382,7 @@ export default function ProductDetailPage() {
               })}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-3 px-5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300/80 text-emerald-900 text-xs font-bold uppercase tracking-wider rounded-full transition-all text-center flex items-center justify-center gap-2 shadow-2xs"
+              className="w-full py-3 px-5 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-300 text-emerald-900 text-xs font-bold uppercase tracking-wider rounded-lg transition-colors text-center flex items-center justify-center gap-2 shadow-xs"
             >
               <MessageSquare className="w-4 h-4 text-emerald-600" />
               <span>Pesan Cepat via WhatsApp</span>
@@ -390,7 +390,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Real-time Shipping Estimator Widget (Feature 4) */}
-          <div className="bg-[#FAF9F5] border border-gray-200/90 rounded-2xl p-4 space-y-3">
+          <div className="bg-[#FAF9F5] border border-stone-200 rounded-xl p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Truck className="w-4 h-4 text-[#003d29]" />
@@ -410,7 +410,7 @@ export default function ProductDetailPage() {
               <select
                 value={selectedCity}
                 onChange={(e) => setSelectedCity(e.target.value)}
-                className="w-full text-xs font-semibold bg-white border border-gray-200 rounded-xl px-3 py-2 text-gray-800 outline-none focus:border-[#003d29] cursor-pointer"
+                className="w-full text-xs font-semibold bg-white border border-stone-200 rounded-lg px-3 py-2 text-gray-800 outline-none focus:border-[#003d29] cursor-pointer"
               >
                 {DESTINATION_CITIES.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -425,7 +425,7 @@ export default function ProductDetailPage() {
               {shippingRates.map((rate) => (
                 <div
                   key={rate.id}
-                  className="flex items-center justify-between p-2.5 bg-white border border-gray-100 rounded-xl text-xs"
+                  className="flex items-center justify-between p-2.5 bg-white border border-stone-200 rounded-lg text-xs"
                 >
                   <div className="flex items-center gap-3">
                     <CourierLogo courierId={rate.courierCode} className="h-6 w-auto" />
@@ -458,7 +458,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Trust Assurances Card */}
-          <div className="border border-gray-200/80 rounded-2xl p-4 divide-y divide-gray-100 text-xs space-y-3">
+          <div className="border border-stone-200 rounded-xl p-4 divide-y divide-stone-200 text-xs space-y-3">
             <div className="flex items-start gap-3 pb-1">
               <Truck className="w-5 h-5 text-[#003d29] shrink-0 mt-0.5" />
               <div>
@@ -483,9 +483,9 @@ export default function ProductDetailPage() {
       </div>
 
       {/* TABS SECTION: Deskripsi & Ulasan Pembeli (Feature 6) */}
-      <div className="mt-16 pt-10 border-t border-gray-200 space-y-8">
+      <div className="mt-16 pt-10 border-t border-stone-200 space-y-8">
         {/* Tab Headers */}
-        <div className="flex items-center gap-8 border-b border-gray-200 text-sm font-bold">
+        <div className="flex items-center gap-8 border-b border-stone-200 text-sm font-bold">
           <button
             onClick={() => setActiveTab('DESCRIPTION')}
             className={`pb-4 border-b-2 transition-all ${
@@ -523,7 +523,7 @@ export default function ProductDetailPage() {
                 </p>
               </div>
 
-              <div className="bg-[#FAF9F5] p-5 rounded-2xl border border-gray-200/80 space-y-3">
+              <div className="bg-[#FAF9F5] p-5 rounded-xl border border-stone-200 space-y-3">
                 <h4 className="font-bold text-gray-900 text-xs uppercase tracking-wider">
                   Petunjuk Penyimpanan & Konsumsi
                 </h4>
@@ -537,24 +537,24 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Spec Card */}
-            <div className="bg-white border border-gray-200/90 rounded-2xl p-5 space-y-3.5 shadow-2xs h-fit">
-              <h4 className="font-bold text-gray-900 text-xs uppercase tracking-wider border-b border-gray-100 pb-2">
+            <div className="bg-white border border-stone-200 rounded-xl p-5 space-y-3.5 shadow-2xs h-fit">
+              <h4 className="font-bold text-gray-900 text-xs uppercase tracking-wider border-b border-stone-200 pb-2">
                 Spesifikasi Oleh-oleh
               </h4>
               <div className="space-y-2.5 text-xs">
-                <div className="flex justify-between py-1 border-b border-gray-50">
+                <div className="flex justify-between py-1 border-b border-stone-100">
                   <span className="text-gray-500">Kota Asal</span>
                   <span className="font-bold text-gray-900">{origin.city}</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-gray-50">
+                <div className="flex justify-between py-1 border-b border-stone-100">
                   <span className="text-gray-500">Provinsi</span>
                   <span className="font-bold text-gray-900">{origin.province}</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-gray-50">
+                <div className="flex justify-between py-1 border-b border-stone-100">
                   <span className="text-gray-500">Kategori</span>
                   <span className="font-bold text-gray-900">{product.category?.name || 'Kuliner Khas'}</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-gray-50">
+                <div className="flex justify-between py-1 border-b border-stone-100">
                   <span className="text-gray-500">Sertifikasi Halal</span>
                   <span className="font-bold text-emerald-700">Tersertifikasi ID-MUI</span>
                 </div>
@@ -571,7 +571,7 @@ export default function ProductDetailPage() {
         {activeTab === 'REVIEWS' && (
           <div className="space-y-8">
             {/* Top Rating Summary Bar */}
-            <div className="bg-[#FAF9F5] border border-gray-200/90 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="bg-[#FAF9F5] border border-stone-200 rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-8">
               {/* Overall Score */}
               <div className="text-center md:text-left shrink-0">
                 <div className="text-4xl sm:text-5xl font-black text-gray-900 tracking-tight">
@@ -611,30 +611,30 @@ export default function ProductDetailPage() {
               <div className="flex flex-wrap md:flex-col gap-2 shrink-0">
                 <button
                   onClick={() => setReviewRatingFilter(null)}
-                  className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${
+                  className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-colors ${
                     reviewRatingFilter === null
                       ? 'bg-[#003d29] text-white border-[#003d29]'
-                      : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'
+                      : 'bg-white text-gray-700 border-stone-200 hover:border-stone-300'
                   }`}
                 >
                   Semua Ulasan (121)
                 </button>
                 <button
                   onClick={() => setReviewRatingFilter(5)}
-                  className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${
+                  className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-colors ${
                     reviewRatingFilter === 5
                       ? 'bg-[#003d29] text-white border-[#003d29]'
-                      : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'
+                      : 'bg-white text-gray-700 border-stone-200 hover:border-stone-300'
                   }`}
                 >
                   Hanya Bintang 5 (111)
                 </button>
                 <button
                   onClick={() => setReviewRatingFilter(4)}
-                  className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${
+                  className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-colors ${
                     reviewRatingFilter === 4
                       ? 'bg-[#003d29] text-white border-[#003d29]'
-                      : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'
+                      : 'bg-white text-gray-700 border-stone-200 hover:border-stone-300'
                   }`}
                 >
                   Bintang 4 (8)
@@ -649,7 +649,7 @@ export default function ProductDetailPage() {
                 return (
                   <div
                     key={rev.id}
-                    className="p-6 bg-white border border-gray-200/80 rounded-2xl shadow-2xs space-y-3"
+                    className="p-6 bg-white border border-stone-200 rounded-xl shadow-2xs space-y-3"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-center gap-3">
@@ -663,7 +663,7 @@ export default function ProductDetailPage() {
                             <span className="font-bold text-gray-900 text-xs">{rev.author}</span>
                             <span className="text-[10px] text-gray-400">({rev.city})</span>
                             {rev.verified && (
-                              <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.2 rounded-full border border-emerald-200/60 flex items-center gap-1">
+                              <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.2 rounded-full border border-emerald-200 flex items-center gap-1">
                                 <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                                 <span>Pembeli Terverifikasi</span>
                               </span>
@@ -682,7 +682,7 @@ export default function ProductDetailPage() {
                     {/* Variant badge */}
                     <div className="text-[11px] text-gray-500 font-medium">
                       Variasi yang dibeli:{' '}
-                      <span className="font-semibold text-gray-700 bg-gray-100 px-2 py-0.5 rounded">
+                      <span className="font-semibold text-gray-700 bg-stone-100 px-2 py-0.5 rounded">
                         {rev.variant}
                       </span>
                     </div>
@@ -710,7 +710,7 @@ export default function ProductDetailPage() {
 
       {/* RELATED PRODUCTS (Cross-Selling) */}
       {relatedItems.length > 0 && (
-        <section className="mt-16 pt-10 border-t border-gray-200 space-y-6">
+        <section className="mt-16 pt-10 border-t border-stone-200 space-y-6">
           <div className="flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold text-[#003d29] uppercase tracking-wider block">
@@ -737,16 +737,16 @@ export default function ProductDetailPage() {
               return (
                 <div
                   key={item.id}
-                  className="bg-white border border-gray-200/80 rounded-2xl p-3.5 shadow-2xs group flex flex-col justify-between hover:border-gray-300 transition-all"
+                  className="bg-white border border-stone-200 rounded-xl p-3.5 shadow-2xs group flex flex-col justify-between hover:border-stone-300 transition-colors"
                 >
                   <div>
-                    <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-xl overflow-hidden mb-2.5 border border-gray-100 p-2 flex items-center justify-center">
+                    <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-lg overflow-hidden mb-2.5 border border-stone-100 p-2 flex items-center justify-center">
                       <Link href={`/products/${item.slug}`} className="relative w-full h-full block">
                         <Image
                           src={relImg}
                           alt={item.title}
                           fill
-                          className="object-contain group-hover:scale-105 transition-transform"
+                          className="object-contain"
                           sizes="(max-width: 640px) 50vw, 25vw"
                         />
                       </Link>
@@ -771,7 +771,7 @@ export default function ProductDetailPage() {
 
                   <Link
                     href={`/products/${item.slug}`}
-                    className="mt-3 w-full py-2 bg-white hover:bg-[#003d29] text-[#003d29] hover:text-white border border-gray-200 hover:border-[#003d29] rounded-full text-[11px] font-bold text-center block transition-all"
+                    className="mt-3 w-full py-2 bg-white hover:bg-[#003d29] text-[#003d29] hover:text-white border border-stone-200 hover:border-[#003d29] rounded-lg text-[11px] font-bold text-center block transition-colors"
                   >
                     Lihat Produk
                   </Link>
