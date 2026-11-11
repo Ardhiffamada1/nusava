@@ -50,7 +50,7 @@ export function Footer() {
                   href="/products?category=workspace"
                   className="hover:text-black transition-colors"
                 >
-                  {language === 'id' ? 'Kudapan & Kopi Daerah' : 'Regional Coffee & Bakes'}
+                  {language === 'id' ? 'Oleh-oleh & Kopi Daerah' : 'Regional Coffee & Bakes'}
                 </Link>
               </li>
               <li>

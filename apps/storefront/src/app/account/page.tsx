@@ -595,7 +595,7 @@ export default function AccountPage() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-[#003d29] font-bold">✓</span>
-                <span>{isId ? 'Produk kuliner dijamin otentik fresh langsung dari dapur pengrajin daerah.' : 'Authentic Indonesian artisanal culinary guaranteed fresh.'}</span>
+                <span>{isId ? 'Produk oleh-oleh kuliner dijamin otentik fresh langsung dari dapur UMKM daerah.' : 'Authentic Indonesian culinary by verified local stores guaranteed fresh.'}</span>
               </li>
             </ul>
           </div>
@@ -670,7 +670,7 @@ export default function AccountPage() {
                 <div className="w-3 h-3 rounded-full bg-stone-300 mt-1 shrink-0" />
                 <div>
                   <p className="font-semibold text-gray-700">
-                    {isId ? 'Paket Dikirim dari Sentra Pengrajin' : 'Departed from artisan origin center'}
+                    {isId ? 'Paket Dikirim dari Sentra UMKM Daerah' : 'Departed from verified local UMKM center'}
                   </p>
                   <span className="text-[10px] text-gray-400">Kemarin, 15:10 WIB</span>
                 </div>

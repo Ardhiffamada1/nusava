@@ -13,12 +13,19 @@ import {
   SlidersHorizontal,
   MapPin,
   Compass,
+  Store,
 } from 'lucide-react';
 import { apiRequest } from '../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 import { useCartStore } from '../../stores/cart-store';
 import { useWishlistStore } from '../../stores/wishlist-store';
-import { getProductOrigin, NUSANTARA_ORIGIN_TABS } from '../../lib/storefront-helpers';
+import {
+  getProductOrigin,
+  getProductStore,
+  NUSANTARA_ORIGIN_TABS,
+  StoreProfile,
+} from '../../lib/storefront-helpers';
+import { StoreProfileModal } from '../../components/store-profile-modal';
 
 function ShopcartCatalogContent() {
   const router = useRouter();
@@ -31,6 +38,7 @@ function ShopcartCatalogContent() {
   const page = parseInt(searchParams.get('page') || '1', 10);
 
   const [addedSlug, setAddedSlug] = useState<string | null>(null);
+  const [selectedStore, setSelectedStore] = useState<StoreProfile | null>(null);
   const { toggleItem, isInWishlist } = useWishlistStore();
 
   const { data: categories } = useQuery({
@@ -112,7 +120,7 @@ function ShopcartCatalogContent() {
           </h1>
           <p className="text-xs text-gray-500 mt-1 max-w-lg">
             {selectedCategory?.description ||
-              'Koleksi lengkap kudapan tradisional, batik, dan kerajinan khas dari pengrajin daerah.'}
+              'Koleksi lengkap aneka oleh-oleh tradisional, kopi, batik, dan kerajinan khas dari sentra UMKM daerah.'}
           </p>
         </div>
 
@@ -220,6 +228,8 @@ function ShopcartCatalogContent() {
             const imageUrl =
               product.images?.[0]?.url ||
               'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=600&q=80';
+            const origin = getProductOrigin(product);
+            const store = getProductStore(product);
 
             return (
               <div key={product.id} className="group flex flex-col justify-between bg-white border border-stone-200 hover:border-stone-300 rounded-xl p-3.5 shadow-xs transition-colors">
@@ -249,13 +259,30 @@ function ShopcartCatalogContent() {
 
                   {/* Origin Badge & Category */}
                   <div className="flex items-center justify-between gap-1 mb-1">
-                    <span className="text-xs font-semibold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-md inline-flex items-center gap-1">
+                    <span className="text-[11px] font-semibold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-md inline-flex items-center gap-1">
                       <MapPin className="w-2.5 h-2.5 text-[#003d29]" />
-                      <span>{getProductOrigin(product).badge}</span>
+                      <span>{origin.badge}</span>
                     </span>
-                    <span className="text-xs text-stone-400 font-medium truncate">
+                    <span className="text-[11px] text-stone-400 font-medium truncate">
                       {product.category?.name}
                     </span>
+                  </div>
+
+                  {/* Store / Seller Name */}
+                  <div className="flex items-center gap-1 text-[11px] text-stone-500 font-medium mb-1">
+                    <Store className="w-3 h-3 text-[#003d29] shrink-0" />
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setSelectedStore(store);
+                      }}
+                      className="hover:text-[#003d29] hover:underline truncate text-left"
+                      title="Lihat profil toko ini"
+                    >
+                      {store.name}
+                    </button>
                   </div>
 
                   {/* Title & Price */}
@@ -311,6 +338,13 @@ function ShopcartCatalogContent() {
           })}
         </div>
       )}
+
+      {/* Interactive Store Profile Modal */}
+      <StoreProfileModal
+        store={selectedStore}
+        isOpen={!!selectedStore}
+        onClose={() => setSelectedStore(null)}
+      />
     </div>
   );
 }

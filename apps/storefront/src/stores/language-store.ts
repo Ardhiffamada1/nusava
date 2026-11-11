@@ -31,7 +31,7 @@ export const translations = {
     nav: {
       home: 'Beranda',
       shop: 'Katalog',
-      about: 'Kisah Pengrajin',
+      about: 'Profil Toko UMKM',
       blog: 'Warta Kriya',
       admin: 'Panel Admin',
       signIn: 'Masuk',
@@ -40,12 +40,12 @@ export const translations = {
       searchPlaceholder: 'Cari gerabah, kopi, batik, kayu jati...',
     },
     hero: {
-      badge: 'KURASI OLEH-OLEH TRADISIONAL 2026',
+      badge: 'KURASI OLEH-OLEH NUSANTARA 2026',
       title: 'Oleh-oleh bermakna, dirawat dengan tradisi.',
       description:
-        'Karya kriya otentik dan cita rasa khas daerah yang dikurasi langsung dari bengkel dan dapur pengrajin lokal Nusantara.',
+        'Karya kriya otentik dan cita rasa khas daerah yang dikurasi langsung dari bengkel dan dapur UMKM lokal Nusantara.',
       exploreBtn: 'Jelajahi Koleksi',
-      storyBtn: 'Kisah Pengrajin →',
+      storyBtn: 'Profil Toko UMKM →',
     },
     categories: {
       heading: 'Ragam Kriya & Cita Rasa',
@@ -61,8 +61,8 @@ export const translations = {
         count: '9 Karya',
       },
       culinary: {
-        title: 'Kudapan & Kopi Sangrai',
-        origin: 'Kopi Gayo & Kudapan Tradisi',
+        title: 'Oleh-oleh & Kopi Sangrai',
+        origin: 'Kopi Gayo & Oleh-oleh Tradisi',
         count: '8 Pilihan',
       },
       textile: {
@@ -73,7 +73,7 @@ export const translations = {
     },
     showcase: {
       tag: 'PILIHAN BULAN INI',
-      heading: 'Koleksi Kurator Pengrajin',
+      heading: 'Koleksi UMKM Pilihan',
       viewAll: 'Lihat seluruh 31 karya',
       quickAdd: '+ Keranjang',
       added: 'Ditambahkan!',
@@ -91,12 +91,12 @@ export const translations = {
         'Bermitra langsung tanpa perantara tengkulak sehingga nilai ekonomi kembali utuh ke pengrajin.',
       pillar3Title: 'Kemasan Khusus Anti-Rusak',
       pillar3Desc:
-        'Standar kemasan ganda dengan proteksi tebal untuk keramik dan pengunci vakum untuk kudapan.',
+        'Standar kemasan ganda dengan proteksi tebal untuk keramik dan pengunci vakum untuk oleh-oleh khas.',
     },
     assurances: [
       {
-        title: 'Kurasi Asli Pengrajin',
-        desc: '100% karya otentik terverifikasi dari daerah asal',
+        title: 'Kurasi Asli UMKM Daerah',
+        desc: '100% produk otentik terverifikasi dari daerah asal',
       },
       {
         title: 'Kemasan Proteksi Ekspedisi',

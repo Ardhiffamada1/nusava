@@ -67,7 +67,7 @@ export default function OrderTrackingPage() {
       isActive: false,
     },
     {
-      title: 'Sedang Dikemas Oleh Pengrajin Daerah',
+      title: 'Sedang Dikemas Oleh Toko UMKM Daerah',
       description: 'Produk oleh-oleh dibungkus kardus tebal dan lapisan bubble wrap protektif.',
       time: '11:30 WIB',
       isCompleted: isProcessing,
@@ -82,7 +82,7 @@ export default function OrderTrackingPage() {
     },
     {
       title: 'Paket Sedang Dalam Perjalanan Menuju Alamat',
-      description: `Bergerak dari Sentra Hub Pengrajin menuju kota tujuan (${order?.shippingAddress?.city || 'Kota Tujuan'}).`,
+      description: `Bergerak dari Sentra Hub UMKM menuju kota tujuan (${order?.shippingAddress?.city || 'Kota Tujuan'}).`,
       time: '04:15 WIB',
       isCompleted: isShipped,
       isActive: isShipped && !isDelivered,
@@ -120,7 +120,7 @@ export default function OrderTrackingPage() {
               Lacak Pengiriman #{orderNumber}
             </h1>
             <p className="text-xs text-gray-500 mt-0.5">
-              Pantau perjalanan oleh-oleh khas Nusantara dari sentra pengrajin hingga tiba di depan pintu rumahmu.
+              Pantau perjalanan oleh-oleh khas Nusantara dari dapur sentra UMKM hingga tiba di depan pintu rumahmu.
             </p>
           </div>
 

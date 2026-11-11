@@ -21,18 +21,22 @@ import {
   MapPin,
   Clock,
   PackageCheck,
+  Store,
 } from 'lucide-react';
 import { apiRequest } from '../../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 import { useCartStore } from '../../../stores/cart-store';
 import {
   getProductOrigin,
+  getProductStore,
   calculateShippingOptions,
   createProductWhatsAppUrl,
   DESTINATION_CITIES,
   SAMPLE_REVIEWS,
+  OFFICIAL_WA_NUMBER,
 } from '../../../lib/storefront-helpers';
 import { CourierLogo } from '../../../components/courier-logos';
+import { StoreProfileModal } from '../../../components/store-profile-modal';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -65,6 +69,7 @@ export default function ProductDetailPage() {
   const [activeTab, setActiveTab] = useState<'DESCRIPTION' | 'REVIEWS'>('DESCRIPTION');
   const [reviewRatingFilter, setReviewRatingFilter] = useState<number | null>(null);
   const [helpfulMap, setHelpfulMap] = useState<Record<string, number>>({});
+  const [storeModalOpen, setStoreModalOpen] = useState(false);
 
   const { addItem, openCart } = useCartStore();
 
@@ -112,6 +117,7 @@ export default function ProductDetailPage() {
   const stockOnHand = activeVariant?.inventory?.quantityOnHand ?? 15;
   const isOutOfStock = stockOnHand <= 0;
   const origin = getProductOrigin(product);
+  const store = getProductStore(product);
   const shippingRates = calculateShippingOptions(currentPrice * quantity, selectedCity);
 
   const toggleHelpful = (id: string) => {
@@ -277,7 +283,7 @@ export default function ProductDetailPage() {
                 {formatCurrency(currentPrice)}
               </span>
               <span className="text-xs text-[#003d29] font-semibold bg-[#F5F6F6] px-2.5 py-1 rounded-full">
-                Harga Pas Pengrajin
+                Harga Asli UMKM
               </span>
             </div>
           </div>
@@ -479,6 +485,63 @@ export default function ProductDetailPage() {
               </div>
             </div>
           </div>
+
+          {/* Profil Toko / Penjual UMKM Resmi */}
+          <div className="bg-[#FAF9F5] border border-stone-200 rounded-xl p-4 space-y-3">
+            <div className="flex items-center justify-between text-xs pb-2 border-b border-stone-200">
+              <div className="flex items-center gap-1.5 font-bold text-stone-900">
+                <Store className="w-4 h-4 text-[#003d29]" />
+                <span>Toko Penjual Resmi</span>
+              </div>
+              <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                <span>{store.type}</span>
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="relative w-12 h-12 rounded-lg bg-white overflow-hidden shrink-0 border border-stone-200">
+                <Image src={store.avatar} alt={store.name} fill className="object-cover" sizes="48px" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-xs font-bold text-stone-900 truncate">{store.name}</h3>
+                <p className="text-[11px] text-stone-500 flex items-center gap-1 mt-0.5">
+                  <MapPin className="w-3 h-3 text-[#003d29] shrink-0" />
+                  <span>{store.city}, {store.province}</span>
+                </p>
+                <div className="flex items-center gap-2 mt-1 text-[11px] text-stone-600">
+                  <span className="flex items-center gap-0.5 text-amber-600 font-bold">
+                    <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+                    <span>{store.rating}</span>
+                  </span>
+                  <span className="text-stone-300">•</span>
+                  <span>{store.productCount}+ Produk</span>
+                  <span className="text-stone-300">•</span>
+                  <span className="text-emerald-700 font-medium">Balas {store.chatResponseTime}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 flex items-center gap-2 text-xs">
+              <button
+                type="button"
+                onClick={() => setStoreModalOpen(true)}
+                className="flex-1 py-2 px-3 bg-white hover:bg-stone-50 border border-stone-200 text-stone-800 font-bold rounded-lg text-center transition-colors"
+              >
+                Lihat Profil Toko
+              </button>
+              <a
+                href={`https://wa.me/${OFFICIAL_WA_NUMBER}?text=${encodeURIComponent(`Halo ${store.name}! Saya tertarik dengan produk ${product.title}.`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="py-2 px-3 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-900 font-bold rounded-lg flex items-center gap-1.5 transition-colors"
+                title="Chat Penjual via WhatsApp"
+              >
+                <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Chat Penjual</span>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -519,7 +582,7 @@ export default function ProductDetailPage() {
                 <h3 className="text-base font-bold text-gray-900 mb-2">Tentang Produk</h3>
                 <p className="leading-relaxed text-gray-700 text-sm">
                   {product.description ||
-                    'Produk oleh-oleh otentik yang diproduksi langsung oleh sentra pengrajin dan dapur kuliner daerah dengan bahan baku pilihan terbaik.'}
+                    'Produk oleh-oleh otentik yang diproduksi langsung oleh sentra UMKM dan dapur kuliner daerah dengan bahan baku pilihan terbaik.'}
                 </p>
               </div>
 
@@ -529,7 +592,7 @@ export default function ProductDetailPage() {
                 </h4>
                 <ul className="space-y-2 list-disc list-inside text-gray-600">
                   <li>Simpan di suhu ruangan sejuk dan terhindar dari sinar matahari langsung.</li>
-                  <li>Untuk kudapan basah, disarankan dikonsumsi dalam 4-7 hari sejak paket diterima.</li>
+                  <li>Untuk oleh-oleh basah, disarankan dikonsumsi dalam 4-7 hari sejak paket diterima.</li>
                   <li>Dapat disimpan di lemari pendingin untuk masa ketahanan hingga 14 hari.</li>
                   <li>Kemasan luar dilapisi bubble wrap tebal dan kardus pengaman standar kiriman ekspedisi.</li>
                 </ul>
@@ -734,6 +797,7 @@ export default function ProductDetailPage() {
                 item.images?.[0]?.url ||
                 'https://upload.wikimedia.org/wikipedia/commons/2/27/Bakpia_pathuk.jpg';
               const relOrigin = getProductOrigin(item);
+              const relStore = getProductStore(item);
               return (
                 <div
                   key={item.id}
@@ -752,10 +816,16 @@ export default function ProductDetailPage() {
                       </Link>
                     </div>
 
-                    <span className="text-[9px] font-bold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-full inline-flex items-center gap-1 mb-1">
-                      <MapPin className="w-2 h-2 text-[#003d29]" />
-                      <span>{relOrigin.badge}</span>
-                    </span>
+                    <div className="flex items-center justify-between gap-1 mb-1">
+                      <span className="text-[9px] font-bold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                        <MapPin className="w-2 h-2 text-[#003d29]" />
+                        <span>{relOrigin.badge}</span>
+                      </span>
+                      <span className="text-[10px] text-stone-500 font-medium truncate max-w-[90px] flex items-center gap-0.5">
+                        <Store className="w-2.5 h-2.5 text-stone-400" />
+                        <span>{relStore.name.replace('Resmi', '').trim()}</span>
+                      </span>
+                    </div>
 
                     <Link
                       href={`/products/${item.slug}`}
@@ -781,6 +851,13 @@ export default function ProductDetailPage() {
           </div>
         </section>
       )}
+
+      {/* Interactive Store Profile Modal */}
+      <StoreProfileModal
+        store={store}
+        isOpen={storeModalOpen}
+        onClose={() => setStoreModalOpen(false)}
+      />
     </div>
   );
 }

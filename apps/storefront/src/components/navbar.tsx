@@ -107,7 +107,7 @@ export function Navbar() {
   };
 
   const categories = [
-    { name: 'Kudapan & Makanan Khas', slug: 'kudapan-khas' },
+    { name: 'Oleh-oleh & Makanan Khas', slug: 'kudapan-khas' },
     { name: 'Kopi & Minuman Tradisional', slug: 'kopi-minuman' },
     { name: 'Batik & Wastra Nusantara', slug: 'batik-wastra' },
     { name: 'Kriya Kayu & Gerabah', slug: 'kriya-kerajinan' },

@@ -28,7 +28,14 @@ import { apiRequest } from '../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 import { useCartStore } from '../stores/cart-store';
 import { useWishlistStore } from '../stores/wishlist-store';
-import { getProductOrigin, NUSANTARA_ORIGIN_TABS } from '../lib/storefront-helpers';
+import {
+  getProductOrigin,
+  getProductStore,
+  NUSANTARA_ORIGIN_TABS,
+  StoreProfile,
+  VERIFIED_UMKM_STORES,
+} from '../lib/storefront-helpers';
+import { StoreProfileModal } from '../components/store-profile-modal';
 
 export default function MarketplaceStorefrontHome() {
   const { addItem, openCart } = useCartStore();
@@ -37,6 +44,7 @@ export default function MarketplaceStorefrontHome() {
   const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('');
   const [activeOriginFilter, setActiveOriginFilter] = useState<string>('');
   const [sortOption, setSortOption] = useState<string>('newest');
+  const [selectedStore, setSelectedStore] = useState<StoreProfile | null>(null);
 
   // Flash Sale Live Countdown Timer
   const [timeLeft, setTimeLeft] = useState({
@@ -118,9 +126,10 @@ export default function MarketplaceStorefrontHome() {
       soldPercentage: 88,
       stockLeft: 4,
       image: 'https://upload.wikimedia.org/wikipedia/commons/2/27/Bakpia_pathuk.jpg',
-      category: 'Kudapan Khas',
+      category: 'Oleh-oleh Khas',
       rating: 4.9,
       reviewsCount: 320,
+      storeName: 'Dapur Bakpia 25 Resmi',
     },
     {
       id: 'fs-2',
@@ -133,9 +142,10 @@ export default function MarketplaceStorefrontHome() {
       soldPercentage: 94,
       stockLeft: 3,
       image: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Pie_Susu_Top_View.jpg',
-      category: 'Kudapan Khas',
+      category: 'Oleh-oleh Khas',
       rating: 5.0,
       reviewsCount: 512,
+      storeName: 'Sentra Pie Susu Dhian Bali',
     },
     {
       id: 'fs-3',
@@ -151,6 +161,7 @@ export default function MarketplaceStorefrontHome() {
       category: 'Kopi Nusantara',
       rating: 4.9,
       reviewsCount: 184,
+      storeName: 'Koperasi Kopi Gayo',
     },
     {
       id: 'fs-4',
@@ -166,13 +177,14 @@ export default function MarketplaceStorefrontHome() {
       category: 'Sambal Tradisional',
       rating: 4.8,
       reviewsCount: 429,
+      storeName: 'Dapur Sambal Bu Rudy',
     },
   ];
 
   // Visual Category Grid (Etsy & Shopee rounded visual cards)
   const visualCategories = [
     {
-      title: 'Kudapan & Kue Tradisional',
+      title: 'Oleh-oleh & Kue Tradisional',
       subtitle: 'Bakpia, Pie Susu & Lapis',
       slug: 'kudapan-khas',
       itemCount: '240+ Produk',
@@ -215,15 +227,16 @@ export default function MarketplaceStorefrontHome() {
     },
   ];
 
-  // Verified Artisans & Official Makers
+  // Verified Artisans & Official Makers -> Sentra UMKM Terverifikasi
   const verifiedMakers = [
     {
       name: 'Dapur Bakpia Pathok 25',
       city: 'Yogyakarta',
-      badge: 'Pengrajin Legendaris (Est. 1948)',
+      badge: 'UMKM Legendaris (Est. 1948)',
       sales: '12.4k Terjual',
       rating: '4.9',
       image: 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Bakpia_pathok.jpg',
+      storeProfile: VERIFIED_UMKM_STORES['bakpia-25'],
     },
     {
       name: 'Sentra Tenun Ikat Troso',
@@ -232,6 +245,7 @@ export default function MarketplaceStorefrontHome() {
       sales: '4.8k Terjual',
       rating: '5.0',
       image: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Batik_pedalaman_-_parang_klithik.JPG',
+      storeProfile: VERIFIED_UMKM_STORES['tenun-troso'],
     },
     {
       name: 'Dapur Sambal Bu Rudy',
@@ -240,6 +254,7 @@ export default function MarketplaceStorefrontHome() {
       sales: '18.9k Terjual',
       rating: '4.9',
       image: 'https://upload.wikimedia.org/wikipedia/commons/5/5a/SAMBAL_BAWANG.jpg',
+      storeProfile: VERIFIED_UMKM_STORES['sambal-bu-rudy'],
     },
     {
       name: 'Kopi Gayo Single Origin Roastery',
@@ -248,6 +263,7 @@ export default function MarketplaceStorefrontHome() {
       sales: '7.2k Terjual',
       rating: '4.9',
       image: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Biji_Kopi.jpg',
+      storeProfile: VERIFIED_UMKM_STORES['kopi-gayo'],
     },
   ];
 
@@ -311,7 +327,7 @@ export default function MarketplaceStorefrontHome() {
           </h1>
 
           <p className="text-sm text-stone-700 leading-relaxed max-w-lg">
-            Jelajahi aneka kudapan khas legendaris, batik tulis, kopi single-origin, dan kriya tangan yang diproduksi dengan integritas oleh perajin dan dapur UMKM terpercaya di Indonesia.
+            Jelajahi aneka oleh-oleh khas legendaris, batik tulis, kopi single-origin, dan kriya tangan yang diproduksi dengan integritas oleh sentra UMKM terpercaya di Indonesia.
           </p>
 
           {/* Quick Coupon Claim Chips */}
@@ -330,7 +346,7 @@ export default function MarketplaceStorefrontHome() {
               </div>
               <div className="inline-flex items-center gap-1.5 bg-white border border-stone-300 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-[#003d29] shadow-xs">
                 <Tag className="w-3.5 h-3.5 text-[#003d29]" />
-                <span>DISKON50</span>
+                <span>OLEHOLEH10</span>
               </div>
             </div>
           </div>
@@ -349,7 +365,7 @@ export default function MarketplaceStorefrontHome() {
               className="inline-flex items-center gap-2 bg-white hover:bg-stone-50 text-stone-800 border border-stone-300 text-xs font-semibold px-6 py-3 rounded-lg transition-colors"
             >
               <ShoppingBag className="w-4 h-4 text-[#003d29]" />
-              <span>Kudapan Terpopuler</span>
+              <span>Oleh-oleh Terpopuler</span>
             </Link>
           </div>
         </div>
@@ -548,22 +564,23 @@ export default function MarketplaceStorefrontHome() {
         </div>
       </section>
 
-      {/* 5. PILIHAN PENGRAJIN & DAPUR DAERAH RESMI */}
+      {/* 5. PILIHAN SENTRA UMKM & TOKO DAERAH RESMI */}
       <section className="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-stone-200 pb-4">
           <div className="flex items-center gap-2.5">
             <Store className="w-5 h-5 text-[#003d29]" />
             <div>
               <h2 className="text-xl font-bold text-stone-900 tracking-tight">
-                Pilihan Pengrajin & Dapur Daerah Resmi
+                Sentra UMKM Pilihan & Toko Resmi
               </h2>
               <p className="text-xs text-stone-500 mt-0.5">
-                UMKM binaan terverifikasi dengan komitmen resep otentik dan kemasan higienis.
+                Produsen oleh-oleh daerah terverifikasi dengan izin edar P-IRT dan sertifikasi halal.
               </p>
             </div>
           </div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#003d29] bg-[#003d29]/10 px-3 py-1 rounded-md">
-            Verified Artisan
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#003d29] bg-[#003d29]/10 px-3 py-1 rounded-md inline-flex items-center gap-1.5">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#003d29]" />
+            <span>UMKM Terverifikasi</span>
           </span>
         </div>
 
@@ -583,8 +600,8 @@ export default function MarketplaceStorefrontHome() {
                       className="object-cover"
                     />
                   </div>
-                  <div>
-                    <h3 className="text-xs font-bold text-stone-900">{maker.name}</h3>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xs font-bold text-stone-900 truncate">{maker.name}</h3>
                     <span className="text-xs text-stone-500 flex items-center gap-1 mt-0.5">
                       <MapPin className="w-3 h-3 text-[#003d29]" />
                       <span>{maker.city}</span>
@@ -602,12 +619,13 @@ export default function MarketplaceStorefrontHome() {
                 </div>
               </div>
 
-              <Link
-                href="/products"
+              <button
+                type="button"
+                onClick={() => setSelectedStore(maker.storeProfile)}
                 className="mt-4 w-full py-2 bg-white hover:bg-[#003d29] hover:text-white border border-stone-200 text-stone-800 rounded-lg text-xs font-semibold text-center block transition-colors"
               >
-                Kunjungi Toko
-              </Link>
+                Lihat Profil Toko
+              </button>
             </div>
           ))}
         </div>
@@ -709,6 +727,7 @@ export default function MarketplaceStorefrontHome() {
               const isAdded = addedId === product.id;
               const isFav = isInWishlist(product.id);
               const origin = getProductOrigin(product);
+              const store = getProductStore(product);
 
               return (
                 <div
@@ -741,27 +760,45 @@ export default function MarketplaceStorefrontHome() {
                         <Heart className={`w-3.5 h-3.5 ${isFav ? 'fill-current text-rose-600' : ''}`} />
                       </button>
 
-                      {/* Artisan Badge */}
-                      <div className="absolute bottom-2 left-2 bg-[#003d29] text-white text-xs font-semibold px-2 py-0.5 rounded-md shadow-xs">
-                        Asli UMKM
+                      {/* UMKM Badge */}
+                      <div className="absolute bottom-2 left-2 bg-[#003d29] text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-xs flex items-center gap-1">
+                        <CheckCircle2 className="w-2.5 h-2.5 text-white" />
+                        <span>UMKM Resmi</span>
                       </div>
                     </div>
 
                     {/* Metadata */}
-                    <div className="space-y-1">
-                      <div className="flex items-center justify-between gap-1 mb-1">
-                        <span className="text-xs font-semibold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-md inline-flex items-center gap-1">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between gap-1 mb-0.5">
+                        <span className="text-[11px] font-semibold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-md inline-flex items-center gap-1">
                           <MapPin className="w-2.5 h-2.5 text-[#003d29]" />
                           <span>{origin.badge}</span>
                         </span>
-                        <span className="text-xs text-stone-400 font-medium truncate">
+                        <span className="text-[11px] text-stone-400 font-medium truncate">
                           {product.category?.name || 'Oleh-Oleh Khas'}
                         </span>
                       </div>
 
+                      {/* Store / Seller Name */}
+                      <div className="flex items-center gap-1 text-[11px] text-stone-500 font-medium">
+                        <Store className="w-3 h-3 text-[#003d29] shrink-0" />
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setSelectedStore(store);
+                          }}
+                          className="hover:text-[#003d29] hover:underline truncate text-left"
+                          title="Lihat profil toko ini"
+                        >
+                          {store.name}
+                        </button>
+                      </div>
+
                       <Link
                         href={`/products/${product.slug}`}
-                        className="text-xs font-bold text-stone-900 group-hover:text-[#003d29] line-clamp-2 transition-colors block leading-snug"
+                        className="text-xs font-bold text-stone-900 group-hover:text-[#003d29] line-clamp-2 transition-colors block leading-snug pt-0.5"
                       >
                         {product.title}
                       </Link>
@@ -860,11 +897,18 @@ export default function MarketplaceStorefrontHome() {
               Dukungan UMKM Lokal
             </h4>
             <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-              Setiap pesanan Anda turut memberdayakan ekonomi para pengrajin daerah di Indonesia.
+              Setiap pesanan Anda turut memberdayakan ekonomi para pelaku UMKM daerah di Indonesia.
             </p>
           </div>
         </div>
       </section>
+
+      {/* Interactive Store Profile Modal */}
+      <StoreProfileModal
+        store={selectedStore}
+        isOpen={!!selectedStore}
+        onClose={() => setSelectedStore(null)}
+      />
     </div>
   );
 }
