@@ -18,12 +18,23 @@ export interface CartItem {
   imageUrl: string | null;
 }
 
+export const GIFT_WRAP_COST = 15000;
+
+export interface GiftDetails {
+  isGiftWrap: boolean;
+  packagingType: 'besek' | 'hardbox';
+  message: string;
+  senderName: string;
+  recipientName: string;
+}
+
 interface CartStore {
   isOpen: boolean;
   isLoading: boolean;
   items: CartItem[];
   itemCount: number;
   subtotal: number;
+  giftDetails: GiftDetails;
   openCart: () => void;
   closeCart: () => void;
   toggleCart: () => void;
@@ -32,6 +43,7 @@ interface CartStore {
   addItem: (variantId: string, quantity?: number) => Promise<void>;
   updateQuantity: (cartItemId: string, quantity: number) => Promise<void>;
   removeItem: (cartItemId: string) => Promise<void>;
+  setGiftDetails: (details: Partial<GiftDetails>) => void;
 }
 
 export const useCartStore = create<CartStore>((set, get) => ({
@@ -40,6 +52,22 @@ export const useCartStore = create<CartStore>((set, get) => ({
   items: [],
   itemCount: 0,
   subtotal: 0,
+  giftDetails: {
+    isGiftWrap: false,
+    packagingType: 'besek',
+    message: '',
+    senderName: '',
+    recipientName: '',
+  },
+
+  setGiftDetails: (details) => {
+    set((state) => ({
+      giftDetails: {
+        ...state.giftDetails,
+        ...details,
+      },
+    }));
+  },
 
   openCart: () => set({ isOpen: true }),
   closeCart: () => set({ isOpen: false }),

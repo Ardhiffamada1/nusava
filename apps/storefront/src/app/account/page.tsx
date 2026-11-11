@@ -19,6 +19,8 @@ import {
   ExternalLink,
   ShieldCheck,
   FileText,
+  Star,
+  Check,
 } from 'lucide-react';
 import { apiRequest } from '../../lib/api';
 import { useAuthStore } from '../../stores/auth-store';
@@ -41,6 +43,12 @@ export default function AccountPage() {
   const [trackingOrder, setTrackingOrder] = useState<any | null>(null);
   const [dismissedBanners, setDismissedBanners] = useState<Record<string, boolean>>({});
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+  const [reviewingItem, setReviewingItem] = useState<any | null>(null);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewHoverRating, setReviewHoverRating] = useState(0);
+  const [reviewText, setReviewText] = useState('');
+  const [reviewTags, setReviewTags] = useState<string[]>([]);
+  const [reviewSuccess, setReviewSuccess] = useState(false);
 
   // Fetch real customer orders if user is authenticated
   const { data: ordersData, isLoading: isOrdersLoading } = useQuery({
@@ -357,14 +365,30 @@ export default function AccountPage() {
                       {/* Review encouragement yellow banner (exact style from uploaded reference image) */}
                       {isDelivered && !bannerDismissed && (
                         <div className="p-3.5 bg-[#FFF9E6] border border-[#FFE8A3] text-gray-800 text-xs rounded-xl flex items-center justify-between">
-                          <div className="flex items-center gap-2 font-medium">
-                            <span className="text-amber-500 text-sm">★</span>
-                            <span className="font-semibold">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const targetItem = orderItems[0] || {};
+                              setReviewingItem({
+                                id: targetItem.id || 'item-review',
+                                title: targetItem.productNameSnapshot || targetItem.title || 'Produk Oleh-Oleh',
+                                image:
+                                  targetItem.image ||
+                                  targetItem.variant?.product?.images?.[0]?.url ||
+                                  'https://upload.wikimedia.org/wikipedia/commons/2/27/Bakpia_pathuk.jpg',
+                                orderNumber: order.orderNumber,
+                              });
+                              setReviewSuccess(false);
+                            }}
+                            className="flex items-center gap-2 font-medium hover:text-[#003d29] text-left transition-colors"
+                          >
+                            <Star className="w-4 h-4 text-amber-500 fill-amber-500 shrink-0" />
+                            <span className="font-semibold underline">
                               {isId
                                 ? 'Beri ulasan pengalaman belanja kamu bersama penjual'
                                 : 'Please rate your experience with the seller'}
                             </span>
-                          </div>
+                          </button>
                           <button
                             onClick={() =>
                               setDismissedBanners((prev) => ({ ...prev, [order.id]: true }))
@@ -476,7 +500,23 @@ export default function AccountPage() {
                                     </button>
 
                                     {menuOpenId === item.id && (
-                                      <div className="absolute left-0 mt-1.5 w-44 bg-white border border-gray-200 rounded-xl shadow-lg py-1 z-20 text-xs font-semibold text-gray-700">
+                                      <div className="absolute left-0 mt-1.5 w-48 bg-white border border-gray-200 rounded-xl shadow-lg py-1 z-20 text-xs font-semibold text-gray-700">
+                                        <button
+                                          onClick={() => {
+                                            setMenuOpenId(null);
+                                            setReviewingItem({
+                                              id: item.id,
+                                              title: productTitle,
+                                              image: productImg,
+                                              orderNumber: order.orderNumber,
+                                            });
+                                            setReviewSuccess(false);
+                                          }}
+                                          className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center gap-2 text-gray-700"
+                                        >
+                                          <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                                          <span>{isId ? 'Tulis Ulasan Produk' : 'Write Product Review'}</span>
+                                        </button>
                                         <button
                                           onClick={() => {
                                             setMenuOpenId(null);
@@ -637,7 +677,14 @@ export default function AccountPage() {
               </div>
             </div>
 
-            <div className="pt-3 border-t border-gray-100 flex justify-end">
+            <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+              <Link
+                href={`/orders/track/${activeTracking.orderNumber || '112-0822160-5390023'}`}
+                className="text-xs font-semibold text-[#003d29] hover:underline flex items-center gap-1"
+              >
+                <span>Halaman Lacak Lengkap</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
               <button
                 onClick={() => setTrackingOrder(null)}
                 className="px-5 py-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold rounded-full transition-colors"
@@ -645,6 +692,183 @@ export default function AccountPage() {
                 {isId ? 'Tutup' : 'Close'}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Write a Product Review Modal (Feature 2) */}
+      {reviewingItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+          <div className="bg-white border border-gray-200 max-w-md w-full rounded-2xl shadow-2xl p-6 space-y-5 animate-in fade-in">
+            <div className="flex justify-between items-start border-b border-gray-100 pb-3">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#003d29]">
+                  {isId ? 'ULASAN PEMBELI' : 'PRODUCT REVIEW'}
+                </span>
+                <h3 className="text-base font-bold text-gray-900 mt-0.5">
+                  {isId ? 'Beri Penilaian Produk' : 'Rate Your Product'}
+                </h3>
+              </div>
+              <button
+                onClick={() => setReviewingItem(null)}
+                className="p-1 text-gray-400 hover:text-gray-900 rounded-full hover:bg-gray-100 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {reviewSuccess ? (
+              <div className="py-8 text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center mx-auto">
+                  <Check className="w-6 h-6 stroke-[3]" />
+                </div>
+                <h4 className="text-base font-bold text-gray-900">Ulasan Berhasil Dikirim!</h4>
+                <p className="text-xs text-gray-500 max-w-xs mx-auto">
+                  Terima kasih sudah membagikan ulasanmu. Pengalaman belanjamu sangat membantu para pengrajin lokal dan pembeli lainnya.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setReviewingItem(null)}
+                  className="mt-4 px-6 py-2.5 bg-[#003d29] text-white text-xs font-bold rounded-full hover:bg-[#002b1c] transition-colors"
+                >
+                  Tutup
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-4 text-xs">
+                {/* Item Thumbnail & Title */}
+                <div className="flex items-center gap-3 p-3 bg-[#FAF9F5] border border-gray-200/80 rounded-xl">
+                  <div className="relative w-12 h-12 bg-white rounded-lg overflow-hidden shrink-0 border border-gray-200">
+                    <Image
+                      src={reviewingItem.image}
+                      alt={reviewingItem.title}
+                      fill
+                      className="object-contain p-1"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[10px] text-gray-400 font-mono block">Order #{reviewingItem.orderNumber}</span>
+                    <h4 className="font-bold text-gray-900 text-xs truncate">{reviewingItem.title}</h4>
+                  </div>
+                </div>
+
+                {/* Star Rating Interactive Selector */}
+                <div>
+                  <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+                    Kualitas Produk Keseluruhan:
+                  </label>
+                  <div className="flex items-center gap-1.5">
+                    {[1, 2, 3, 4, 5].map((star) => {
+                      const isFilled = (reviewHoverRating || reviewRating) >= star;
+                      return (
+                        <button
+                          key={star}
+                          type="button"
+                          onMouseEnter={() => setReviewHoverRating(star)}
+                          onMouseLeave={() => setReviewHoverRating(0)}
+                          onClick={() => setReviewRating(star)}
+                          className="p-1 hover:scale-115 transition-transform"
+                          aria-label={`Beri ${star} bintang`}
+                        >
+                          <Star
+                            className={`w-6 h-6 ${
+                              isFilled
+                                ? 'text-amber-500 fill-amber-500'
+                                : 'text-gray-300'
+                            }`}
+                          />
+                        </button>
+                      );
+                    })}
+                    <span className="text-xs font-bold text-gray-700 ml-2">
+                      {reviewRating === 5
+                        ? 'Sangat Puas'
+                        : reviewRating === 4
+                        ? 'Puas'
+                        : reviewRating === 3
+                        ? 'Cukup'
+                        : reviewRating === 2
+                        ? 'Kurang'
+                        : 'Mengecewakan'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Quality Tags Chips */}
+                <div>
+                  <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+                    Poin Penilaian yang Menonjol:
+                  </label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {[
+                      'Rasa Otentik Khas Daerah',
+                      'Kemasan Rapi & Tebal',
+                      'Pengiriman Tepat Waktu',
+                      'Sesuai Foto & Deskripsi',
+                      'Fresh Langsung dari Dapur',
+                    ].map((tag) => {
+                      const isSelected = reviewTags.includes(tag);
+                      return (
+                        <button
+                          key={tag}
+                          type="button"
+                          onClick={() => {
+                            if (isSelected) {
+                              setReviewTags(reviewTags.filter((t) => t !== tag));
+                            } else {
+                              setReviewTags([...reviewTags, tag]);
+                            }
+                          }}
+                          className={`px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all border ${
+                            isSelected
+                              ? 'bg-[#003d29] text-white border-[#003d29]'
+                              : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+                          }`}
+                        >
+                          {tag}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Review Text */}
+                <div>
+                  <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+                    Ceritakan Pengalamanmu:
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={reviewText}
+                    onChange={(e) => setReviewText(e.target.value)}
+                    placeholder="Bagikan ulasan tentang kelezatan rasa, kerapian kemasan, atau pelayanan penjual..."
+                    className="w-full text-xs p-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#003d29] resize-none"
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <div className="pt-2 flex items-center justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setReviewingItem(null)}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-900 font-semibold"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setReviewSuccess(true);
+                      setReviewText('');
+                      setReviewTags([]);
+                    }}
+                    className="px-5 py-2.5 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold rounded-full transition-colors shadow-2xs"
+                  >
+                    Kirim Ulasan
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

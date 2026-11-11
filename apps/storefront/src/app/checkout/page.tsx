@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useQuery } from '@tanstack/react-query';
-import { useCartStore } from '../../stores/cart-store';
+import { useCartStore, GIFT_WRAP_COST } from '../../stores/cart-store';
 import { useAuthStore } from '../../stores/auth-store';
 import { apiRequest } from '../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
@@ -28,6 +28,7 @@ import {
   Banknote,
   Tag,
   X,
+  Gift,
 } from 'lucide-react';
 
 const CheckoutFormSchema = z.object({
@@ -47,7 +48,7 @@ type CheckoutFormData = z.infer<typeof CheckoutFormSchema>;
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, subtotal, fetchCart, clearCart } = useCartStore();
+  const { items, subtotal, fetchCart, clearCart, giftDetails, setGiftDetails } = useCartStore();
   const { user } = useAuthStore();
 
   const [couponCode, setCouponCode] = useState('');
@@ -135,7 +136,8 @@ export default function CheckoutPage() {
 
   const rawShippingCost = items.length === 0 ? 0 : activeCourier.cost;
   const effectiveShippingCost = appliedCoupon?.discountType === 'SHIPPING' ? 0 : rawShippingCost;
-  const grandTotal = Math.max(0, subtotal + effectiveShippingCost - (appliedCoupon?.discountType === 'SHIPPING' ? 0 : couponDiscount));
+  const giftCost = giftDetails.isGiftWrap ? GIFT_WRAP_COST : 0;
+  const grandTotal = Math.max(0, subtotal + effectiveShippingCost + giftCost - (appliedCoupon?.discountType === 'SHIPPING' ? 0 : couponDiscount));
 
   const handleApplyCoupon = (codeToApply?: string) => {
     const code = codeToApply || couponCode;
@@ -175,7 +177,10 @@ export default function CheckoutPage() {
 
       let order: any;
       const courierNote = `[Kurir: ${activeCourier.name} - ${activeCourier.service}]`;
-      const combinedNotes = data.notes ? `${courierNote} ${data.notes}` : courierNote;
+      const giftNote = giftDetails.isGiftWrap
+        ? `[HAMPERS: ${giftDetails.packagingType === 'besek' ? 'Besek Tradisional Bambu' : 'Hardbox Eksklusif'} | Pesan: "${giftDetails.message || '-'}" | Dari: ${giftDetails.senderName || data.fullName} | Kepada: ${giftDetails.recipientName || data.fullName}]`
+        : '';
+      const combinedNotes = [courierNote, giftNote, data.notes].filter(Boolean).join(' ');
 
       if (!user) {
         // GUEST CHECKOUT (Tanpa perlu login / register)
@@ -560,6 +565,116 @@ export default function CheckoutPage() {
                 })}
               </div>
             </div>
+
+            {/* Opsi Kemasan Hampers / Gift Box & Kartu Ucapan Adat (Feature 3) */}
+            <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-2xs space-y-4">
+              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <Gift className="w-5 h-5 text-[#003d29]" />
+                  <h2 className="text-sm font-bold text-gray-900">
+                    Kemas Sebagai Paket Hadiah / Hampers Khas Nusantara
+                  </h2>
+                </div>
+                <span className="text-xs font-bold text-[#003d29]">+{formatCurrency(GIFT_WRAP_COST)}</span>
+              </div>
+
+              <label className="flex items-start gap-3 p-3.5 bg-[#FAF9F5] border border-gray-200 rounded-xl cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={giftDetails.isGiftWrap}
+                  onChange={(e) => setGiftDetails({ isGiftWrap: e.target.checked })}
+                  className="mt-0.5 rounded text-[#003d29] focus:ring-[#003d29] w-4 h-4"
+                />
+                <div>
+                  <span className="text-xs font-bold text-gray-900 block">
+                    Ya, tambahkan kemasan hampers eksklusif & kartu ucapan kustom
+                  </span>
+                  <span className="text-[11px] text-gray-500 block mt-0.5 leading-relaxed">
+                    Sangat cocok untuk kiriman cinderamata bagi sahabat, kerabat, atau relasi bisnis.
+                  </span>
+                </div>
+              </label>
+
+              {giftDetails.isGiftWrap && (
+                <div className="space-y-3 pt-2">
+                  <div>
+                    <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+                      Pilihan Wadah Kemasan:
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => setGiftDetails({ packagingType: 'besek' })}
+                        className={`p-3 rounded-xl border text-left transition-all text-xs ${
+                          giftDetails.packagingType === 'besek'
+                            ? 'border-[#003d29] bg-[#FAF9F5] font-bold text-[#003d29] ring-1 ring-[#003d29]'
+                            : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                        }`}
+                      >
+                        <span className="block font-bold">Besek Tradisional</span>
+                        <span className="text-[11px] text-gray-500 block mt-0.5">
+                          Anyaman Bambu Natural & Pita Etnik
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setGiftDetails({ packagingType: 'hardbox' })}
+                        className={`p-3 rounded-xl border text-left transition-all text-xs ${
+                          giftDetails.packagingType === 'hardbox'
+                            ? 'border-[#003d29] bg-[#FAF9F5] font-bold text-[#003d29] ring-1 ring-[#003d29]'
+                            : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                        }`}
+                      >
+                        <span className="block font-bold">Hardbox Eksklusif</span>
+                        <span className="text-[11px] text-gray-500 block mt-0.5">
+                          Kotak Tebal Hijau Nusantara & Pita Satin Emas
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-semibold text-gray-700 block mb-1">
+                        Nama Pengirim (di kartu ucapan)
+                      </label>
+                      <input
+                        type="text"
+                        value={giftDetails.senderName}
+                        onChange={(e) => setGiftDetails({ senderName: e.target.value })}
+                        placeholder="Contoh: Keluarga Budi"
+                        className="w-full text-xs px-3 py-2 border border-gray-200 rounded-xl focus:border-[#003d29] outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-gray-700 block mb-1">
+                        Nama Penerima (di kartu ucapan)
+                      </label>
+                      <input
+                        type="text"
+                        value={giftDetails.recipientName}
+                        onChange={(e) => setGiftDetails({ recipientName: e.target.value })}
+                        placeholder="Contoh: Sahabatku Maya"
+                        className="w-full text-xs px-3 py-2 border border-gray-200 rounded-xl focus:border-[#003d29] outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-gray-700 block mb-1">
+                      Pesan Kartu Ucapan
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={giftDetails.message}
+                      onChange={(e) => setGiftDetails({ message: e.target.value })}
+                      placeholder="Tuliskan ucapan kado hangat untuk penerima..."
+                      className="w-full text-xs p-3 border border-gray-200 rounded-xl focus:border-[#003d29] outline-none resize-none"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Right Column: Order Summary & Payment Details */}
@@ -748,6 +863,16 @@ export default function CheckoutPage() {
                     )}
                   </span>
                 </div>
+
+                {giftCost > 0 && (
+                  <div className="flex justify-between text-[#003d29] font-semibold">
+                    <span className="flex items-center gap-1.5">
+                      <Gift className="w-3.5 h-3.5 text-[#003d29]" />
+                      <span>Kemasan Hampers & Kartu Ucapan</span>
+                    </span>
+                    <span>+{formatCurrency(giftCost)}</span>
+                  </div>
+                )}
 
                 {appliedCoupon && (
                   <div className="flex justify-between text-[#003d29] font-semibold">

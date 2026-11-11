@@ -3,15 +3,15 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Trash2, ArrowRight, ShoppingBag, ArrowLeft, ShieldCheck, MessageSquare, Tag, X, Check } from 'lucide-react';
-import { useCartStore } from '../../stores/cart-store';
+import { Trash2, ArrowRight, ShoppingBag, ArrowLeft, ShieldCheck, MessageSquare, Tag, X, Check, Gift } from 'lucide-react';
+import { useCartStore, GIFT_WRAP_COST } from '../../stores/cart-store';
 import { formatCurrency } from '@commerceos/ui';
 import { useLanguageStore } from '../../stores/language-store';
 import { createCartWhatsAppUrl } from '../../lib/storefront-helpers';
 import { AVAILABLE_COUPONS, validateAndApplyCoupon, Coupon } from '../../lib/coupon-helpers';
 
 export default function CartPage() {
-  const { items, itemCount, subtotal, updateQuantity, removeItem, isLoading } = useCartStore();
+  const { items, itemCount, subtotal, updateQuantity, removeItem, isLoading, giftDetails, setGiftDetails } = useCartStore();
   const { language } = useLanguageStore();
   const isId = language === 'id';
 
@@ -23,7 +23,8 @@ export default function CartPage() {
   const freeShippingThreshold = 150000;
   const rawShippingCost = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : 20000;
   const shippingCost = appliedCoupon?.discountType === 'SHIPPING' ? 0 : rawShippingCost;
-  const grandTotal = Math.max(0, subtotal + shippingCost - couponDiscount);
+  const giftCost = giftDetails.isGiftWrap ? GIFT_WRAP_COST : 0;
+  const grandTotal = Math.max(0, subtotal + shippingCost + giftCost - couponDiscount);
 
   const handleApplyCoupon = (codeToApply?: string) => {
     const code = codeToApply || couponInput;
@@ -178,6 +179,85 @@ export default function CartPage() {
             {isId ? 'Ringkasan Belanja' : 'Order Summary'}
           </h2>
 
+          {/* Gift Wrap / Hampers Section */}
+          <div className="mb-4 p-3.5 bg-white border border-gray-200 rounded-xl">
+            <label className="flex items-start gap-2.5 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={giftDetails.isGiftWrap}
+                onChange={(e) => setGiftDetails({ isGiftWrap: e.target.checked })}
+                className="mt-0.5 rounded text-[#003d29] focus:ring-[#003d29] w-4 h-4"
+              />
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-gray-900 flex items-center gap-1.5">
+                    <Gift className="w-3.5 h-3.5 text-[#003d29]" />
+                    <span>{isId ? 'Kemas Sebagai Hampers / Kado' : 'Gift Packaging & Card'}</span>
+                  </span>
+                  <span className="text-xs font-semibold text-[#003d29]">+{formatCurrency(GIFT_WRAP_COST)}</span>
+                </div>
+                <p className="text-[11px] text-gray-500 mt-0.5">
+                  {isId
+                    ? 'Kemasan rapi dengan pita serta kartu ucapan kustom untuk penerima.'
+                    : 'Authentic gift packaging with ribbon and customized greeting card.'}
+                </p>
+              </div>
+            </label>
+
+            {giftDetails.isGiftWrap && (
+              <div className="mt-3 pt-3 border-t border-gray-100 space-y-2.5">
+                <div>
+                  <label className="text-[10px] font-semibold text-gray-600 block mb-1">
+                    {isId ? 'Pilihan Jenis Wadah Kemasan:' : 'Packaging Style:'}
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setGiftDetails({ packagingType: 'besek' })}
+                      className={`py-2 px-2.5 rounded-lg text-left border transition-all text-xs ${
+                        giftDetails.packagingType === 'besek'
+                          ? 'border-[#003d29] bg-[#FAF9F5] font-bold text-[#003d29]'
+                          : 'border-gray-200 hover:border-gray-300 text-gray-700 bg-white'
+                      }`}
+                    >
+                      <span className="block text-[11px] font-bold">Besek Tradisional</span>
+                      <span className="text-[10px] text-gray-400 font-normal">Anyaman Bambu & Pita</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setGiftDetails({ packagingType: 'hardbox' })}
+                      className={`py-2 px-2.5 rounded-lg text-left border transition-all text-xs ${
+                        giftDetails.packagingType === 'hardbox'
+                          ? 'border-[#003d29] bg-[#FAF9F5] font-bold text-[#003d29]'
+                          : 'border-gray-200 hover:border-gray-300 text-gray-700 bg-white'
+                      }`}
+                    >
+                      <span className="block text-[11px] font-bold">Hardbox Eksklusif</span>
+                      <span className="text-[10px] text-gray-400 font-normal">Warna Hijau & Emas</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-semibold text-gray-600 block mb-1">
+                    {isId ? 'Tuliskan Pesan Kartu Ucapan:' : 'Gift Card Message:'}
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={giftDetails.message}
+                    onChange={(e) => setGiftDetails({ message: e.target.value })}
+                    placeholder={
+                      isId
+                        ? 'Contoh: Selamat menikmati oleh-oleh khas Nusantara dari Jogja!'
+                        : 'Your warm greeting message...'
+                    }
+                    className="w-full text-xs p-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#003d29] resize-none"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Coupon Code Section */}
           <div className="mb-5 p-3.5 bg-white border border-dashed border-gray-200 rounded-xl">
             <div className="flex items-center gap-1.5 text-xs font-semibold text-[#003d29] mb-2.5">
@@ -273,6 +353,16 @@ export default function CartPage() {
                 )}
               </span>
             </div>
+
+            {giftCost > 0 && (
+              <div className="flex justify-between text-[#003d29] pt-3.5 font-medium">
+                <span className="flex items-center gap-1.5">
+                  <Gift className="w-3.5 h-3.5 text-[#003d29]" />
+                  <span>{isId ? 'Kemasan Hampers & Kartu' : 'Gift Wrapping & Card'}</span>
+                </span>
+                <span>+{formatCurrency(giftCost)}</span>
+              </div>
+            )}
 
             {couponDiscount > 0 && (
               <div className="flex justify-between text-emerald-700 pt-3.5 font-medium">
