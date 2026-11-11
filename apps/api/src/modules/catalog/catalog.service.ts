@@ -136,6 +136,23 @@ export class CatalogService {
       }
     }
 
+    if (query.origin) {
+      const originTerm = query.origin.trim();
+      const originCondition = {
+        OR: [
+          { title: { contains: originTerm, mode: 'insensitive' as const } },
+          { description: { contains: originTerm, mode: 'insensitive' as const } },
+        ],
+      };
+      if (Array.isArray(where.AND)) {
+        where.AND.push(originCondition);
+      } else if (where.AND) {
+        where.AND = [where.AND as any, originCondition];
+      } else {
+        where.AND = [originCondition];
+      }
+    }
+
     if (query.minPrice !== undefined || query.maxPrice !== undefined) {
       where.basePrice = {};
       if (query.minPrice !== undefined) {

@@ -23,12 +23,14 @@ import {
 import { apiRequest } from '../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 import { useCartStore } from '../stores/cart-store';
+import { getProductOrigin, NUSANTARA_ORIGIN_TABS } from '../lib/storefront-helpers';
 
 export default function ShopcartStorefrontHome() {
   const { addItem, openCart } = useCartStore();
   const [addedId, setAddedId] = useState<string | null>(null);
   const [wishlist, setWishlist] = useState<Record<string, boolean>>({});
   const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('');
+  const [activeOriginFilter, setActiveOriginFilter] = useState<string>('');
   const [sortOption, setSortOption] = useState<string>('newest');
 
   // Flash Sale Live Countdown Timer (Hours, Minutes, Seconds)
@@ -56,10 +58,11 @@ export default function ShopcartStorefrontHome() {
 
   // Fetch featured catalog products
   const { data: productsData, isLoading } = useQuery({
-    queryKey: ['featured-products', activeCategoryFilter, sortOption],
+    queryKey: ['featured-products', activeCategoryFilter, activeOriginFilter, sortOption],
     queryFn: () => {
       const p = new URLSearchParams();
       if (activeCategoryFilter) p.set('category', activeCategoryFilter);
+      if (activeOriginFilter) p.set('origin', activeOriginFilter);
       p.set('sortBy', sortOption);
       p.set('limit', '12');
       return apiRequest<{ items: any[] }>(`/products?${p.toString()}`);
@@ -327,102 +330,127 @@ export default function ShopcartStorefrontHome() {
       </section>
 
       {/* 3. FILTER PILLS BAR */}
-      <section className="flex flex-wrap items-center justify-between gap-4 pt-2 pb-4 border-b border-gray-100">
-        {/* Left Filter Dropdowns */}
-        <div className="flex flex-wrap items-center gap-2.5">
-          <button
-            onClick={() => setActiveCategoryFilter('')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
-              !activeCategoryFilter
-                ? 'bg-[#003d29] text-white border-[#003d29]'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
-            }`}
-          >
-            <span>Semua Oleh-oleh</span>
-          </button>
+      <section className="space-y-4 pt-2 pb-4 border-b border-gray-100">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          {/* Left Category Dropdowns */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              onClick={() => setActiveCategoryFilter('')}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+                !activeCategoryFilter
+                  ? 'bg-[#003d29] text-white border-[#003d29]'
+                  : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+              }`}
+            >
+              <span>Semua Oleh-oleh</span>
+            </button>
 
-          <button
-            onClick={() => setActiveCategoryFilter('kudapan-khas')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
-              activeCategoryFilter === 'kudapan-khas'
-                ? 'bg-[#003d29] text-white border-[#003d29]'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
-            }`}
-          >
-            <span>Kudapan Khas</span>
-            <ChevronDown className="w-3.5 h-3.5" />
-          </button>
+            <button
+              onClick={() => setActiveCategoryFilter('kudapan-khas')}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+                activeCategoryFilter === 'kudapan-khas'
+                  ? 'bg-[#003d29] text-white border-[#003d29]'
+                  : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+              }`}
+            >
+              <span>Kudapan Khas</span>
+              <ChevronDown className="w-3.5 h-3.5" />
+            </button>
 
-          <button
-            onClick={() => setActiveCategoryFilter('kopi-minuman')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
-              activeCategoryFilter === 'kopi-minuman'
-                ? 'bg-[#003d29] text-white border-[#003d29]'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
-            }`}
-          >
-            <span>Kopi & Minuman</span>
-            <ChevronDown className="w-3.5 h-3.5" />
-          </button>
+            <button
+              onClick={() => setActiveCategoryFilter('kopi-minuman')}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+                activeCategoryFilter === 'kopi-minuman'
+                  ? 'bg-[#003d29] text-white border-[#003d29]'
+                  : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+              }`}
+            >
+              <span>Kopi & Minuman</span>
+              <ChevronDown className="w-3.5 h-3.5" />
+            </button>
 
-          <button
-            onClick={() => setActiveCategoryFilter('batik-wastra')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
-              activeCategoryFilter === 'batik-wastra'
-                ? 'bg-[#003d29] text-white border-[#003d29]'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
-            }`}
-          >
-            <span>Batik & Wastra</span>
-            <ChevronDown className="w-3.5 h-3.5" />
-          </button>
+            <button
+              onClick={() => setActiveCategoryFilter('batik-wastra')}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+                activeCategoryFilter === 'batik-wastra'
+                  ? 'bg-[#003d29] text-white border-[#003d29]'
+                  : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+              }`}
+            >
+              <span>Batik & Wastra</span>
+              <ChevronDown className="w-3.5 h-3.5" />
+            </button>
 
-          <button
-            onClick={() => setActiveCategoryFilter('kriya-kerajinan')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
-              activeCategoryFilter === 'kriya-kerajinan'
-                ? 'bg-[#003d29] text-white border-[#003d29]'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
-            }`}
-          >
-            <span>Kriya Kayu & Gerabah</span>
-            <ChevronDown className="w-3.5 h-3.5" />
-          </button>
+            <button
+              onClick={() => setActiveCategoryFilter('kriya-kerajinan')}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+                activeCategoryFilter === 'kriya-kerajinan'
+                  ? 'bg-[#003d29] text-white border-[#003d29]'
+                  : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+              }`}
+            >
+              <span>Kriya Kayu & Gerabah</span>
+              <ChevronDown className="w-3.5 h-3.5" />
+            </button>
 
-          <button
-            onClick={() => setActiveCategoryFilter('sambal-bumbu')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
-              activeCategoryFilter === 'sambal-bumbu'
-                ? 'bg-[#003d29] text-white border-[#003d29]'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
-            }`}
-          >
-            <span>Sambal & Bumbu</span>
-            <ChevronDown className="w-3.5 h-3.5" />
-          </button>
+            <button
+              onClick={() => setActiveCategoryFilter('sambal-bumbu')}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+                activeCategoryFilter === 'sambal-bumbu'
+                  ? 'bg-[#003d29] text-white border-[#003d29]'
+                  : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+              }`}
+            >
+              <span>Sambal & Bumbu</span>
+              <ChevronDown className="w-3.5 h-3.5" />
+            </button>
 
-          <Link
-            href="/products"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold bg-white text-gray-700 border border-gray-200 hover:border-gray-400"
-          >
-            <SlidersHorizontal className="w-3.5 h-3.5 text-gray-500" />
-            <span>Semua Filter</span>
-          </Link>
+            <Link
+              href="/products"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold bg-white text-gray-700 border border-gray-200 hover:border-gray-400"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-gray-500" />
+              <span>Semua Filter</span>
+            </Link>
+          </div>
+
+          {/* Right Sort Selector */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500">Urutkan:</span>
+            <select
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              className="text-xs font-semibold text-gray-800 bg-white border border-gray-200 rounded-full px-3.5 py-1.5 outline-none focus:border-[#003d29] cursor-pointer"
+            >
+              <option value="newest">Paling Sesuai</option>
+              <option value="price_asc">Harga: Rendah ke Tinggi</option>
+              <option value="price_desc">Harga: Tinggi ke Rendah</option>
+              <option value="popular">Paling Banyak Dibeli</option>
+            </select>
+          </div>
         </div>
 
-        {/* Right Sort Selector */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500">Urutkan:</span>
-          <select
-            value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
-            className="text-xs font-semibold text-gray-800 bg-white border border-gray-200 rounded-full px-3.5 py-1.5 outline-none focus:border-[#003d29] cursor-pointer"
-          >
-            <option value="newest">Paling Sesuai</option>
-            <option value="price_asc">Harga: Rendah ke Tinggi</option>
-            <option value="price_desc">Harga: Tinggi ke Rendah</option>
-            <option value="popular">Paling Banyak Dibeli</option>
-          </select>
+        {/* 3.1 PETA RASA NUSANTARA - ORIGIN CITY PILLS */}
+        <div className="pt-2 flex items-center gap-2 overflow-x-auto scrollbar-none pb-1">
+          <span className="text-xs font-bold text-[#003d29] uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1">
+            <span>📍 Peta Rasa:</span>
+          </span>
+          {NUSANTARA_ORIGIN_TABS.map((tab) => {
+            const isSelected = activeOriginFilter === tab.city;
+            return (
+              <button
+                key={tab.id || 'all'}
+                onClick={() => setActiveOriginFilter(tab.city)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border shrink-0 ${
+                  isSelected
+                    ? 'bg-[#003d29] text-white border-[#003d29] shadow-2xs'
+                    : 'bg-[#FAF9F5] text-gray-700 border-gray-200 hover:border-gray-400'
+                }`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
       </section>
 
@@ -468,6 +496,7 @@ export default function ShopcartStorefrontHome() {
               const price = Number(product.basePrice);
               const isAdded = addedId === product.id;
               const isFav = wishlist[product.id];
+              const origin = getProductOrigin(product);
 
               return (
                 <div
@@ -502,6 +531,16 @@ export default function ShopcartStorefrontHome() {
 
                   {/* Product Metadata */}
                   <div className="mt-3.5 space-y-1">
+                    {/* Origin Badge & Category */}
+                    <div className="flex items-center justify-between gap-1 mb-1">
+                      <span className="text-[10px] font-bold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-full">
+                        {origin.badge}
+                      </span>
+                      <span className="text-[10px] text-gray-400 font-medium truncate">
+                        {product.category?.name}
+                      </span>
+                    </div>
+
                     {/* Top Row: Title on Left, Price on Right */}
                     <div className="flex items-start justify-between gap-2">
                       <Link

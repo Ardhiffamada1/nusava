@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   transpilePackages: ['@commerceos/contracts', '@commerceos/ui'],
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',

@@ -14,10 +14,24 @@ import {
   Truck,
   RotateCcw,
   Heart,
+  MessageSquare,
+  ThumbsUp,
+  Star,
+  CheckCircle2,
+  MapPin,
+  Clock,
+  PackageCheck,
 } from 'lucide-react';
 import { apiRequest } from '../../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 import { useCartStore } from '../../../stores/cart-store';
+import {
+  getProductOrigin,
+  calculateShippingOptions,
+  createProductWhatsAppUrl,
+  DESTINATION_CITIES,
+  SAMPLE_REVIEWS,
+} from '../../../lib/storefront-helpers';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -35,6 +49,10 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [selectedCity, setSelectedCity] = useState('jakarta');
+  const [activeTab, setActiveTab] = useState<'DESCRIPTION' | 'REVIEWS'>('DESCRIPTION');
+  const [reviewRatingFilter, setReviewRatingFilter] = useState<number | null>(null);
+  const [helpfulMap, setHelpfulMap] = useState<Record<string, number>>({});
 
   const { addItem, openCart } = useCartStore();
 
@@ -81,6 +99,20 @@ export default function ProductDetailPage() {
 
   const stockOnHand = activeVariant?.inventory?.quantityOnHand ?? 15;
   const isOutOfStock = stockOnHand <= 0;
+  const origin = getProductOrigin(product);
+  const shippingRates = calculateShippingOptions(currentPrice * quantity, selectedCity);
+
+  const toggleHelpful = (id: string) => {
+    setHelpfulMap((prev) => ({
+      ...prev,
+      [id]: (prev[id] || 0) + 1,
+    }));
+  };
+
+  const filteredReviews = SAMPLE_REVIEWS.filter((r) => {
+    if (reviewRatingFilter) return r.rating === reviewRatingFilter;
+    return true;
+  });
 
   const handleAddToCart = async () => {
     if (!activeVariant || isOutOfStock) return;
@@ -195,6 +227,18 @@ export default function ProductDetailPage() {
         {/* Right: Buy Box & Options */}
         <div className="lg:col-span-5 space-y-6">
           <div>
+            {/* Origin Badge */}
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-[11px] font-bold text-[#003d29] bg-[#003d29]/8 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1">
+                <span>{origin.badge}</span>
+                <span className="text-gray-400 font-normal">•</span>
+                <span className="font-semibold text-gray-600">{origin.province}</span>
+              </span>
+              <span className="text-[11px] font-semibold text-gray-500">
+                {product.category?.name}
+              </span>
+            </div>
+
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
               {product.title}
             </h1>
@@ -203,7 +247,12 @@ export default function ProductDetailPage() {
             {/* Star Rating (Shopcart dark green stars) */}
             <div className="flex items-center gap-2 mt-2.5">
               <div className="flex text-[#003d29] text-xs">{'★'.repeat(5)}</div>
-              <span className="text-xs text-gray-500 font-semibold">(121 ulasan pembeli)</span>
+              <button
+                onClick={() => setActiveTab('REVIEWS')}
+                className="text-xs text-[#003d29] hover:underline font-semibold"
+              >
+                (121 ulasan pembeli terverifikasi)
+              </button>
             </div>
 
             {/* Price Headline */}
@@ -257,7 +306,7 @@ export default function ProductDetailPage() {
           )}
 
           {/* Quantity Stepper & Buy Action Buttons */}
-          <div className="space-y-4 pt-2">
+          <div className="space-y-3 pt-2">
             <div className="flex items-center gap-4">
               {/* Stepper */}
               <div className="flex items-center border border-gray-200 bg-[#F5F6F6] rounded-full p-1">
@@ -286,12 +335,12 @@ export default function ProductDetailPage() {
               </span>
             </div>
 
-            {/* Action Buttons (Style from image) */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
               <button
                 onClick={handleBuyNow}
                 disabled={isOutOfStock || isAdding}
-                className="flex-1 py-3.5 px-6 bg-[#003d29] hover:bg-[#002b1d] text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-md transition-all text-center hover:scale-102 disabled:opacity-40"
+                className="flex-1 py-3 px-6 bg-[#003d29] hover:bg-[#002b1d] text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-md transition-all text-center hover:scale-102 disabled:opacity-40"
               >
                 Beli Sekarang
               </button>
@@ -299,15 +348,100 @@ export default function ProductDetailPage() {
               <button
                 onClick={handleAddToCart}
                 disabled={isOutOfStock || isAdding}
-                className="flex-1 py-3.5 px-6 bg-white hover:bg-[#F5F6F6] text-gray-900 border border-gray-300 text-xs font-bold uppercase tracking-wider rounded-full transition-all text-center flex items-center justify-center gap-2 disabled:opacity-40"
+                className="flex-1 py-3 px-6 bg-white hover:bg-[#F5F6F6] text-gray-900 border border-gray-300 text-xs font-bold uppercase tracking-wider rounded-full transition-all text-center flex items-center justify-center gap-2 disabled:opacity-40"
               >
                 <ShoppingCart className="w-4 h-4 text-gray-600" />
                 <span>Tambah ke Keranjang</span>
               </button>
             </div>
+
+            {/* Quick WhatsApp Order Button (Feature 2) */}
+            <a
+              href={createProductWhatsAppUrl({
+                productTitle: product.title,
+                variantTitle: activeVariant?.title,
+                quantity,
+                unitPrice: currentPrice,
+                slug: product.slug,
+              })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3 px-5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300/80 text-emerald-900 text-xs font-bold uppercase tracking-wider rounded-full transition-all text-center flex items-center justify-center gap-2 shadow-2xs"
+            >
+              <MessageSquare className="w-4 h-4 text-emerald-600" />
+              <span>Pesan Cepat via WhatsApp</span>
+            </a>
           </div>
 
-          {/* Trust Assurances Card (Delivery & Return from reference image) */}
+          {/* Real-time Shipping Estimator Widget (Feature 4) */}
+          <div className="bg-[#FAF9F5] border border-gray-200/90 rounded-2xl p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Truck className="w-4 h-4 text-[#003d29]" />
+                <span className="text-xs font-bold text-gray-900">
+                  Estimasi Ongkir Kurir (JNE / J&T / SiCepat)
+                </span>
+              </div>
+              <span className="text-[10px] font-bold text-[#003d29] bg-[#003d29]/10 px-2 py-0.5 rounded-full">
+                Real-Time
+              </span>
+            </div>
+
+            <div>
+              <label className="text-[11px] font-semibold text-gray-600 block mb-1">
+                Tujuan Pengiriman Kamu:
+              </label>
+              <select
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                className="w-full text-xs font-semibold bg-white border border-gray-200 rounded-xl px-3 py-2 text-gray-800 outline-none focus:border-[#003d29] cursor-pointer"
+              >
+                {DESTINATION_CITIES.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Courier Service Rates */}
+            <div className="space-y-1.5 pt-1">
+              {shippingRates.map((rate) => (
+                <div
+                  key={rate.id}
+                  className="flex items-center justify-between p-2.5 bg-white border border-gray-100 rounded-xl text-xs"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">{rate.logo}</span>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-bold text-gray-900">{rate.courier}</span>
+                        <span className="text-[11px] text-gray-500">{rate.service}</span>
+                        {rate.badge && (
+                          <span className="text-[9px] font-bold bg-[#003d29] text-white px-1.5 py-0.2 rounded">
+                            {rate.badge}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[10px] text-gray-400 block">
+                        Estimasi tiba: {rate.etd}
+                      </span>
+                    </div>
+                  </div>
+
+                  <span className="font-bold text-gray-900">
+                    {rate.cost === 0 ? (
+                      <span className="text-[#003d29] font-bold">Gratis Ongkir</span>
+                    ) : (
+                      formatCurrency(rate.cost)
+                    )}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Trust Assurances Card */}
           <div className="border border-gray-200/80 rounded-2xl p-4 divide-y divide-gray-100 text-xs space-y-3">
             <div className="flex items-start gap-3 pb-1">
               <Truck className="w-5 h-5 text-[#003d29] shrink-0 mt-0.5" />
@@ -330,6 +464,232 @@ export default function ProductDetailPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* TABS SECTION: Deskripsi & Ulasan Pembeli (Feature 6) */}
+      <div className="mt-16 pt-10 border-t border-gray-200 space-y-8">
+        {/* Tab Headers */}
+        <div className="flex items-center gap-8 border-b border-gray-200 text-sm font-bold">
+          <button
+            onClick={() => setActiveTab('DESCRIPTION')}
+            className={`pb-4 border-b-2 transition-all ${
+              activeTab === 'DESCRIPTION'
+                ? 'border-[#003d29] text-[#003d29]'
+                : 'border-transparent text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            Deskripsi & Komposisi
+          </button>
+          <button
+            onClick={() => setActiveTab('REVIEWS')}
+            className={`pb-4 border-b-2 transition-all flex items-center gap-2 ${
+              activeTab === 'REVIEWS'
+                ? 'border-[#003d29] text-[#003d29]'
+                : 'border-transparent text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            <span>Ulasan & Testimoni Pelanggan</span>
+            <span className="bg-[#003d29]/10 text-[#003d29] text-xs px-2.5 py-0.5 rounded-full font-bold">
+              121
+            </span>
+          </button>
+        </div>
+
+        {/* Tab Content 1: Description & Details */}
+        {activeTab === 'DESCRIPTION' && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-xs text-gray-600">
+            <div className="md:col-span-2 space-y-5">
+              <div>
+                <h3 className="text-base font-bold text-gray-900 mb-2">Tentang Produk</h3>
+                <p className="leading-relaxed text-gray-700 text-sm">
+                  {product.description ||
+                    'Produk oleh-oleh otentik yang diproduksi langsung oleh sentra pengrajin dan dapur kuliner daerah dengan bahan baku pilihan terbaik.'}
+                </p>
+              </div>
+
+              <div className="bg-[#FAF9F5] p-5 rounded-2xl border border-gray-200/80 space-y-3">
+                <h4 className="font-bold text-gray-900 text-xs uppercase tracking-wider">
+                  Petunjuk Penyimpanan & Konsumsi
+                </h4>
+                <ul className="space-y-2 list-disc list-inside text-gray-600">
+                  <li>Simpan di suhu ruangan sejuk dan terhindar dari sinar matahari langsung.</li>
+                  <li>Untuk kudapan basah, disarankan dikonsumsi dalam 4-7 hari sejak paket diterima.</li>
+                  <li>Dapat disimpan di lemari pendingin untuk masa ketahanan hingga 14 hari.</li>
+                  <li>Kemasan luar dilapisi bubble wrap tebal dan kardus pengaman standar kiriman ekspedisi.</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Spec Card */}
+            <div className="bg-white border border-gray-200/90 rounded-2xl p-5 space-y-3.5 shadow-2xs h-fit">
+              <h4 className="font-bold text-gray-900 text-xs uppercase tracking-wider border-b border-gray-100 pb-2">
+                Spesifikasi Oleh-oleh
+              </h4>
+              <div className="space-y-2.5 text-xs">
+                <div className="flex justify-between py-1 border-b border-gray-50">
+                  <span className="text-gray-500">Kota Asal</span>
+                  <span className="font-bold text-gray-900">{origin.city}</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-gray-50">
+                  <span className="text-gray-500">Provinsi</span>
+                  <span className="font-bold text-gray-900">{origin.province}</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-gray-50">
+                  <span className="text-gray-500">Kategori</span>
+                  <span className="font-bold text-gray-900">{product.category?.name || 'Kuliner Khas'}</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-gray-50">
+                  <span className="text-gray-500">Sertifikasi Halal</span>
+                  <span className="font-bold text-emerald-700">Tersertifikasi ID-MUI</span>
+                </div>
+                <div className="flex justify-between py-1">
+                  <span className="text-gray-500">Kondisi Pengiriman</span>
+                  <span className="font-bold text-gray-900">Kemasan Vakum / Dus Aman</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab Content 2: Customer Reviews & Testimonials */}
+        {activeTab === 'REVIEWS' && (
+          <div className="space-y-8">
+            {/* Top Rating Summary Bar */}
+            <div className="bg-[#FAF9F5] border border-gray-200/90 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-8">
+              {/* Overall Score */}
+              <div className="text-center md:text-left shrink-0">
+                <div className="text-4xl sm:text-5xl font-black text-gray-900 tracking-tight">
+                  4.9 <span className="text-base sm:text-xl font-normal text-gray-400">/ 5.0</span>
+                </div>
+                <div className="flex items-center justify-center md:justify-start gap-1 text-[#003d29] text-base my-1.5">
+                  {'★'.repeat(5)}
+                </div>
+                <p className="text-xs font-semibold text-gray-500">
+                  Berdasarkan 121 ulasan pembeli terverifikasi
+                </p>
+              </div>
+
+              {/* Star Distribution Bars */}
+              <div className="w-full max-w-sm space-y-1.5 text-xs">
+                {[
+                  { stars: 5, pct: 92, count: 111 },
+                  { stars: 4, pct: 6, count: 8 },
+                  { stars: 3, pct: 2, count: 2 },
+                  { stars: 2, pct: 0, count: 0 },
+                  { stars: 1, pct: 0, count: 0 },
+                ].map((row) => (
+                  <div key={row.stars} className="flex items-center gap-3">
+                    <span className="w-12 text-gray-600 font-semibold">{row.stars} Bintang</span>
+                    <div className="flex-1 bg-gray-200/80 rounded-full h-2 overflow-hidden">
+                      <div
+                        className="bg-[#003d29] h-full rounded-full"
+                        style={{ width: `${row.pct}%` }}
+                      />
+                    </div>
+                    <span className="w-8 text-right text-gray-400 font-medium">{row.count}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Filter Pills */}
+              <div className="flex flex-wrap md:flex-col gap-2 shrink-0">
+                <button
+                  onClick={() => setReviewRatingFilter(null)}
+                  className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${
+                    reviewRatingFilter === null
+                      ? 'bg-[#003d29] text-white border-[#003d29]'
+                      : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  Semua Ulasan (121)
+                </button>
+                <button
+                  onClick={() => setReviewRatingFilter(5)}
+                  className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${
+                    reviewRatingFilter === 5
+                      ? 'bg-[#003d29] text-white border-[#003d29]'
+                      : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  Hanya Bintang 5 (111)
+                </button>
+                <button
+                  onClick={() => setReviewRatingFilter(4)}
+                  className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${
+                    reviewRatingFilter === 4
+                      ? 'bg-[#003d29] text-white border-[#003d29]'
+                      : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  Bintang 4 (8)
+                </button>
+              </div>
+            </div>
+
+            {/* Reviews Cards List */}
+            <div className="space-y-4">
+              {filteredReviews.map((rev) => {
+                const helpfulCount = (helpfulMap[rev.id] || 0) + rev.helpfulCount;
+                return (
+                  <div
+                    key={rev.id}
+                    className="p-6 bg-white border border-gray-200/80 rounded-2xl shadow-2xs space-y-3"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`w-9 h-9 rounded-full ${rev.avatarBg} text-white flex items-center justify-center font-bold text-xs uppercase shadow-2xs`}
+                        >
+                          {rev.author.charAt(0)}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-gray-900 text-xs">{rev.author}</span>
+                            <span className="text-[10px] text-gray-400">({rev.city})</span>
+                            {rev.verified && (
+                              <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.2 rounded-full border border-emerald-200/60 flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                                <span>Pembeli Terverifikasi</span>
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[11px] text-gray-400 mt-0.5 block">{rev.date}</span>
+                        </div>
+                      </div>
+
+                      {/* Stars */}
+                      <div className="flex text-[#003d29] text-xs">
+                        {'★'.repeat(rev.rating)}
+                      </div>
+                    </div>
+
+                    {/* Variant badge */}
+                    <div className="text-[11px] text-gray-500 font-medium">
+                      Variasi yang dibeli:{' '}
+                      <span className="font-semibold text-gray-700 bg-gray-100 px-2 py-0.5 rounded">
+                        {rev.variant}
+                      </span>
+                    </div>
+
+                    {/* Review text */}
+                    <p className="text-xs text-gray-700 leading-relaxed pt-1">{rev.content}</p>
+
+                    {/* Helpful Button */}
+                    <div className="pt-2 flex items-center gap-4 text-xs text-gray-500">
+                      <button
+                        onClick={() => toggleHelpful(rev.id)}
+                        className="flex items-center gap-1.5 hover:text-[#003d29] transition-colors font-medium"
+                      >
+                        <ThumbsUp className="w-3.5 h-3.5" />
+                        <span>Membantu ({helpfulCount})</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

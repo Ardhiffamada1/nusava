@@ -15,12 +15,14 @@ import {
 import { apiRequest } from '../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 import { useCartStore } from '../../stores/cart-store';
+import { getProductOrigin, NUSANTARA_ORIGIN_TABS } from '../../lib/storefront-helpers';
 
 function ShopcartCatalogContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const categorySlug = searchParams.get('category') || '';
+  const originParam = searchParams.get('origin') || '';
   const search = searchParams.get('q') || '';
   const sortBy = searchParams.get('sortBy') || 'newest';
   const page = parseInt(searchParams.get('page') || '1', 10);
@@ -36,10 +38,11 @@ function ShopcartCatalogContent() {
   const selectedCategory = categories?.find((c) => c.slug === categorySlug);
 
   const { data: productsData, isLoading } = useQuery({
-    queryKey: ['products', categorySlug, search, sortBy, page],
+    queryKey: ['products', categorySlug, originParam, search, sortBy, page],
     queryFn: () => {
       const params = new URLSearchParams();
       if (selectedCategory) params.set('categoryId', selectedCategory.id);
+      if (originParam) params.set('origin', originParam);
       if (search) params.set('search', search);
       if (sortBy) params.set('sortBy', sortBy);
       params.set('page', page.toString());
@@ -113,35 +116,60 @@ function ShopcartCatalogContent() {
         </div>
       </div>
 
-      {/* Filter Pills Strip */}
-      <div className="flex flex-wrap items-center gap-2 pb-2">
-        <button
-          onClick={() => updateParam('category', null)}
-          className={`px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
-            !categorySlug
-              ? 'bg-[#003d29] text-white border-[#003d29]'
-              : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
-          }`}
-        >
-          Semua Kategori
-        </button>
+      {/* Filter Pills Strip: Categories */}
+      <div className="space-y-3 pb-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => updateParam('category', null)}
+            className={`px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+              !categorySlug
+                ? 'bg-[#003d29] text-white border-[#003d29]'
+                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+            }`}
+          >
+            Semua Kategori
+          </button>
 
-        {categories?.map((cat) => {
-          const isSelected = categorySlug === cat.slug;
-          return (
-            <button
-              key={cat.id}
-              onClick={() => updateParam('category', cat.slug)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
-                isSelected
-                  ? 'bg-[#003d29] text-white border-[#003d29]'
-                  : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
-              }`}
-            >
-              {cat.name}
-            </button>
-          );
-        })}
+          {categories?.map((cat) => {
+            const isSelected = categorySlug === cat.slug;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => updateParam('category', cat.slug)}
+                className={`px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+                  isSelected
+                    ? 'bg-[#003d29] text-white border-[#003d29]'
+                    : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+                }`}
+              >
+                {cat.name}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Peta Rasa Nusantara - Origin City Filter */}
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pt-1">
+          <span className="text-[11px] font-bold text-[#003d29] uppercase tracking-wider shrink-0 mr-1">
+            📍 Asal Daerah:
+          </span>
+          {NUSANTARA_ORIGIN_TABS.map((tab) => {
+            const isSelected = originParam === tab.city;
+            return (
+              <button
+                key={tab.id || 'all-origin'}
+                onClick={() => updateParam('origin', tab.city || null)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border shrink-0 ${
+                  isSelected
+                    ? 'bg-[#003d29] text-white border-[#003d29] shadow-2xs'
+                    : 'bg-[#FAF9F5] text-gray-700 border-gray-200 hover:border-gray-400'
+                }`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Products Grid (4 columns) */}
@@ -201,6 +229,16 @@ function ShopcartCatalogContent() {
                         className="object-contain group-hover:scale-106 transition-transform duration-300"
                       />
                     </Link>
+                  </div>
+
+                  {/* Origin Badge & Category */}
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="text-[10px] font-bold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-full">
+                      {getProductOrigin(product).badge}
+                    </span>
+                    <span className="text-[10px] text-gray-400 font-medium truncate">
+                      {product.category?.name}
+                    </span>
                   </div>
 
                   {/* Title & Price */}

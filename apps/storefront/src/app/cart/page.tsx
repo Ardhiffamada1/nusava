@@ -3,10 +3,11 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Trash2, ArrowRight, ShoppingBag, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { Trash2, ArrowRight, ShoppingBag, ArrowLeft, ShieldCheck, MessageSquare } from 'lucide-react';
 import { useCartStore } from '../../stores/cart-store';
 import { formatCurrency } from '@commerceos/ui';
 import { useLanguageStore } from '../../stores/language-store';
+import { createCartWhatsAppUrl } from '../../lib/storefront-helpers';
 
 export default function CartPage() {
   const { items, itemCount, subtotal, updateQuantity, removeItem, isLoading } = useCartStore();
@@ -179,6 +180,24 @@ export default function CartPage() {
             <span>{isId ? 'Lanjut ke Pembayaran' : 'Proceed to Checkout'}</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
+
+          <a
+            href={createCartWhatsAppUrl({
+              items: items.map((it) => ({
+                productTitle: it.productTitle,
+                variantTitle: it.variantTitle,
+                quantity: it.quantity,
+                unitPrice: it.unitPrice,
+              })),
+              grandTotal,
+            })}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full mt-2.5 flex items-center justify-center gap-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-900 text-xs font-bold py-3 px-4 rounded-full transition-all shadow-2xs"
+          >
+            <MessageSquare className="w-4 h-4 text-emerald-600" />
+            <span>{isId ? 'Checkout Cepat via WhatsApp' : 'Order via WhatsApp'}</span>
+          </a>
 
           <div className="mt-4 text-center">
             <Link

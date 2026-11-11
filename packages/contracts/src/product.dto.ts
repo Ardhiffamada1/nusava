@@ -39,6 +39,7 @@ export const ProductQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(12),
   search: z.string().optional(),
+  origin: z.string().optional(),
   categoryId: z.string().uuid().optional(),
   status: z.nativeEnum(ProductStatus).optional(),
   minPrice: z.coerce.number().optional(),

@@ -50,8 +50,46 @@ export default function CheckoutPage() {
   const [couponApplied, setCouponApplied] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedCourierId, setSelectedCourierId] = useState('jne-reg');
 
-  // Fetch saved user addresses if user is logged in
+  const isFreeEligible = subtotal >= 150000;
+  const courierOptions = [
+    {
+      id: 'jne-reg',
+      name: 'JNE Express',
+      service: 'Reguler (2-3 Hari)',
+      cost: isFreeEligible ? 0 : 18000,
+      logo: '📦',
+      badge: isFreeEligible ? 'Gratis Ongkir' : 'Paling Populer',
+    },
+    {
+      id: 'jne-yes',
+      name: 'JNE Express',
+      service: 'YES - Kilat (1 Hari Sampai)',
+      cost: 32000,
+      logo: '⚡',
+      badge: 'Prioritas Makanan Basah',
+    },
+    {
+      id: 'jnt-ez',
+      name: 'J&T Express',
+      service: 'EZ Standard (2-3 Hari)',
+      cost: isFreeEligible ? 0 : 19000,
+      logo: '🚚',
+      badge: isFreeEligible ? 'Gratis Ongkir' : undefined,
+    },
+    {
+      id: 'sicepat-best',
+      name: 'SiCepat',
+      service: 'BEST (1-2 Hari Sampai)',
+      cost: 25000,
+      logo: '🛡️',
+      badge: 'Rekomendasi Oleh-oleh',
+    },
+  ];
+
+  const activeCourier = courierOptions.find((c) => c.id === selectedCourierId) || courierOptions[0];
+  const shippingCost = items.length === 0 ? 0 : activeCourier.cost;
   const { data: addresses } = useQuery({
     queryKey: ['user-addresses'],
     queryFn: () => apiRequest<any[]>('/users/addresses'),
@@ -94,8 +132,7 @@ export default function CheckoutPage() {
     }
   }, [user, defaultAddress, setValue]);
 
-  // Ongkir Gratis di atas Rp 200.000, jika di bawah Rp 20.000
-  const shippingCost = subtotal >= 200000 || subtotal === 0 ? 0 : 20000;
+  // Ongkir Gratis di atas Rp 150.000 atau dihitung sesuai kurir pilihan
   const discount = couponApplied ? 20000 : 0;
   const grandTotal = Math.max(0, subtotal + shippingCost - discount);
 
@@ -110,6 +147,8 @@ export default function CheckoutPage() {
       setErrorMessage(null);
 
       let order: any;
+      const courierNote = `[Kurir: ${activeCourier.name} - ${activeCourier.service}]`;
+      const combinedNotes = data.notes ? `${courierNote} ${data.notes}` : courierNote;
 
       if (!user) {
         // GUEST CHECKOUT (Tanpa perlu login / register)
@@ -123,7 +162,7 @@ export default function CheckoutPage() {
           postalCode: data.postalCode,
           country: data.country || 'ID',
           paymentMethod: data.paymentMethod,
-          notes: data.notes || '',
+          notes: combinedNotes,
           items: items.map((it) => ({
             variantId: it.variantId,
             quantity: it.quantity,
@@ -138,7 +177,7 @@ export default function CheckoutPage() {
         // Logged in user checkout
         const payload: any = {
           paymentMethod: data.paymentMethod,
-          notes: data.notes,
+          notes: combinedNotes,
           items: items.map((it) => ({
             variantId: it.variantId,
             quantity: it.quantity,
@@ -430,6 +469,70 @@ export default function CheckoutPage() {
                 />
               </div>
             </div>
+
+            {/* Pilihan Ekspedisi & Kurir Pengiriman (Feature 4) */}
+            <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-2xs space-y-4">
+              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <Truck className="w-5 h-5 text-[#003d29]" />
+                  <h2 className="text-sm font-bold text-gray-900">
+                    Pilihan Ekspedisi & Layanan Pengiriman
+                  </h2>
+                </div>
+                {isFreeEligible && (
+                  <span className="text-[10px] font-bold text-[#003d29] bg-[#003d29]/10 px-2.5 py-0.5 rounded-full">
+                    Kualifikasi Bebas Ongkir
+                  </span>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {courierOptions.map((courier) => {
+                  const isSelected = selectedCourierId === courier.id;
+                  return (
+                    <div
+                      key={courier.id}
+                      onClick={() => setSelectedCourierId(courier.id)}
+                      className={`p-4 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
+                        isSelected
+                          ? 'border-[#003d29] bg-[#FAF9F5] ring-1 ring-[#003d29]'
+                          : 'border-gray-200 hover:border-gray-300 bg-white'
+                      }`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-lg">{courier.logo}</span>
+                          {courier.badge && (
+                            <span className="text-[9px] font-bold bg-[#003d29] text-white px-2 py-0.5 rounded-full">
+                              {courier.badge}
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="text-xs font-bold text-gray-900">{courier.name}</h3>
+                        <p className="text-[11px] text-gray-500 mt-0.5">{courier.service}</p>
+                      </div>
+
+                      <div className="mt-3 pt-2 border-t border-gray-100 flex items-center justify-between">
+                        <span className="text-xs font-bold text-gray-900">
+                          {courier.cost === 0 ? (
+                            <span className="text-[#003d29] font-bold">Gratis</span>
+                          ) : (
+                            formatCurrency(courier.cost)
+                          )}
+                        </span>
+                        <span
+                          className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                            isSelected ? 'border-[#003d29] bg-[#003d29]' : 'border-gray-300'
+                          }`}
+                        >
+                          {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           {/* Right Column: Order Summary & Payment Details */}
@@ -554,7 +657,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="flex justify-between text-gray-600">
-                  <span>Biaya Pengiriman Kurir</span>
+                  <span>Ongkir ({activeCourier.name} - {activeCourier.service.split('(')[0].trim()})</span>
                   <span className="font-semibold text-gray-900">
                     {shippingCost === 0 ? (
                       <span className="text-[#003d29] font-bold">GRATIS ONGKIR</span>
