@@ -157,20 +157,21 @@ export const translations = {
     },
     footer: {
       description:
-        'Platform kurasi oleh-oleh khas daerah dan kriya tradisional Nusantara. Menghubungkan pengrajin lokal dengan pencinta estetika otentik.',
-      collectionsTitle: 'Koleksi Kriya',
-      infoTitle: 'Layanan Pembeli',
+        'Sentra belanja online resmi untuk aneka oleh-oleh kuliner, kopi khas daerah, kain batik, dan kerajinan kriya otentik langsung dari pengrajin dan dapur UMKM terverifikasi di seluruh Nusantara.',
+      collectionsTitle: 'Ragam Oleh-oleh Daerah',
+      infoTitle: 'Layanan & Bantuan',
       infoItems: [
-        'Konfirmasi Bayar di Tempat (COD)',
-        'Transfer Bank Manual (Demo)',
-        'Garansi Pengiriman Aman',
-        'Pertanyaan Umum (FAQ)',
+        'Lacak Resi Pengiriman Kurir',
+        'Cek Estimasi Ongkos Kirim',
+        'Bayar di Tempat (COD)',
+        'Garansi 100% Paket Rusak Ganti Baru',
+        'Panduan Belanja & Bantuan (FAQ)',
       ],
-      architectureTitle: 'Sistem CommerceOS',
-      architectureDesc:
-        'Dibangun dengan arsitektur modular monolith Next.js 15, NestJS, dan PostgreSQL. Ledger stok atomik anti-overselling.',
-      rights: 'Hak Cipta Terpelihara.',
-      adminLink: 'Konsol Manajemen Admin (:3001)',
+      partnerTitle: 'Kemitraan UMKM',
+      partnerDesc:
+        'Setiap produk diproduksi langsung oleh sentra UMKM dan pengrajin daerah terverifikasi dengan standar mutu, izin P-IRT resmi, dan sertifikasi halal.',
+      rights: 'Seluruh Hak Cipta Dilindungi.',
+      adminLink: 'Portal Admin Toko',
     },
   },
   en: {
@@ -306,20 +307,21 @@ export const translations = {
     },
     footer: {
       description:
-        'A curated platform for authentic Indonesian regional souvenirs and traditional craft objects, built for modern spaces.',
-      collectionsTitle: 'Collections',
+        'Official online destination for authentic regional culinary souvenirs, single-origin coffee, handwoven textiles, and craft heirlooms direct from verified Indonesian local makers.',
+      collectionsTitle: 'Regional Heirlooms',
       infoTitle: 'Customer Care',
       infoItems: [
-        'Cash on Delivery Confirmation (COD)',
-        'Manual Bank Transfer (Demo)',
-        'Secure Transit Guarantee',
-        'Frequently Asked Questions',
+        'Real-time Courier Order Tracking',
+        'Check Shipping Rate Estimator',
+        'Cash on Delivery (COD)',
+        '100% Broken Package Replacement Guarantee',
+        'Shopping Guide & Help Center (FAQ)',
       ],
-      architectureTitle: 'CommerceOS Engine',
-      architectureDesc:
-        'Engineered with Next.js 15, NestJS, and PostgreSQL. Strict atomic row-level locking for zero overselling.',
+      partnerTitle: 'Verified Makers',
+      partnerDesc:
+        'All products are shipped directly from certified local workshops and traditional kitchens with food-grade safety standards and official licensing.',
       rights: 'All rights reserved.',
-      adminLink: 'Admin Management Console (:3001)',
+      adminLink: 'Store Admin Console',
     },
   },
 };
