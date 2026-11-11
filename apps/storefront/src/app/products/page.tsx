@@ -17,6 +17,7 @@ import {
 import { apiRequest } from '../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 import { useCartStore } from '../../stores/cart-store';
+import { useWishlistStore } from '../../stores/wishlist-store';
 import { getProductOrigin, NUSANTARA_ORIGIN_TABS } from '../../lib/storefront-helpers';
 
 function ShopcartCatalogContent() {
@@ -30,7 +31,7 @@ function ShopcartCatalogContent() {
   const page = parseInt(searchParams.get('page') || '1', 10);
 
   const [addedSlug, setAddedSlug] = useState<string | null>(null);
-  const [wishlist, setWishlist] = useState<Record<string, boolean>>({});
+  const { toggleItem, isInWishlist } = useWishlistStore();
 
   const { data: categories } = useQuery({
     queryKey: ['categories'],
@@ -80,10 +81,22 @@ function ShopcartCatalogContent() {
     openCart();
   };
 
-  const toggleWishlist = (e: React.MouseEvent, id: string) => {
+  const toggleWishlist = (e: React.MouseEvent, product: any) => {
     e.preventDefault();
     e.stopPropagation();
-    setWishlist((prev) => ({ ...prev, [id]: !prev[id] }));
+    const imageUrl =
+      product.images?.[0]?.url ||
+      'https://upload.wikimedia.org/wikipedia/commons/2/27/Bakpia_pathuk.jpg';
+
+    toggleItem({
+      id: product.id,
+      slug: product.slug,
+      title: product.title,
+      price: Number(product.basePrice),
+      imageUrl,
+      category: product.category?.name,
+      origin: getProductOrigin(product).badge,
+    });
   };
 
   return (
@@ -203,7 +216,7 @@ function ShopcartCatalogContent() {
           {productsData?.items?.map((product) => {
             const defaultVariant = product.variants?.[0];
             const price = Number(defaultVariant?.priceOverride || product.basePrice || 0);
-            const isFav = !!wishlist[product.id];
+            const isFav = isInWishlist(product.id);
             const imageUrl =
               product.images?.[0]?.url ||
               'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=600&q=80';
@@ -214,13 +227,13 @@ function ShopcartCatalogContent() {
                   {/* Square Image Box with Wishlist Heart */}
                   <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-2xl flex items-center justify-center p-6 mb-3 overflow-hidden">
                     <button
-                      onClick={(e) => toggleWishlist(e, product.id)}
+                      onClick={(e) => toggleWishlist(e, product)}
                       className={`absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white shadow-2xs flex items-center justify-center transition-colors z-10 ${
-                        isFav ? 'text-[#003d29] fill-current' : 'text-gray-400 hover:text-[#003d29]'
+                        isFav ? 'text-rose-600' : 'text-gray-400 hover:text-rose-600'
                       }`}
                       title="Simpan ke favorit"
                     >
-                      <Heart className={`w-4 h-4 ${isFav ? 'fill-current' : ''}`} />
+                      <Heart className={`w-4 h-4 ${isFav ? 'fill-current text-rose-600' : ''}`} />
                     </button>
 
                     <Link href={`/products/${product.slug}`} className="relative w-full h-full">

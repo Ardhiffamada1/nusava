@@ -5,6 +5,7 @@ import { Providers } from '../components/providers';
 import { Navbar } from '../components/navbar';
 import { Footer } from '../components/footer';
 import { CartDrawer } from '../components/cart-drawer';
+import { WhatsAppFloatingWidget } from '../components/whatsapp-floating';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -31,6 +32,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer />
           <CartDrawer />
+          <WhatsAppFloatingWidget />
         </Providers>
       </body>
     </html>

@@ -1,22 +1,55 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Trash2, ArrowRight, ShoppingBag, ArrowLeft, ShieldCheck, MessageSquare } from 'lucide-react';
+import { Trash2, ArrowRight, ShoppingBag, ArrowLeft, ShieldCheck, MessageSquare, Tag, X, Check } from 'lucide-react';
 import { useCartStore } from '../../stores/cart-store';
 import { formatCurrency } from '@commerceos/ui';
 import { useLanguageStore } from '../../stores/language-store';
 import { createCartWhatsAppUrl } from '../../lib/storefront-helpers';
+import { AVAILABLE_COUPONS, validateAndApplyCoupon, Coupon } from '../../lib/coupon-helpers';
 
 export default function CartPage() {
   const { items, itemCount, subtotal, updateQuantity, removeItem, isLoading } = useCartStore();
   const { language } = useLanguageStore();
   const isId = language === 'id';
 
-  const freeShippingThreshold = 200000;
-  const shippingCost = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : 20000;
-  const grandTotal = subtotal + shippingCost;
+  const [couponInput, setCouponInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponError, setCouponError] = useState<string | null>(null);
+
+  const freeShippingThreshold = 150000;
+  const rawShippingCost = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : 20000;
+  const shippingCost = appliedCoupon?.discountType === 'SHIPPING' ? 0 : rawShippingCost;
+  const grandTotal = Math.max(0, subtotal + shippingCost - couponDiscount);
+
+  const handleApplyCoupon = (codeToApply?: string) => {
+    const code = codeToApply || couponInput;
+    if (!code.trim()) return;
+
+    setCouponError(null);
+    const result = validateAndApplyCoupon({
+      code,
+      subtotal,
+      shippingCost: rawShippingCost,
+    });
+
+    if (result.success && result.coupon) {
+      setAppliedCoupon(result.coupon);
+      setCouponDiscount(result.discount);
+      setCouponInput('');
+    } else {
+      setCouponError(result.error || 'Kupon tidak dapat digunakan.');
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponDiscount(0);
+    setCouponError(null);
+  };
 
   if (items.length === 0) {
     return (
@@ -141,9 +174,88 @@ export default function CartPage() {
 
         {/* Order Summary Box */}
         <div className="lg:col-span-4 bg-[#F9FAFA] border border-gray-100 p-6 rounded-2xl sticky top-24">
-          <h2 className="text-base font-bold text-gray-900 mb-5">
+          <h2 className="text-base font-bold text-gray-900 mb-4">
             {isId ? 'Ringkasan Belanja' : 'Order Summary'}
           </h2>
+
+          {/* Coupon Code Section */}
+          <div className="mb-5 p-3.5 bg-white border border-dashed border-gray-200 rounded-xl">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-[#003d29] mb-2.5">
+              <Tag className="w-3.5 h-3.5" />
+              <span>{isId ? 'Kupon & Voucher Belanja' : 'Discount Voucher'}</span>
+            </div>
+
+            {appliedCoupon ? (
+              <div className="flex items-center justify-between p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">✓</span>
+                  <div>
+                    <span className="text-xs font-bold text-emerald-800 tracking-wider font-mono">
+                      {appliedCoupon.code}
+                    </span>
+                    <p className="text-[11px] text-emerald-700">
+                      {appliedCoupon.description} (-{formatCurrency(couponDiscount)})
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRemoveCoupon}
+                  className="text-xs text-emerald-700 hover:text-rose-600 p-1"
+                  title="Hapus kupon"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={couponInput}
+                    onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleApplyCoupon();
+                      }
+                    }}
+                    placeholder={isId ? 'Masukkan kode kupon' : 'Enter voucher code'}
+                    className="flex-1 px-3 py-2 text-xs uppercase font-mono font-bold tracking-wider rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#003d29] focus:border-[#003d29] bg-gray-50/50"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleApplyCoupon()}
+                    className="px-3.5 py-2 text-xs font-semibold bg-[#003d29] hover:bg-[#002b1c] text-white rounded-lg transition-colors shrink-0"
+                  >
+                    {isId ? 'Pakai' : 'Apply'}
+                  </button>
+                </div>
+
+                {couponError && (
+                  <p className="text-[11px] text-rose-600 font-medium">{couponError}</p>
+                )}
+
+                {/* Quick Chips */}
+                <div className="pt-1">
+                  <p className="text-[10px] text-gray-400 mb-1.5 font-medium">{isId ? 'Kupon tersedia:' : 'Available vouchers:'}</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {AVAILABLE_COUPONS.map((cp) => (
+                      <button
+                        key={cp.code}
+                        type="button"
+                        onClick={() => handleApplyCoupon(cp.code)}
+                        className="text-[10px] font-mono font-bold px-2 py-1 bg-gray-100 hover:bg-[#FCF0E4] hover:text-[#003d29] text-gray-700 rounded transition-colors border border-gray-200"
+                        title={cp.description}
+                      >
+                        {cp.code}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
 
           <div className="space-y-3.5 text-sm divide-y divide-gray-100">
             <div className="flex justify-between text-gray-600 pt-1">
@@ -161,6 +273,16 @@ export default function CartPage() {
                 )}
               </span>
             </div>
+
+            {couponDiscount > 0 && (
+              <div className="flex justify-between text-emerald-700 pt-3.5 font-medium">
+                <span className="flex items-center gap-1.5">
+                  <Tag className="w-3.5 h-3.5" />
+                  <span>{isId ? 'Diskon Kupon' : 'Voucher Discount'} ({appliedCoupon?.code})</span>
+                </span>
+                <span>-{formatCurrency(couponDiscount)}</span>
+              </div>
+            )}
 
             <div className="flex justify-between text-gray-900 font-bold text-lg pt-4">
               <span>{isId ? 'Total Tagihan' : 'Grand Total'}</span>

@@ -15,10 +15,12 @@ import {
   Globe,
   Sparkles,
   ArrowRight,
+  Heart,
 } from 'lucide-react';
 import { useCartStore } from '../stores/cart-store';
 import { useAuthStore } from '../stores/auth-store';
 import { useLanguageStore } from '../stores/language-store';
+import { useWishlistStore } from '../stores/wishlist-store';
 import { apiRequest } from '../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 
@@ -27,6 +29,9 @@ export function Navbar() {
   const { openCart, itemCount } = useCartStore();
   const { user } = useAuthStore();
   const { language, setLanguage } = useLanguageStore();
+  const { items: wishlistItems } = useWishlistStore();
+  const isId = language === 'id';
+  const wishlistCount = wishlistItems.length;
 
   const [topBarVisible, setTopBarVisible] = useState(true);
   const [categoryOpen, setCategoryOpen] = useState(false);
@@ -341,8 +346,25 @@ export function Navbar() {
           )}
         </div>
 
-        {/* Right Side: Account & Cart Icons */}
-        <div className="flex items-center gap-5">
+        {/* Right Side: Account, Wishlist & Cart Icons */}
+        <div className="flex items-center gap-4 sm:gap-5">
+          {/* Wishlist Link with Badge */}
+          <Link
+            href="/wishlist"
+            className="flex items-center gap-2 text-xs font-semibold text-gray-700 hover:text-[#003d29] transition-colors relative"
+            title={isId ? 'Daftar Favorit' : 'Wishlist'}
+          >
+            <div className="relative">
+              <Heart className="w-5 h-5 text-gray-700 hover:text-rose-600 transition-colors" />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-1.5 -right-2 bg-rose-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
+                  {wishlistCount}
+                </span>
+              )}
+            </div>
+            <span className="hidden sm:inline">{isId ? 'Favorit' : 'Wishlist'}</span>
+          </Link>
+
           {/* User Account / Profile */}
           <Link
             href={user ? '/account' : '/login'}

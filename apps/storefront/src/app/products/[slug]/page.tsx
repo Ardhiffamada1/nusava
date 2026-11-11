@@ -45,6 +45,17 @@ export default function ProductDetailPage() {
     enabled: !!slug,
   });
 
+  const { data: relatedProductsData } = useQuery({
+    queryKey: ['related-products', product?.category?.id, product?.id],
+    queryFn: () => {
+      const p = new URLSearchParams();
+      if (product?.category?.id) p.set('categoryId', product.category.id);
+      p.set('limit', '5');
+      return apiRequest<{ items: any[] }>(`/products?${p.toString()}`);
+    },
+    enabled: !!product?.category?.id,
+  });
+
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -114,6 +125,9 @@ export default function ProductDetailPage() {
     if (reviewRatingFilter) return r.rating === reviewRatingFilter;
     return true;
   });
+
+  const relatedItems =
+    relatedProductsData?.items?.filter((it: any) => it.id !== product?.id).slice(0, 4) || [];
 
   const handleAddToCart = async () => {
     if (!activeVariant || isOutOfStock) return;
@@ -693,6 +707,80 @@ export default function ProductDetailPage() {
           </div>
         )}
       </div>
+
+      {/* RELATED PRODUCTS (Cross-Selling) */}
+      {relatedItems.length > 0 && (
+        <section className="mt-16 pt-10 border-t border-gray-200 space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-[10px] font-bold text-[#003d29] uppercase tracking-wider block">
+                REKOMENDASI OLEH-OLEH
+              </span>
+              <h3 className="text-xl font-extrabold text-gray-900 tracking-tight mt-0.5">
+                Pilihan Serupa Khas {origin.city}
+              </h3>
+            </div>
+            <Link
+              href={`/products?category=${product.category?.slug}`}
+              className="text-xs font-bold text-[#003d29] hover:underline"
+            >
+              Lihat Kategori Ini →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {relatedItems.map((item: any) => {
+              const relImg =
+                item.images?.[0]?.url ||
+                'https://upload.wikimedia.org/wikipedia/commons/2/27/Bakpia_pathuk.jpg';
+              const relOrigin = getProductOrigin(item);
+              return (
+                <div
+                  key={item.id}
+                  className="bg-white border border-gray-200/80 rounded-2xl p-3.5 shadow-2xs group flex flex-col justify-between hover:border-gray-300 transition-all"
+                >
+                  <div>
+                    <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-xl overflow-hidden mb-2.5 border border-gray-100 p-2 flex items-center justify-center">
+                      <Link href={`/products/${item.slug}`} className="relative w-full h-full block">
+                        <Image
+                          src={relImg}
+                          alt={item.title}
+                          fill
+                          className="object-contain group-hover:scale-105 transition-transform"
+                          sizes="(max-width: 640px) 50vw, 25vw"
+                        />
+                      </Link>
+                    </div>
+
+                    <span className="text-[9px] font-bold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-full inline-flex items-center gap-1 mb-1">
+                      <MapPin className="w-2 h-2 text-[#003d29]" />
+                      <span>{relOrigin.badge}</span>
+                    </span>
+
+                    <Link
+                      href={`/products/${item.slug}`}
+                      className="text-xs font-bold text-gray-900 hover:text-[#003d29] transition-colors line-clamp-1 block"
+                    >
+                      {item.title}
+                    </Link>
+
+                    <span className="text-xs font-extrabold text-gray-900 mt-1 block">
+                      {formatCurrency(Number(item.basePrice))}
+                    </span>
+                  </div>
+
+                  <Link
+                    href={`/products/${item.slug}`}
+                    className="mt-3 w-full py-2 bg-white hover:bg-[#003d29] text-[#003d29] hover:text-white border border-gray-200 hover:border-[#003d29] rounded-full text-[11px] font-bold text-center block transition-all"
+                  >
+                    Lihat Produk
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

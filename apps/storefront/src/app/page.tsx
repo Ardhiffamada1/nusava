@@ -25,12 +25,13 @@ import {
 import { apiRequest } from '../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 import { useCartStore } from '../stores/cart-store';
+import { useWishlistStore } from '../stores/wishlist-store';
 import { getProductOrigin, NUSANTARA_ORIGIN_TABS } from '../lib/storefront-helpers';
 
 export default function ShopcartStorefrontHome() {
   const { addItem, openCart } = useCartStore();
+  const { toggleItem, isInWishlist } = useWishlistStore();
   const [addedId, setAddedId] = useState<string | null>(null);
-  const [wishlist, setWishlist] = useState<Record<string, boolean>>({});
   const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('');
   const [activeOriginFilter, setActiveOriginFilter] = useState<string>('');
   const [sortOption, setSortOption] = useState<string>('newest');
@@ -71,10 +72,23 @@ export default function ShopcartStorefrontHome() {
     },
   });
 
-  const toggleWishlist = (e: React.MouseEvent, id: string) => {
+  const toggleWishlist = (e: React.MouseEvent, product: any) => {
     e.preventDefault();
     e.stopPropagation();
-    setWishlist((prev) => ({ ...prev, [id]: !prev[id] }));
+    const primaryImage =
+      product.images?.find((img: any) => img.isThumbnail)?.url ||
+      product.images?.[0]?.url ||
+      'https://upload.wikimedia.org/wikipedia/commons/2/27/Bakpia_pathuk.jpg';
+
+    toggleItem({
+      id: product.id,
+      slug: product.slug,
+      title: product.title,
+      price: Number(product.basePrice),
+      imageUrl: primaryImage,
+      category: product.category?.name,
+      origin: getProductOrigin(product).badge,
+    });
   };
 
   const handleQuickAdd = async (e: React.MouseEvent, product: any) => {
@@ -498,7 +512,7 @@ export default function ShopcartStorefrontHome() {
 
               const price = Number(product.basePrice);
               const isAdded = addedId === product.id;
-              const isFav = wishlist[product.id];
+              const isFav = isInWishlist(product.id);
               const origin = getProductOrigin(product);
 
               return (
@@ -522,13 +536,13 @@ export default function ShopcartStorefrontHome() {
 
                     {/* Wishlist Heart Button */}
                     <button
-                      onClick={(e) => toggleWishlist(e, product.id)}
+                      onClick={(e) => toggleWishlist(e, product)}
                       className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-xs transition-colors ${
-                        isFav ? 'text-[#003d29]' : 'text-gray-400 hover:text-[#003d29]'
+                        isFav ? 'text-rose-600' : 'text-gray-400 hover:text-rose-600'
                       }`}
-                      aria-label="Tambah favorit"
+                      aria-label="Simpan ke favorit"
                     >
-                      <Heart className={`w-4 h-4 ${isFav ? 'fill-current' : ''}`} />
+                      <Heart className={`w-4 h-4 ${isFav ? 'fill-current text-rose-600' : ''}`} />
                     </button>
                   </div>
 
