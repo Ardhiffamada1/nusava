@@ -11,6 +11,8 @@ import {
   Plus,
   Check,
   SlidersHorizontal,
+  MapPin,
+  Compass,
 } from 'lucide-react';
 import { apiRequest } from '../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
@@ -150,8 +152,9 @@ function ShopcartCatalogContent() {
 
         {/* Peta Rasa Nusantara - Origin City Filter */}
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pt-1">
-          <span className="text-[11px] font-bold text-[#003d29] uppercase tracking-wider shrink-0 mr-1">
-            📍 Asal Daerah:
+          <span className="text-[11px] font-bold text-[#003d29] uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1.5">
+            <Compass className="w-3.5 h-3.5 text-[#003d29]" />
+            <span>Asal Daerah:</span>
           </span>
           {NUSANTARA_ORIGIN_TABS.map((tab) => {
             const isSelected = originParam === tab.city;
@@ -233,8 +236,9 @@ function ShopcartCatalogContent() {
 
                   {/* Origin Badge & Category */}
                   <div className="flex items-center justify-between gap-1 mb-1">
-                    <span className="text-[10px] font-bold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-full">
-                      {getProductOrigin(product).badge}
+                    <span className="text-[10px] font-bold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                      <MapPin className="w-2.5 h-2.5 text-[#003d29]" />
+                      <span>{getProductOrigin(product).badge}</span>
                     </span>
                     <span className="text-[10px] text-gray-400 font-medium truncate">
                       {product.category?.name}

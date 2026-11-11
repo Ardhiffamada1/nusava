@@ -14,67 +14,67 @@ export function getProductOrigin(product: {
   const text = `${product.title || ''} ${product.description || ''} ${product.slug || ''}`.toLowerCase();
 
   if (text.includes('jogja') || text.includes('yogyakarta') || text.includes('imogiri') || text.includes('kasongan')) {
-    return { city: 'Yogyakarta', province: 'DI Yogyakarta', badge: '📍 Yogyakarta' };
+    return { city: 'Yogyakarta', province: 'DI Yogyakarta', badge: 'Khas Yogyakarta' };
   }
   if (text.includes('bali') || text.includes('denpasar') || text.includes('dewata')) {
-    return { city: 'Bali', province: 'Bali', badge: '📍 Bali' };
+    return { city: 'Bali', province: 'Bali', badge: 'Khas Bali' };
   }
   if (text.includes('bandung') || text.includes('kartika sari') || text.includes('harum manis')) {
-    return { city: 'Bandung', province: 'Jawa Barat', badge: '📍 Bandung' };
+    return { city: 'Bandung', province: 'Jawa Barat', badge: 'Khas Bandung' };
   }
   if (text.includes('medan') || text.includes('bika ambon') || text.includes('bolu meranti')) {
-    return { city: 'Medan', province: 'Sumatera Utara', badge: '📍 Medan' };
+    return { city: 'Medan', province: 'Sumatera Utara', badge: 'Khas Medan' };
   }
   if (text.includes('solo') || text.includes('surakarta') || text.includes('laweyan')) {
-    return { city: 'Solo', province: 'Jawa Tengah', badge: '📍 Solo' };
+    return { city: 'Solo', province: 'Jawa Tengah', badge: 'Khas Solo' };
   }
   if (text.includes('malang') || text.includes('apel')) {
-    return { city: 'Malang', province: 'Jawa Timur', badge: '📍 Malang' };
+    return { city: 'Malang', province: 'Jawa Timur', badge: 'Khas Malang' };
   }
   if (text.includes('palembang') || text.includes('pempek') || text.includes('cuko')) {
-    return { city: 'Palembang', province: 'Sumatera Selatan', badge: '📍 Palembang' };
+    return { city: 'Palembang', province: 'Sumatera Selatan', badge: 'Khas Palembang' };
   }
   if (text.includes('padang') || text.includes('rendang') || text.includes('payakumbuh')) {
-    return { city: 'Padang', province: 'Sumatera Barat', badge: '📍 Padang' };
+    return { city: 'Padang', province: 'Sumatera Barat', badge: 'Khas Padang' };
   }
   if (text.includes('surabaya') || text.includes('bu rudy') || text.includes('almond')) {
-    return { city: 'Surabaya', province: 'Jawa Timur', badge: '📍 Surabaya' };
+    return { city: 'Surabaya', province: 'Jawa Timur', badge: 'Khas Surabaya' };
   }
   if (text.includes('aceh') || text.includes('gayo')) {
-    return { city: 'Aceh', province: 'Aceh', badge: '📍 Aceh' };
+    return { city: 'Aceh', province: 'Aceh', badge: 'Khas Aceh' };
   }
   if (text.includes('garut') || text.includes('dodol')) {
-    return { city: 'Garut', province: 'Jawa Barat', badge: '📍 Garut' };
+    return { city: 'Garut', province: 'Jawa Barat', badge: 'Khas Garut' };
   }
   if (text.includes('bogor') || text.includes('lapis talas')) {
-    return { city: 'Bogor', province: 'Jawa Barat', badge: '📍 Bogor' };
+    return { city: 'Bogor', province: 'Jawa Barat', badge: 'Khas Bogor' };
   }
   if (text.includes('jepara') || text.includes('troso')) {
-    return { city: 'Jepara', province: 'Jawa Tengah', badge: '📍 Jepara' };
+    return { city: 'Jepara', province: 'Jawa Tengah', badge: 'Khas Jepara' };
   }
   if (text.includes('toraja')) {
-    return { city: 'Toraja', province: 'Sulawesi Selatan', badge: '📍 Toraja' };
+    return { city: 'Toraja', province: 'Sulawesi Selatan', badge: 'Khas Toraja' };
   }
   if (text.includes('bangka') || text.includes('getas')) {
-    return { city: 'Bangka', province: 'Kep. Bangka Belitung', badge: '📍 Bangka' };
+    return { city: 'Bangka', province: 'Kep. Bangka Belitung', badge: 'Khas Bangka' };
   }
   if (text.includes('cirebon') || text.includes('megamendung')) {
-    return { city: 'Cirebon', province: 'Jawa Barat', badge: '📍 Cirebon' };
+    return { city: 'Cirebon', province: 'Jawa Barat', badge: 'Khas Cirebon' };
   }
   if (text.includes('samarinda')) {
-    return { city: 'Samarinda', province: 'Kalimantan Timur', badge: '📍 Samarinda' };
+    return { city: 'Samarinda', province: 'Kalimantan Timur', badge: 'Khas Samarinda' };
   }
   if (text.includes('lampung')) {
-    return { city: 'Lampung', province: 'Lampung', badge: '📍 Lampung' };
+    return { city: 'Lampung', province: 'Lampung', badge: 'Khas Lampung' };
   }
   if (text.includes('lombok')) {
-    return { city: 'Lombok', province: 'Nusa Tenggara Barat', badge: '📍 Lombok' };
+    return { city: 'Lombok', province: 'Nusa Tenggara Barat', badge: 'Khas Lombok' };
   }
   if (text.includes('jakarta') || text.includes('betawi') || text.includes('batavia')) {
-    return { city: 'Jakarta', province: 'DKI Jakarta', badge: '📍 Jakarta' };
+    return { city: 'Jakarta', province: 'DKI Jakarta', badge: 'Khas Jakarta' };
   }
 
-  return { city: 'Nusantara', province: 'Indonesia', badge: '📍 Nusantara' };
+  return { city: 'Nusantara', province: 'Indonesia', badge: 'Otentik Nusantara' };
 }
 
 export const NUSANTARA_ORIGIN_TABS = [
@@ -99,7 +99,7 @@ export interface ShippingOption {
   cost: number;
   etd: string;
   badge?: string;
-  logo: string;
+  courierCode: 'jne' | 'jnt' | 'sicepat';
 }
 
 export const DESTINATION_CITIES = [
@@ -132,7 +132,7 @@ export function calculateShippingOptions(
       cost: isFreeEligible ? 0 : Math.round(18000 * mult / 1000) * 1000,
       etd: '2 - 3 Hari Kerja',
       badge: isFreeEligible ? 'Gratis Ongkir' : 'Populer',
-      logo: '📦',
+      courierCode: 'jne',
     },
     {
       id: 'jne-yes',
@@ -141,7 +141,7 @@ export function calculateShippingOptions(
       cost: Math.round(32000 * mult / 1000) * 1000,
       etd: '1 Hari (Esok Tiba)',
       badge: 'Kilat Prioritas',
-      logo: '⚡',
+      courierCode: 'jne',
     },
     {
       id: 'jnt-ez',
@@ -150,7 +150,7 @@ export function calculateShippingOptions(
       cost: isFreeEligible ? 0 : Math.round(19000 * mult / 1000) * 1000,
       etd: '2 - 3 Hari Kerja',
       badge: isFreeEligible ? 'Gratis Ongkir' : undefined,
-      logo: '🚚',
+      courierCode: 'jnt',
     },
     {
       id: 'sicepat-best',
@@ -159,7 +159,7 @@ export function calculateShippingOptions(
       cost: Math.round(25000 * mult / 1000) * 1000,
       etd: '1 - 2 Hari Kerja',
       badge: 'Rekomendasi Kudapan',
-      logo: '🛡️',
+      courierCode: 'sicepat',
     },
   ];
 }

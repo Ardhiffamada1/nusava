@@ -32,6 +32,7 @@ import {
   DESTINATION_CITIES,
   SAMPLE_REVIEWS,
 } from '../../../lib/storefront-helpers';
+import { CourierLogo } from '../../../components/courier-logos';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -229,7 +230,8 @@ export default function ProductDetailPage() {
           <div>
             {/* Origin Badge */}
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-[11px] font-bold text-[#003d29] bg-[#003d29]/8 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1">
+              <span className="text-[11px] font-bold text-[#003d29] bg-[#003d29]/8 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1.5">
+                <MapPin className="w-3 h-3 text-[#003d29]" />
                 <span>{origin.badge}</span>
                 <span className="text-gray-400 font-normal">•</span>
                 <span className="font-semibold text-gray-600">{origin.province}</span>
@@ -411,8 +413,8 @@ export default function ProductDetailPage() {
                   key={rate.id}
                   className="flex items-center justify-between p-2.5 bg-white border border-gray-100 rounded-xl text-xs"
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{rate.logo}</span>
+                  <div className="flex items-center gap-3">
+                    <CourierLogo courierId={rate.courierCode} className="h-6 w-auto" />
                     <div>
                       <div className="flex items-center gap-1.5">
                         <span className="font-bold text-gray-900">{rate.courier}</span>

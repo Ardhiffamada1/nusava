@@ -13,6 +13,7 @@ import { useAuthStore } from '../../stores/auth-store';
 import { apiRequest } from '../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 import { PaymentMethod } from '@commerceos/contracts';
+import { CourierLogo } from '../../components/courier-logos';
 import {
   ShoppingBag,
   ArrowRight,
@@ -59,7 +60,6 @@ export default function CheckoutPage() {
       name: 'JNE Express',
       service: 'Reguler (2-3 Hari)',
       cost: isFreeEligible ? 0 : 18000,
-      logo: '📦',
       badge: isFreeEligible ? 'Gratis Ongkir' : 'Paling Populer',
     },
     {
@@ -67,7 +67,6 @@ export default function CheckoutPage() {
       name: 'JNE Express',
       service: 'YES - Kilat (1 Hari Sampai)',
       cost: 32000,
-      logo: '⚡',
       badge: 'Prioritas Makanan Basah',
     },
     {
@@ -75,7 +74,6 @@ export default function CheckoutPage() {
       name: 'J&T Express',
       service: 'EZ Standard (2-3 Hari)',
       cost: isFreeEligible ? 0 : 19000,
-      logo: '🚚',
       badge: isFreeEligible ? 'Gratis Ongkir' : undefined,
     },
     {
@@ -83,7 +81,6 @@ export default function CheckoutPage() {
       name: 'SiCepat',
       service: 'BEST (1-2 Hari Sampai)',
       cost: 25000,
-      logo: '🛡️',
       badge: 'Rekomendasi Oleh-oleh',
     },
   ];
@@ -500,8 +497,8 @@ export default function CheckoutPage() {
                       }`}
                     >
                       <div>
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-lg">{courier.logo}</span>
+                        <div className="flex items-center justify-between mb-2">
+                          <CourierLogo courierId={courier.id} className="h-6 w-auto" />
                           {courier.badge && (
                             <span className="text-[9px] font-bold bg-[#003d29] text-white px-2 py-0.5 rounded-full">
                               {courier.badge}

@@ -19,6 +19,8 @@ import {
   Flame,
   Clock,
   Sparkles,
+  MapPin,
+  Compass,
 } from 'lucide-react';
 import { apiRequest } from '../lib/api';
 import { formatCurrency } from '@commerceos/ui';
@@ -432,8 +434,9 @@ export default function ShopcartStorefrontHome() {
 
         {/* 3.1 PETA RASA NUSANTARA - ORIGIN CITY PILLS */}
         <div className="pt-2 flex items-center gap-2 overflow-x-auto scrollbar-none pb-1">
-          <span className="text-xs font-bold text-[#003d29] uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1">
-            <span>📍 Peta Rasa:</span>
+          <span className="text-xs font-bold text-[#003d29] uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1.5">
+            <Compass className="w-3.5 h-3.5 text-[#003d29]" />
+            <span>Peta Rasa Daerah:</span>
           </span>
           {NUSANTARA_ORIGIN_TABS.map((tab) => {
             const isSelected = activeOriginFilter === tab.city;
@@ -533,8 +536,9 @@ export default function ShopcartStorefrontHome() {
                   <div className="mt-3.5 space-y-1">
                     {/* Origin Badge & Category */}
                     <div className="flex items-center justify-between gap-1 mb-1">
-                      <span className="text-[10px] font-bold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-full">
-                        {origin.badge}
+                      <span className="text-[10px] font-bold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                        <MapPin className="w-2.5 h-2.5 text-[#003d29]" />
+                        <span>{origin.badge}</span>
                       </span>
                       <span className="text-[10px] text-gray-400 font-medium truncate">
                         {product.category?.name}
