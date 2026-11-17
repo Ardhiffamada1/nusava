@@ -22,6 +22,9 @@ import {
   Clock,
   PackageCheck,
   Store,
+  Share2,
+  Copy,
+  Thermometer,
 } from 'lucide-react';
 import { apiRequest } from '../../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
@@ -31,6 +34,7 @@ import {
   getProductStore,
   calculateShippingOptions,
   createProductWhatsAppUrl,
+  getProductShelfLife,
   DESTINATION_CITIES,
   SAMPLE_REVIEWS,
   OFFICIAL_WA_NUMBER,
@@ -70,6 +74,7 @@ export default function ProductDetailPage() {
   const [reviewRatingFilter, setReviewRatingFilter] = useState<number | null>(null);
   const [helpfulMap, setHelpfulMap] = useState<Record<string, number>>({});
   const [storeModalOpen, setStoreModalOpen] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
 
   const { addItem, openCart } = useCartStore();
 
@@ -118,7 +123,23 @@ export default function ProductDetailPage() {
   const isOutOfStock = stockOnHand <= 0;
   const origin = getProductOrigin(product);
   const store = getProductStore(product);
+  const shelfLife = getProductShelfLife(product);
   const shippingRates = calculateShippingOptions(currentPrice * quantity, selectedCity);
+
+  const handleCopyLink = () => {
+    if (typeof window !== 'undefined') {
+      navigator.clipboard.writeText(window.location.href);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2000);
+    }
+  };
+
+  const handleShareWhatsApp = () => {
+    if (typeof window === 'undefined') return;
+    const url = window.location.href;
+    const text = `Lihat ${product.title} di NUSAVA — Satu Indonesia, Banyak Cerita: ${url}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  };
 
   const toggleHelpful = (id: string) => {
     setHelpfulMap((prev) => ({
@@ -327,6 +348,43 @@ export default function ProductDetailPage() {
             </div>
           )}
 
+          {/* Ketahanan & Petunjuk Suhu Simpan (Feature 2) */}
+          <div className="bg-[#FAF9F5] border border-stone-200 rounded-xl p-3.5 space-y-2.5 text-xs">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5 font-bold text-gray-900">
+                <Clock className="w-4 h-4 text-[#003d29]" />
+                <span>Ketahanan & Petunjuk Suhu Simpan</span>
+              </div>
+              {shelfLife.isPerishable && (
+                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded">
+                  Produk Segar / Basah
+                </span>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 pt-1 border-t border-stone-200">
+              <div className="bg-white p-2.5 rounded-lg border border-stone-200">
+                <span className="text-[10px] text-gray-500 block mb-0.5">Suhu Ruang</span>
+                <span className="font-bold text-gray-900 block">{shelfLife.roomTemp}</span>
+              </div>
+              <div className="bg-white p-2.5 rounded-lg border border-stone-200">
+                <span className="text-[10px] text-gray-500 block mb-0.5">Lemari Pendingin (Kulkas)</span>
+                <span className="font-bold text-gray-900 block">{shelfLife.chilled}</span>
+              </div>
+            </div>
+
+            <div className="text-[11px] text-gray-600 leading-relaxed bg-white/80 p-2.5 rounded-lg border border-stone-200">
+              {shelfLife.isPerishable ? (
+                <div>
+                  <strong className="text-gray-900 font-semibold block mb-0.5">Rekomendasi Ekspedisi:</strong>
+                  <span>{shelfLife.recommendedCourier}. {shelfLife.storageTips}</span>
+                </div>
+              ) : (
+                <span>{shelfLife.storageTips}</span>
+              )}
+            </div>
+          </div>
+
           {/* Quantity Stepper & Buy Action Buttons */}
           <div className="space-y-3 pt-2">
             <div className="flex items-center gap-4">
@@ -393,6 +451,43 @@ export default function ProductDetailPage() {
               <MessageSquare className="w-4 h-4 text-emerald-600" />
               <span>Pesan Cepat via WhatsApp</span>
             </a>
+
+            {/* Bagikan Produk (Feature 5) */}
+            <div className="pt-2.5 border-t border-stone-200">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[11px] font-semibold text-gray-500 flex items-center gap-1.5">
+                  <Share2 className="w-3.5 h-3.5 text-gray-400" />
+                  <span>Bagikan Produk:</span>
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleShareWhatsApp}
+                    className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#FAF9F5] hover:bg-stone-100 border border-stone-200 text-gray-800 flex items-center gap-1.5 transition-colors"
+                    title="Bagikan ke kerabat via WhatsApp"
+                  >
+                    <MessageSquare className="w-3.5 h-3.5 text-[#003d29]" />
+                    <span>WhatsApp</span>
+                  </button>
+                  <button
+                    onClick={handleCopyLink}
+                    className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#FAF9F5] hover:bg-stone-100 border border-stone-200 text-gray-800 flex items-center gap-1.5 transition-colors"
+                    title="Salin tautan produk ini"
+                  >
+                    {copiedLink ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-[#003d29]" />
+                        <span className="text-[#003d29]">Tersalin</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5 text-gray-500" />
+                        <span>Salin Link</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Real-time Shipping Estimator Widget (Feature 4) */}
@@ -428,38 +523,54 @@ export default function ProductDetailPage() {
 
             {/* Courier Service Rates */}
             <div className="space-y-1.5 pt-1">
-              {shippingRates.map((rate) => (
-                <div
-                  key={rate.id}
-                  className="flex items-center justify-between p-2.5 bg-white border border-stone-200 rounded-lg text-xs"
-                >
-                  <div className="flex items-center gap-3">
-                    <CourierLogo courierId={rate.courierCode} className="h-6 w-auto" />
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-bold text-gray-900">{rate.courier}</span>
-                        <span className="text-[11px] text-gray-500">{rate.service}</span>
-                        {rate.badge && (
-                          <span className="text-[9px] font-bold bg-[#003d29] text-white px-1.5 py-0.2 rounded">
-                            {rate.badge}
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-[10px] text-gray-400 block">
-                        Estimasi tiba: {rate.etd}
-                      </span>
-                    </div>
-                  </div>
+              {shippingRates.map((rate) => {
+                const isRecommendedForPerishable =
+                  shelfLife.isPerishable &&
+                  (rate.service.includes('YES') ||
+                    rate.service.includes('BEST') ||
+                    rate.etd.includes('1 Hari'));
 
-                  <span className="font-bold text-gray-900">
-                    {rate.cost === 0 ? (
-                      <span className="text-[#003d29] font-bold">Gratis Ongkir</span>
-                    ) : (
-                      formatCurrency(rate.cost)
-                    )}
-                  </span>
-                </div>
-              ))}
+                return (
+                  <div
+                    key={rate.id}
+                    className={`flex items-center justify-between p-2.5 rounded-lg text-xs transition-colors ${
+                      isRecommendedForPerishable
+                        ? 'bg-emerald-50/70 border border-emerald-300'
+                        : 'bg-white border border-stone-200'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <CourierLogo courierId={rate.courierCode} className="h-6 w-auto" />
+                      <div>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="font-bold text-gray-900">{rate.courier}</span>
+                          <span className="text-[11px] text-gray-500">{rate.service}</span>
+                          {isRecommendedForPerishable ? (
+                            <span className="text-[9px] font-bold bg-[#003d29] text-white px-1.5 py-0.5 rounded">
+                              Disarankan Produk Basah
+                            </span>
+                          ) : rate.badge ? (
+                            <span className="text-[9px] font-bold bg-[#003d29] text-white px-1.5 py-0.2 rounded">
+                              {rate.badge}
+                            </span>
+                          ) : null}
+                        </div>
+                        <span className="text-[10px] text-gray-400 block">
+                          Estimasi tiba: {rate.etd}
+                        </span>
+                      </div>
+                    </div>
+
+                    <span className="font-bold text-gray-900">
+                      {rate.cost === 0 ? (
+                        <span className="text-[#003d29] font-bold">Gratis Ongkir</span>
+                      ) : (
+                        formatCurrency(rate.cost)
+                      )}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 

@@ -14,6 +14,9 @@ import {
   MapPin,
   Compass,
   Store,
+  Star,
+  Truck,
+  RotateCcw,
 } from 'lucide-react';
 import { apiRequest } from '../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
@@ -39,6 +42,10 @@ function ShopcartCatalogContent() {
 
   const [addedSlug, setAddedSlug] = useState<string | null>(null);
   const [selectedStore, setSelectedStore] = useState<StoreProfile | null>(null);
+  const [priceRange, setPriceRange] = useState<'all' | 'under50k' | '50k-150k' | 'above150k'>('all');
+  const [minRating, setMinRating] = useState<number | null>(null);
+  const [freeShippingOnly, setFreeShippingOnly] = useState(false);
+  const [inStockOnly, setInStockOnly] = useState(false);
   const { toggleItem, isInWishlist } = useWishlistStore();
 
   const { data: categories } = useQuery({
@@ -65,6 +72,34 @@ function ShopcartCatalogContent() {
   });
 
   const { addItem, openCart } = useCartStore();
+
+  const hasActiveFilters =
+    priceRange !== 'all' || minRating !== null || freeShippingOnly || inStockOnly;
+
+  const resetFilters = () => {
+    setPriceRange('all');
+    setMinRating(null);
+    setFreeShippingOnly(false);
+    setInStockOnly(false);
+  };
+
+  const displayedProducts = (productsData?.items || []).filter((product) => {
+    const defaultVariant = product.variants?.[0];
+    const price = Number(defaultVariant?.priceOverride || product.basePrice || 0);
+
+    if (priceRange === 'under50k' && price >= 50000) return false;
+    if (priceRange === '50k-150k' && (price < 50000 || price > 150000)) return false;
+    if (priceRange === 'above150k' && price <= 150000) return false;
+
+    if (minRating && 4.9 < minRating) return false;
+
+    const stock = defaultVariant?.inventory?.quantityOnHand ?? 10;
+    if (inStockOnly && stock <= 0) return false;
+
+    if (freeShippingOnly && price < 150000) return false;
+
+    return true;
+  });
 
   const updateParam = (key: string, value: string | null) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
@@ -194,6 +229,78 @@ function ShopcartCatalogContent() {
             );
           })}
         </div>
+
+        {/* Filter Cepat: Rentang Harga, Rating, & Layanan (Feature 3) */}
+        <div className="bg-[#FAF9F5] border border-stone-200 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[11px] font-bold text-gray-700 flex items-center gap-1.5 mr-1">
+              <SlidersHorizontal className="w-3.5 h-3.5 text-[#003d29]" />
+              <span>Filter:</span>
+            </span>
+
+            {/* Price Filter Pills */}
+            <select
+              value={priceRange}
+              onChange={(e) => setPriceRange(e.target.value as any)}
+              className="bg-white border border-stone-200 text-gray-800 font-semibold px-2.5 py-1 rounded-lg text-xs outline-none focus:border-[#003d29] cursor-pointer"
+            >
+              <option value="all">Semua Harga</option>
+              <option value="under50k">&lt; Rp 50.000</option>
+              <option value="50k-150k">Rp 50.000 - Rp 150.000</option>
+              <option value="above150k">&gt; Rp 150.000</option>
+            </select>
+
+            {/* Rating Filter Pill */}
+            <button
+              onClick={() => setMinRating(minRating === 4.5 ? null : 4.5)}
+              className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors flex items-center gap-1 ${
+                minRating === 4.5
+                  ? 'bg-[#003d29] text-white border-[#003d29]'
+                  : 'bg-white text-gray-700 border-stone-200 hover:border-stone-400'
+              }`}
+            >
+              <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+              <span>Rating 4.5+</span>
+            </button>
+
+            {/* Free Shipping Pill */}
+            <button
+              onClick={() => setFreeShippingOnly(!freeShippingOnly)}
+              className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors flex items-center gap-1 ${
+                freeShippingOnly
+                  ? 'bg-[#003d29] text-white border-[#003d29]'
+                  : 'bg-white text-gray-700 border-stone-200 hover:border-stone-400'
+              }`}
+            >
+              <Truck className="w-3 h-3 text-[#003d29]" />
+              <span>Bebas Ongkir</span>
+            </button>
+
+            {/* In Stock Pill */}
+            <button
+              onClick={() => setInStockOnly(!inStockOnly)}
+              className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors flex items-center gap-1 ${
+                inStockOnly
+                  ? 'bg-[#003d29] text-white border-[#003d29]'
+                  : 'bg-white text-gray-700 border-stone-200 hover:border-stone-400'
+              }`}
+            >
+              <Check className="w-3 h-3 text-emerald-600" />
+              <span>Ready Stock</span>
+            </button>
+          </div>
+
+          {/* Reset Action */}
+          {hasActiveFilters && (
+            <button
+              onClick={resetFilters}
+              className="text-[11px] font-bold text-stone-600 hover:text-[#003d29] underline flex items-center gap-1"
+            >
+              <RotateCcw className="w-3 h-3" />
+              <span>Reset Filter</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Products Grid (4 columns) */}
@@ -207,21 +314,35 @@ function ShopcartCatalogContent() {
             </div>
           ))}
         </div>
-      ) : productsData?.items?.length === 0 ? (
+      ) : displayedProducts.length === 0 ? (
         <div className="py-24 text-center">
           <p className="text-sm font-semibold text-gray-800">
-            Belum ada produk untuk kategori ini.
+            Tidak ada produk yang sesuai dengan kriteria filter kamu.
           </p>
-          <button
-            onClick={() => updateParam('category', null)}
-            className="mt-3 text-xs font-bold text-[#003d29] underline"
-          >
-            Tampilkan semua produk
-          </button>
+          <div className="mt-3 flex items-center justify-center gap-3">
+            {hasActiveFilters && (
+              <button
+                onClick={resetFilters}
+                className="text-xs font-bold text-[#003d29] underline"
+              >
+                Reset Filter Pencarian
+              </button>
+            )}
+            <button
+              onClick={() => {
+                resetFilters();
+                updateParam('category', null);
+                updateParam('origin', null);
+              }}
+              className="text-xs font-bold text-stone-500 hover:text-stone-800 underline"
+            >
+              Tampilkan Semua Produk
+            </button>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-8">
-          {productsData?.items?.map((product) => {
+          {displayedProducts.map((product) => {
             const defaultVariant = product.variants?.[0];
             const price = Number(defaultVariant?.priceOverride || product.basePrice || 0);
             const isFav = isInWishlist(product.id);

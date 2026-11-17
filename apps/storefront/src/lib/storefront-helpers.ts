@@ -409,6 +409,101 @@ export function getProductStore(product: {
   return VERIFIED_UMKM_STORES['default'];
 }
 
+// Shelf-Life & Temperature Storage Guide for Indonesian Souvenirs
+export interface ShelfLifeInfo {
+  roomTemp: string;
+  chilled: string;
+  isPerishable: boolean;
+  courierRecommendation: string;
+  recommendedCourier: string;
+  note: string;
+  storageTips: string;
+}
+
+export function getProductShelfLife(product: {
+  title?: string;
+  description?: string;
+  slug?: string;
+}): ShelfLifeInfo {
+  const text = `${product.title || ''} ${product.description || ''} ${product.slug || ''}`.toLowerCase();
+
+  if (
+    text.includes('bakpia') ||
+    text.includes('pie susu') ||
+    text.includes('bika ambon') ||
+    text.includes('bolu') ||
+    text.includes('lapis') ||
+    text.includes('kue') ||
+    text.includes('pempek') ||
+    text.includes('mochi')
+  ) {
+    const courier = 'Kurir Kilat 1 Hari (JNE YES / SiCepat BEST)';
+    const tip = 'Oleh-oleh basah tanpa bahan pengawet sintetis. Segera simpan di kulkas setelah paket tiba agar kesegaran tetap optimal.';
+    return {
+      roomTemp: '4 - 7 Hari',
+      chilled: '14 Hari di Kulkas',
+      isPerishable: true,
+      courierRecommendation: courier,
+      recommendedCourier: courier,
+      note: tip,
+      storageTips: tip,
+    };
+  }
+
+  if (
+    text.includes('sambal') ||
+    text.includes('rendang') ||
+    text.includes('dodol') ||
+    text.includes('abon') ||
+    text.includes('camilan') ||
+    text.includes('keripik')
+  ) {
+    const courier = 'Aman untuk semua kurir (JNE / J&T / SiCepat)';
+    const tip = 'Kemasan segel aluminium kedap udara. Simpan di tempat sejuk dan terhindar dari paparan sinar matahari langsung.';
+    return {
+      roomTemp: '30 - 60 Hari',
+      chilled: '90 Hari',
+      isPerishable: false,
+      courierRecommendation: courier,
+      recommendedCourier: courier,
+      note: tip,
+      storageTips: tip,
+    };
+  }
+
+  if (
+    text.includes('kopi') ||
+    text.includes('teh') ||
+    text.includes('wedang') ||
+    text.includes('jamu') ||
+    text.includes('herbal')
+  ) {
+    const courier = 'Aman untuk semua kurir reguler & kargo';
+    const tip = 'Biji kopi & rempah kering disangrai fresh. Simpan dalam wadah kedap udara tertutup rapat bersuhu ruangan.';
+    return {
+      roomTemp: '6 - 12 Bulan',
+      chilled: 'Tidak perlu (Suhu Ruang)',
+      isPerishable: false,
+      courierRecommendation: courier,
+      recommendedCourier: courier,
+      note: tip,
+      storageTips: tip,
+    };
+  }
+
+  const courier = 'Aman untuk semua ekspedisi dengan proteksi kardus berlapis';
+  const tip = 'Karya kriya & wastra otentik. Simpan di tempat kering dan rawat sesuai panduan perawatan produk.';
+  return {
+    roomTemp: 'Awet & Tahan Lama',
+    chilled: 'Tidak berlaku',
+    isPerishable: false,
+    courierRecommendation: courier,
+    recommendedCourier: courier,
+    note: tip,
+    storageTips: tip,
+  };
+}
+
 // WhatsApp Order Integration
 export const OFFICIAL_WA_NUMBER = '6281234567890';
 
@@ -434,7 +529,7 @@ export function createProductWhatsAppUrl({
 
   const productUrl = typeof window !== 'undefined' && slug ? `${window.location.origin}/products/${slug}` : '';
 
-  const message = `Halo Onestore Oleh-oleh Nusantara!
+  const message = `Halo NUSAVA — Satu Indonesia, Banyak Cerita!
 
 Saya ingin memesan langsung produk berikut:
 - Produk: ${productTitle}
@@ -472,7 +567,7 @@ export function createCartWhatsAppUrl({
     )
     .join('\n');
 
-  const message = `Halo Onestore Nusantara!
+  const message = `Halo Layanan Pelanggan NUSAVA!
 
 Saya ingin memesan keranjang belanja berikut:
 
@@ -547,7 +642,7 @@ export const SAMPLE_REVIEWS: CustomerReview[] = [
     date: '3 minggu yang lalu',
     variant: 'Standar Toko',
     content:
-      'Kualitas produk juara, tekstur dan bumbunya nendang. Sedikit catatan untuk kurir agar lebih hati-hati saat meletakkan paket di pagar, tapi secara keseluruhan puas dengan layanan Onestore.',
+      'Kualitas produk juara, tekstur dan bumbunya nendang. Sedikit catatan untuk kurir agar lebih hati-hati saat meletakkan paket di pagar, tapi secara keseluruhan puas dengan layanan NUSAVA.',
     helpfulCount: 9,
     verified: true,
     avatarBg: 'bg-slate-700',

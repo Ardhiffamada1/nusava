@@ -573,7 +573,7 @@ export default function AccountPage() {
             </div>
 
             <a
-              href="https://wa.me/6281234567890?text=Halo%20Admin%20Onestore,%20saya%20butuh%20bantuan%20seputar%20pesanan%20saya."
+              href="https://wa.me/6281234567890?text=Halo%20Admin%20NUSAVA,%20saya%20butuh%20bantuan%20seputar%20pesanan%20saya."
               target="_blank"
               rel="noreferrer"
               className="w-full bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold py-3.5 px-4 rounded-lg text-center block transition-colors shadow-2xs"

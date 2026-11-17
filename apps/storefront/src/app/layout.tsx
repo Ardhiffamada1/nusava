@@ -14,9 +14,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'MINDI — Oleh-oleh Tradisional & Kerajinan Khas Nusantara',
+  title: 'NUSAVA — Satu Indonesia, Banyak Cerita.',
   description:
-    'Platform e-commerce modern kurasi oleh-oleh khas daerah, batik, gerabah, dan kerajinan tradisional UMKM Indonesia.',
+    'Platform kurasi resmi oleh-oleh khas daerah, kopi nusantara, batik, dan kriya tradisional langsung dari sentra UMKM Indonesia.',
 };
 
 export default function RootLayout({

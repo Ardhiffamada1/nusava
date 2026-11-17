@@ -25,8 +25,8 @@ export const useLanguageStore = create<LanguageStore>()(
 
 export const translations = {
   id: {
-    brandName: 'MINDI',
-    brandSub: 'OLEH-OLEH & KRIYA NUSANTARA',
+    brandName: 'NUSAVA',
+    brandSub: 'SATU INDONESIA, BANYAK CERITA.',
     announcement: 'Pengiriman aman dengan kemasan proteksi khusus ke seluruh Indonesia',
     nav: {
       home: 'Beranda',
@@ -175,8 +175,8 @@ export const translations = {
     },
   },
   en: {
-    brandName: 'MINDI',
-    brandSub: 'ARCHIPELAGO CRAFT & HEIRLOOMS',
+    brandName: 'NUSAVA',
+    brandSub: 'ONE INDONESIA, ENDLESS STORIES.',
     announcement: 'Carefully packaged and insured courier delivery across all islands',
     nav: {
       home: 'Home',

@@ -58,6 +58,10 @@ export default function CheckoutPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedCourierId, setSelectedCourierId] = useState('jne-reg');
+  const [isDropship, setIsDropship] = useState(false);
+  const [dropshipSenderName, setDropshipSenderName] = useState('');
+  const [dropshipSenderPhone, setDropshipSenderPhone] = useState('');
+  const [hidePriceInSlip, setHidePriceInSlip] = useState(true);
 
   const isFreeEligible = subtotal >= 150000;
   const courierOptions = [
@@ -180,7 +184,10 @@ export default function CheckoutPage() {
       const giftNote = giftDetails.isGiftWrap
         ? `[HAMPERS: ${giftDetails.packagingType === 'besek' ? 'Besek Tradisional Bambu' : 'Hardbox Eksklusif'} | Pesan: "${giftDetails.message || '-'}" | Dari: ${giftDetails.senderName || data.fullName} | Kepada: ${giftDetails.recipientName || data.fullName}]`
         : '';
-      const combinedNotes = [courierNote, giftNote, data.notes].filter(Boolean).join(' ');
+      const dropshipNote = isDropship
+        ? `[GIFT DELIVERY (DROPSHIP): Pengirim: ${dropshipSenderName || data.fullName} (${dropshipSenderPhone || data.phone}) | Sembunyikan Harga: ${hidePriceInSlip ? 'YA' : 'TIDAK'}]`
+        : '';
+      const combinedNotes = [courierNote, giftNote, dropshipNote, data.notes].filter(Boolean).join(' ');
 
       if (!user) {
         // GUEST CHECKOUT (Tanpa perlu login / register)
@@ -500,6 +507,76 @@ export default function CheckoutPage() {
                   className="w-full text-xs px-3.5 py-2.5 bg-[#F9FAFA] border border-gray-200 focus:bg-white focus:border-[#003d29] rounded-xl outline-none transition-all"
                 />
               </div>
+            </div>
+
+            {/* Mode Kirim Sebagai Hadiah / Dropship */}
+            <div className="bg-[#FAF9F5] border border-stone-200 rounded-xl p-5 space-y-3 font-sans">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <Gift className="w-5 h-5 text-[#003d29] shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="text-xs font-bold text-stone-900">
+                      Kirim Sebagai Hadiah Langsung ke Kerabat / Teman
+                    </h3>
+                    <p className="text-[11px] text-stone-500 mt-0.5">
+                      Paket dikirim langsung ke alamat penerima di atas dengan nama pengirim Anda.
+                    </p>
+                  </div>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                  <input
+                    type="checkbox"
+                    checked={isDropship}
+                    onChange={(e) => setIsDropship(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-9 h-5 bg-stone-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#003d29]"></div>
+                </label>
+              </div>
+
+              {isDropship && (
+                <div className="pt-3 border-t border-stone-200 space-y-3 animate-in fade-in">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-semibold text-stone-700 block mb-1">
+                        Nama Pengirim (Tampil di Slip Pengiriman)
+                      </label>
+                      <input
+                        type="text"
+                        value={dropshipSenderName}
+                        onChange={(e) => setDropshipSenderName(e.target.value)}
+                        placeholder="Contoh: Budi Santoso & Keluarga"
+                        className="w-full text-xs px-3.5 py-2.5 bg-white border border-stone-200 rounded-lg outline-none focus:border-[#003d29]"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-stone-700 block mb-1">
+                        Nomor HP / WhatsApp Pengirim
+                      </label>
+                      <input
+                        type="text"
+                        value={dropshipSenderPhone}
+                        onChange={(e) => setDropshipSenderPhone(e.target.value)}
+                        placeholder="081234567890"
+                        className="w-full text-xs px-3.5 py-2.5 bg-white border border-stone-200 rounded-lg outline-none focus:border-[#003d29]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-1">
+                    <input
+                      type="checkbox"
+                      id="hide-price-slip"
+                      checked={hidePriceInSlip}
+                      onChange={(e) => setHidePriceInSlip(e.target.checked)}
+                      className="rounded border-stone-300 text-[#003d29] focus:ring-[#003d29]"
+                    />
+                    <label htmlFor="hide-price-slip" className="text-xs text-stone-700 font-medium cursor-pointer">
+                      Sembunyikan nominal harga pada label/slip packing paket (Gift Receipt)
+                    </label>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Pilihan Ekspedisi & Kurir Pengiriman (Feature 4) */}

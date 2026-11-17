@@ -27,7 +27,7 @@ interface StoreProfileModalProps {
 export function StoreProfileModal({ store, isOpen, onClose }: StoreProfileModalProps) {
   if (!isOpen || !store) return null;
 
-  const waStoreMessage = `Halo ${store.name}! Saya melihat profil toko Anda di Onestore Nusantara dan ingin menanyakan produk oleh-oleh yang tersedia.`;
+  const waStoreMessage = `Halo ${store.name}! Saya melihat profil toko Anda di NUSAVA dan ingin menanyakan produk oleh-oleh yang tersedia.`;
   const waUrl = `https://wa.me/${OFFICIAL_WA_NUMBER}?text=${encodeURIComponent(waStoreMessage)}`;
 
   return (

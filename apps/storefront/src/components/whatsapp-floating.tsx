@@ -8,7 +8,7 @@ export function WhatsAppFloatingWidget() {
   const [isOpen, setIsOpen] = useState(false);
 
   const defaultMessage =
-    'Halo CS MINDI! Saya ingin bertanya seputar rekomendasi oleh-oleh Nusantara, ketersediaan stok, dan estimasi pengiriman ke alamat saya.';
+    'Halo CS NUSAVA! Saya ingin bertanya seputar rekomendasi oleh-oleh Nusantara, ketersediaan stok, dan estimasi pengiriman ke alamat saya.';
 
   const waUrl = `https://wa.me/${OFFICIAL_WA_NUMBER}?text=${encodeURIComponent(defaultMessage)}`;
 
@@ -43,7 +43,7 @@ export function WhatsAppFloatingWidget() {
           <div className="py-3 space-y-2">
             <div className="text-xs text-stone-600 leading-relaxed bg-[#FAF9F5] rounded-lg p-3 border border-stone-200/60">
               <p>
-                Selamat datang di MINDI. Ada yang bisa kami bantu seputar pesanan oleh-oleh, konfirmasi pembayaran, atau pelacakan kurir ekspedisi?
+                Selamat datang di NUSAVA. Ada yang bisa kami bantu seputar pesanan oleh-oleh, konfirmasi pembayaran, atau pelacakan kurir ekspedisi?
               </p>
             </div>
 

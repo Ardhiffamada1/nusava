@@ -25,7 +25,7 @@ export function Footer() {
   const isId = language === 'id';
 
   const customerCareWaUrl = `https://wa.me/${OFFICIAL_WA_NUMBER}?text=${encodeURIComponent(
-    'Halo Layanan Pelanggan Mindi Nusantara! Saya ingin menanyakan informasi pemesanan.',
+    'Halo Layanan Pelanggan NUSAVA! Saya ingin menanyakan informasi pemesanan.',
   )}`;
 
   return (
@@ -139,7 +139,7 @@ export function Footer() {
                   <ArrowRight className="w-3.5 h-3.5" />
                 </a>
                 <span className="text-[11px] text-stone-400 font-mono">
-                  Email: bantuan@mindi-nusantara.id
+                  Email: bantuan@nusava.id
                 </span>
               </div>
             </div>

@@ -36,6 +36,7 @@ import {
   VERIFIED_UMKM_STORES,
 } from '../lib/storefront-helpers';
 import { StoreProfileModal } from '../components/store-profile-modal';
+import { FaqAccordion } from '../components/faq-accordion';
 
 export default function MarketplaceStorefrontHome() {
   const { addItem, openCart } = useCartStore();
@@ -844,7 +845,10 @@ export default function MarketplaceStorefrontHome() {
         )}
       </section>
 
-      {/* 8. MARKETPLACE SHOPPING ASSURANCES */}
+      {/* 8. PUSAT BANTUAN & FAQ INTERAKTIF (Feature 4) */}
+      <FaqAccordion />
+
+      {/* 9. MARKETPLACE SHOPPING ASSURANCES */}
       <section className="bg-[#FAF9F5] border border-stone-200 rounded-2xl p-8 grid grid-cols-1 sm:grid-cols-4 gap-6 text-center sm:text-left">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-lg bg-[#003d29] text-white flex items-center justify-center shrink-0">
