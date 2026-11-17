@@ -18,6 +18,7 @@ import {
 import { useLanguageStore, translations } from '../stores/language-store';
 import { JneLogo, JntLogo, SicepatLogo } from './courier-logos';
 import { OFFICIAL_WA_NUMBER } from '../lib/storefront-helpers';
+import { NusavaLogo } from './nusava-logo';
 
 export function Footer() {
   const { language } = useLanguageStore();
@@ -106,14 +107,9 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
           {/* Column 1: Brand & Contact Info (3.5 cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <div>
-              <span className="font-extrabold text-base tracking-[0.18em] text-stone-900 uppercase block">
-                {t.brandName}
-              </span>
-              <span className="text-[10px] tracking-widest text-[#003d29] font-mono font-bold block mt-0.5">
-                {t.brandSub}
-              </span>
-            </div>
+            <Link href="/" className="inline-block group focus:outline-none">
+              <NusavaLogo size="md" showTagline={true} />
+            </Link>
 
             <p className="text-xs text-stone-500 leading-relaxed pr-2">
               {t.footer.description}

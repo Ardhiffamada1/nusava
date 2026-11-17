@@ -848,65 +848,6 @@ export default function MarketplaceStorefrontHome() {
       {/* 8. PUSAT BANTUAN & FAQ INTERAKTIF (Feature 4) */}
       <FaqAccordion />
 
-      {/* 9. MARKETPLACE SHOPPING ASSURANCES */}
-      <section className="bg-[#FAF9F5] border border-stone-200 rounded-2xl p-8 grid grid-cols-1 sm:grid-cols-4 gap-6 text-center sm:text-left">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-[#003d29] text-white flex items-center justify-center shrink-0">
-            <Truck className="w-5 h-5 text-emerald-300" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wide">
-              Pengiriman Terlacak
-            </h4>
-            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-              Didukung kurir resmi JNE, J&T, dan SiCepat dengan nomor resi otomatis terverifikasi.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-[#003d29] text-white flex items-center justify-center shrink-0">
-            <ShieldCheck className="w-5 h-5 text-emerald-300" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wide">
-              100% Produk Pengrajin Asli
-            </h4>
-            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-              Terkurasi langsung dari bengkel kriya dan dapur kuliner daerah terpercaya.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-[#003d29] text-white flex items-center justify-center shrink-0">
-            <RotateCcw className="w-5 h-5 text-emerald-300" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wide">
-              Garansi Ganti Baru
-            </h4>
-            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-              Jaminan ganti baru atau uang kembali jika paket remuk atau rusak selama di perjalanan.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-[#003d29] text-white flex items-center justify-center shrink-0">
-            <Award className="w-5 h-5 text-emerald-300" />
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wide">
-              Dukungan UMKM Lokal
-            </h4>
-            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-              Setiap pesanan Anda turut memberdayakan ekonomi para pelaku UMKM daerah di Indonesia.
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* Interactive Store Profile Modal */}
       <StoreProfileModal
         store={selectedStore}

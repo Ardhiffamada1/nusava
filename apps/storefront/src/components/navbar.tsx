@@ -23,6 +23,7 @@ import { useLanguageStore } from '../stores/language-store';
 import { useWishlistStore } from '../stores/wishlist-store';
 import { apiRequest } from '../lib/api';
 import { formatCurrency } from '@commerceos/ui';
+import { NusavaLogo } from './nusava-logo';
 
 export function Navbar() {
   const router = useRouter();
@@ -203,13 +204,10 @@ export function Navbar() {
 
       {/* 2. Main Navigation Bar */}
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex items-center justify-between gap-6">
-        {/* Brand Logo: Clean Shopcart with Green Cart icon */}
-        <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-2 group">
-            <ShoppingCart className="w-7 h-7 text-[#003d29] shrink-0" />
-            <span className="text-2xl font-black text-[#003d29] tracking-tight">
-              Shopcart
-            </span>
+        {/* Brand Logo: NUSAVA Green & Gold Nusantara Emblem */}
+        <div className="flex items-center gap-3 shrink-0">
+          <Link href="/" className="group focus:outline-none">
+            <NusavaLogo size="md" showTagline={true} />
           </Link>
         </div>
 
