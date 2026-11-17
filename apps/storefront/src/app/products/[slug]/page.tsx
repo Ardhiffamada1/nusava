@@ -78,6 +78,30 @@ export default function ProductDetailPage() {
 
   const { addItem, openCart } = useCartStore();
 
+  const previewOrigin = product ? getProductOrigin(product).city : 'yogyakarta';
+  const previewPrice = product
+    ? Number(
+        (product.variants?.find((v: any) => v.id === selectedVariantId) || product.variants?.[0])
+          ?.priceOverride || product.basePrice,
+      )
+    : 0;
+
+  const { data: shippingApiData } = useQuery({
+    queryKey: ['rajaongkir-cost', previewOrigin, selectedCity, quantity, previewPrice],
+    queryFn: async () => {
+      const q = new URLSearchParams({
+        origin: previewOrigin.toLowerCase(),
+        destination: selectedCity,
+        weight: String(quantity * 500),
+        subtotal: String(previewPrice * quantity),
+      });
+      const res = await fetch(`/api/shipping/cost?${q.toString()}`);
+      if (!res.ok) throw new Error('Failed to fetch shipping cost');
+      return res.json();
+    },
+    enabled: !!product,
+  });
+
   if (isLoading) {
     return (
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16 animate-pulse font-sans">
@@ -124,7 +148,9 @@ export default function ProductDetailPage() {
   const origin = getProductOrigin(product);
   const store = getProductStore(product);
   const shelfLife = getProductShelfLife(product);
-  const shippingRates = calculateShippingOptions(currentPrice * quantity, selectedCity);
+  const shippingRates =
+    shippingApiData?.options ||
+    calculateShippingOptions(currentPrice * quantity, selectedCity, origin.city, quantity * 500);
 
   const handleCopyLink = () => {
     if (typeof window !== 'undefined') {
@@ -572,23 +598,32 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Real-time Shipping Estimator Widget (Feature 4) */}
+          {/* Real-time RajaOngkir Shipping Estimator Widget */}
           <div className="bg-[#FAF9F5] border border-stone-200 rounded-xl p-4 space-y-3">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <Truck className="w-4 h-4 text-[#003d29]" />
                 <span className="text-xs font-bold text-gray-900">
-                  Estimasi Ongkir Kurir (JNE / J&T / SiCepat)
+                  Cek Ongkir (JNE, J&T, SiCepat, Pos)
                 </span>
               </div>
               <span className="text-[10px] font-bold text-[#003d29] bg-[#003d29]/10 px-2 py-0.5 rounded-full">
-                Real-Time
+                RajaOngkir API
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] text-stone-500 bg-white px-3 py-1.5 rounded-lg border border-stone-200/80">
+              <span>
+                Dikirim dari: <strong className="text-stone-800">{origin.city}</strong>
+              </span>
+              <span>
+                Berat Paket: <strong className="text-stone-800">{Math.max(1, Math.ceil((quantity * 500) / 1000))} kg</strong>
               </span>
             </div>
 
             <div>
               <label className="text-[11px] font-semibold text-gray-600 block mb-1">
-                Tujuan Pengiriman Kamu:
+                Kota Tujuan Pengiriman:
               </label>
               <select
                 value={selectedCity}

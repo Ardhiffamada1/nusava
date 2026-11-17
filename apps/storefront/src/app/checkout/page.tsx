@@ -64,7 +64,24 @@ export default function CheckoutPage() {
   const [hidePriceInSlip, setHidePriceInSlip] = useState(true);
 
   const isFreeEligible = subtotal >= 150000;
-  const courierOptions = [
+  const totalWeightGrams = Math.max(1000, items.reduce((acc, it) => acc + it.quantity, 0) * 500);
+
+  const { data: shippingCostApi } = useQuery({
+    queryKey: ['checkout-rajaongkir', subtotal, totalWeightGrams],
+    queryFn: async () => {
+      const q = new URLSearchParams({
+        origin: 'yogyakarta',
+        destination: 'jakarta',
+        weight: String(totalWeightGrams),
+        subtotal: String(subtotal),
+      });
+      const res = await fetch(`/api/shipping/cost?${q.toString()}`);
+      if (!res.ok) throw new Error('Failed to fetch shipping options');
+      return res.json();
+    },
+  });
+
+  const fallbackCourierOptions = [
     {
       id: 'jne-reg',
       name: 'JNE Express',
@@ -82,20 +99,37 @@ export default function CheckoutPage() {
     {
       id: 'jnt-ez',
       name: 'J&T Express',
-      service: 'EZ Standard (2-3 Hari)',
+      service: 'EZ Regular (2-3 Hari)',
       cost: isFreeEligible ? 0 : 19000,
       badge: isFreeEligible ? 'Gratis Ongkir' : undefined,
     },
     {
       id: 'sicepat-best',
-      name: 'SiCepat',
+      name: 'SiCepat Ekspres',
       service: 'BEST (1-2 Hari Sampai)',
       cost: 25000,
       badge: 'Rekomendasi Oleh-oleh',
     },
+    {
+      id: 'pos-reg',
+      name: 'Pos Indonesia',
+      service: 'Pos Reguler / Kilat Khusus (2-4 Hari)',
+      cost: isFreeEligible ? 0 : 16000,
+      badge: isFreeEligible ? 'Gratis Ongkir' : 'Hemat',
+    },
   ];
 
-  const activeCourier = courierOptions.find((c) => c.id === selectedCourierId) || courierOptions[0];
+  const courierOptions = shippingCostApi?.options
+    ? shippingCostApi.options.map((opt: any) => ({
+        id: opt.id,
+        name: opt.courier,
+        service: `${opt.service} (${opt.etd})`,
+        cost: opt.cost,
+        badge: opt.badge,
+      }))
+    : fallbackCourierOptions;
+
+  const activeCourier = courierOptions.find((c: any) => c.id === selectedCourierId) || courierOptions[0];
   const { data: addresses } = useQuery({
     queryKey: ['user-addresses'],
     queryFn: () => apiRequest<any[]>('/users/addresses'),

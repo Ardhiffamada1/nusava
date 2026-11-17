@@ -16,7 +16,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { useLanguageStore, translations } from '../stores/language-store';
-import { JneLogo, JntLogo, SicepatLogo } from './courier-logos';
+import { JneLogo, JntLogo, SicepatLogo, PosLogo } from './courier-logos';
 import { OFFICIAL_WA_NUMBER } from '../lib/storefront-helpers';
 import { NusavaLogo } from './nusava-logo';
 
@@ -278,6 +278,7 @@ export function Footer() {
                 <JneLogo className="h-7 w-auto" />
                 <JntLogo className="h-7 w-auto" />
                 <SicepatLogo className="h-7 w-auto" />
+                <PosLogo className="h-7 w-auto" />
               </div>
               <p className="text-[11px] text-stone-400 mt-1.5 leading-relaxed">
                 {isId

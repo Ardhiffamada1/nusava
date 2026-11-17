@@ -91,15 +91,16 @@ export const NUSANTARA_ORIGIN_TABS = [
   { id: 'Aceh', label: 'Aceh', city: 'Aceh' },
 ];
 
-// Courier Shipping Estimator Rates
+// Courier Shipping Estimator Rates (RajaOngkir Compatible)
 export interface ShippingOption {
   id: string;
   courier: string;
   service: string;
   cost: number;
+  originalCost?: number;
   etd: string;
   badge?: string;
-  courierCode: 'jne' | 'jnt' | 'sicepat';
+  courierCode: 'jne' | 'jnt' | 'sicepat' | 'pos';
 }
 
 export const DESTINATION_CITIES = [
@@ -119,18 +120,33 @@ export const DESTINATION_CITIES = [
 export function calculateShippingOptions(
   subtotal: number,
   cityId = 'jakarta',
+  originCity = 'yogyakarta',
+  weightGrams = 1000,
 ): ShippingOption[] {
   const city = DESTINATION_CITIES.find((c) => c.id === cityId) || DESTINATION_CITIES[0];
-  const mult = city.baseMultiplier;
+  const isSameCity =
+    originCity.toLowerCase().includes(cityId.toLowerCase()) ||
+    (originCity.toLowerCase() === 'jogja' && cityId === 'yogyakarta') ||
+    (originCity.toLowerCase() === 'bali' && cityId === 'denpasar');
+
+  const distanceMult = isSameCity ? 0.65 : city.baseMultiplier;
+  const weightKg = Math.max(1, Math.ceil(weightGrams / 1000));
   const isFreeEligible = subtotal >= 150000;
+
+  const jneRegRaw = Math.round((18000 * distanceMult * weightKg) / 1000) * 1000;
+  const jneYesRaw = Math.round((32000 * distanceMult * weightKg) / 1000) * 1000;
+  const jntEzRaw = Math.round((19000 * distanceMult * weightKg) / 1000) * 1000;
+  const sicepatBestRaw = Math.round((25000 * distanceMult * weightKg) / 1000) * 1000;
+  const posRegRaw = Math.round((16000 * distanceMult * weightKg) / 1000) * 1000;
 
   return [
     {
       id: 'jne-reg',
       courier: 'JNE Express',
       service: 'Reguler (REG)',
-      cost: isFreeEligible ? 0 : Math.round(18000 * mult / 1000) * 1000,
-      etd: '2 - 3 Hari Kerja',
+      cost: isFreeEligible ? 0 : jneRegRaw,
+      originalCost: jneRegRaw,
+      etd: isSameCity ? '1 - 2 Hari Kerja' : '2 - 3 Hari Kerja',
       badge: isFreeEligible ? 'Gratis Ongkir' : 'Populer',
       courierCode: 'jne',
     },
@@ -138,7 +154,8 @@ export function calculateShippingOptions(
       id: 'jne-yes',
       courier: 'JNE Express',
       service: 'YES (Yakin Esok Sampai)',
-      cost: Math.round(32000 * mult / 1000) * 1000,
+      cost: jneYesRaw,
+      originalCost: jneYesRaw,
       etd: '1 Hari (Esok Tiba)',
       badge: 'Kilat Prioritas',
       courierCode: 'jne',
@@ -146,20 +163,32 @@ export function calculateShippingOptions(
     {
       id: 'jnt-ez',
       courier: 'J&T Express',
-      service: 'EZ Standard',
-      cost: isFreeEligible ? 0 : Math.round(19000 * mult / 1000) * 1000,
-      etd: '2 - 3 Hari Kerja',
+      service: 'EZ Regular',
+      cost: isFreeEligible ? 0 : jntEzRaw,
+      originalCost: jntEzRaw,
+      etd: isSameCity ? '1 - 2 Hari Kerja' : '2 - 3 Hari Kerja',
       badge: isFreeEligible ? 'Gratis Ongkir' : undefined,
       courierCode: 'jnt',
     },
     {
       id: 'sicepat-best',
-      courier: 'SiCepat',
+      courier: 'SiCepat Ekspres',
       service: 'BEST (Besok Sampai Tujuan)',
-      cost: Math.round(25000 * mult / 1000) * 1000,
+      cost: sicepatBestRaw,
+      originalCost: sicepatBestRaw,
       etd: '1 - 2 Hari Kerja',
       badge: 'Rekomendasi Oleh-oleh',
       courierCode: 'sicepat',
+    },
+    {
+      id: 'pos-reg',
+      courier: 'Pos Indonesia',
+      service: 'Pos Reguler / Kilat Khusus',
+      cost: isFreeEligible ? 0 : posRegRaw,
+      originalCost: posRegRaw,
+      etd: '2 - 4 Hari Kerja',
+      badge: isFreeEligible ? 'Gratis Ongkir' : 'Hemat',
+      courierCode: 'pos',
     },
   ];
 }
