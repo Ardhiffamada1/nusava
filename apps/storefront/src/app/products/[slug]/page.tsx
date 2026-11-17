@@ -264,6 +264,88 @@ export default function ProductDetailPage() {
               ))}
             </div>
           )}
+
+          {/* Profil Toko / Penjual UMKM Resmi (Di Bawah Gambar Produk) */}
+          <div className="bg-[#FAF9F5] border border-stone-200 rounded-2xl p-4 sm:p-5 space-y-3.5">
+            <div className="flex items-center justify-between text-xs pb-2.5 border-b border-stone-200">
+              <div className="flex items-center gap-1.5 font-bold text-stone-900">
+                <Store className="w-4 h-4 text-[#003d29]" />
+                <span>Toko Penjual Resmi</span>
+              </div>
+              <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                <span>{store.type}</span>
+              </span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white overflow-hidden shrink-0 border border-stone-200">
+                  <Image src={store.avatar} alt={store.name} fill className="object-cover" sizes="56px" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm font-extrabold text-stone-900 truncate">{store.name}</h3>
+                  <p className="text-xs text-stone-500 flex items-center gap-1 mt-0.5">
+                    <MapPin className="w-3 h-3 text-[#003d29] shrink-0" />
+                    <span>{store.city}, {store.province}</span>
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2 mt-1 text-[11px] text-stone-600">
+                    <span className="flex items-center gap-0.5 text-amber-600 font-bold">
+                      <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+                      <span>{store.rating}</span>
+                    </span>
+                    <span className="text-stone-300">•</span>
+                    <span>{store.productCount}+ Produk</span>
+                    <span className="text-stone-300">•</span>
+                    <span className="text-emerald-700 font-medium">Balas {store.chatResponseTime}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 text-xs shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setStoreModalOpen(true)}
+                  className="flex-1 sm:flex-initial py-2.5 px-4 bg-white hover:bg-stone-50 border border-stone-200 text-stone-800 font-bold rounded-xl text-center transition-colors"
+                >
+                  Lihat Profil Toko
+                </button>
+                <a
+                  href={`https://wa.me/${OFFICIAL_WA_NUMBER}?text=${encodeURIComponent(`Halo ${store.name}! Saya tertarik dengan produk ${product.title}.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="py-2.5 px-4 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-900 font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors"
+                  title="Chat Penjual via WhatsApp"
+                >
+                  <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Chat Toko</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Trust Assurances Card (Di Bawah Toko Penjual) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 border border-stone-200 rounded-2xl p-4 bg-white text-xs">
+            <div className="flex items-start gap-3">
+              <Truck className="w-5 h-5 text-[#003d29] shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold text-stone-900 block">Gratis Pengiriman</span>
+                <span className="text-[11px] text-stone-500 block mt-0.5 leading-relaxed">
+                  Bebas ongkir untuk pembelanjaan di atas Rp 150.000 ke seluruh Indonesia.
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 sm:border-l border-stone-200 sm:pl-4">
+              <RotateCcw className="w-5 h-5 text-[#003d29] shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold text-stone-900 block">Garansi Paket Rusak</span>
+                <span className="text-[11px] text-stone-500 block mt-0.5 leading-relaxed">
+                  Penggantian 100% jika produk oleh-oleh atau gerabah rusak selama di perjalanan kurir.
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Right: Buy Box & Options */}
@@ -571,86 +653,6 @@ export default function ProductDetailPage() {
                   </div>
                 );
               })}
-            </div>
-          </div>
-
-          {/* Trust Assurances Card */}
-          <div className="border border-stone-200 rounded-xl p-4 divide-y divide-stone-200 text-xs space-y-3">
-            <div className="flex items-start gap-3 pb-1">
-              <Truck className="w-5 h-5 text-[#003d29] shrink-0 mt-0.5" />
-              <div>
-                <span className="font-bold text-gray-900 block">Gratis Pengiriman</span>
-                <span className="text-[11px] text-gray-500 block">
-                  Bebas ongkir untuk pembelanjaan di atas Rp 150.000 ke seluruh Indonesia.
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 pt-3">
-              <RotateCcw className="w-5 h-5 text-[#003d29] shrink-0 mt-0.5" />
-              <div>
-                <span className="font-bold text-gray-900 block">Garansi Paket Rusak</span>
-                <span className="text-[11px] text-gray-500 block">
-                  Penggantian 100% jika produk oleh-oleh atau gerabah rusak selama di perjalanan kurir.
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Profil Toko / Penjual UMKM Resmi */}
-          <div className="bg-[#FAF9F5] border border-stone-200 rounded-xl p-4 space-y-3">
-            <div className="flex items-center justify-between text-xs pb-2 border-b border-stone-200">
-              <div className="flex items-center gap-1.5 font-bold text-stone-900">
-                <Store className="w-4 h-4 text-[#003d29]" />
-                <span>Toko Penjual Resmi</span>
-              </div>
-              <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                <span>{store.type}</span>
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="relative w-12 h-12 rounded-lg bg-white overflow-hidden shrink-0 border border-stone-200">
-                <Image src={store.avatar} alt={store.name} fill className="object-cover" sizes="48px" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-xs font-bold text-stone-900 truncate">{store.name}</h3>
-                <p className="text-[11px] text-stone-500 flex items-center gap-1 mt-0.5">
-                  <MapPin className="w-3 h-3 text-[#003d29] shrink-0" />
-                  <span>{store.city}, {store.province}</span>
-                </p>
-                <div className="flex items-center gap-2 mt-1 text-[11px] text-stone-600">
-                  <span className="flex items-center gap-0.5 text-amber-600 font-bold">
-                    <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
-                    <span>{store.rating}</span>
-                  </span>
-                  <span className="text-stone-300">•</span>
-                  <span>{store.productCount}+ Produk</span>
-                  <span className="text-stone-300">•</span>
-                  <span className="text-emerald-700 font-medium">Balas {store.chatResponseTime}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-2 flex items-center gap-2 text-xs">
-              <button
-                type="button"
-                onClick={() => setStoreModalOpen(true)}
-                className="flex-1 py-2 px-3 bg-white hover:bg-stone-50 border border-stone-200 text-stone-800 font-bold rounded-lg text-center transition-colors"
-              >
-                Lihat Profil Toko
-              </button>
-              <a
-                href={`https://wa.me/${OFFICIAL_WA_NUMBER}?text=${encodeURIComponent(`Halo ${store.name}! Saya tertarik dengan produk ${product.title}.`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="py-2 px-3 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-900 font-bold rounded-lg flex items-center gap-1.5 transition-colors"
-                title="Chat Penjual via WhatsApp"
-              >
-                <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Chat Penjual</span>
-              </a>
             </div>
           </div>
         </div>

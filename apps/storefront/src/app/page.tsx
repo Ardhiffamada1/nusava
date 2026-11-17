@@ -770,19 +770,8 @@ export default function MarketplaceStorefrontHome() {
 
                     {/* Metadata */}
                     <div className="space-y-1">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="text-[10px] sm:text-[11px] font-semibold text-[#003d29] bg-[#003d29]/8 px-1.5 sm:px-2 py-0.5 rounded-md inline-flex items-center gap-1 truncate max-w-full">
-                          <MapPin className="w-2.5 h-2.5 text-[#003d29] shrink-0" />
-                          <span className="truncate">{origin.badge}</span>
-                        </span>
-                        <span className="hidden sm:inline text-[11px] text-stone-400 font-medium truncate">
-                          {product.category?.name || 'Oleh-Oleh Khas'}
-                        </span>
-                      </div>
-
-                      {/* Store / Seller Name */}
-                      <div className="flex items-center gap-1 text-[10px] sm:text-[11px] text-stone-500 font-medium">
-                        <Store className="w-3 h-3 text-[#003d29] shrink-0" />
+                      {/* Store / Seller Name (Directly Below Product Image) */}
+                      <div className="flex items-center justify-between gap-1.5 text-[10px] sm:text-[11px] text-stone-600 font-semibold pb-1 border-b border-stone-100">
                         <button
                           type="button"
                           onClick={(e) => {
@@ -790,11 +779,25 @@ export default function MarketplaceStorefrontHome() {
                             e.stopPropagation();
                             setSelectedStore(store);
                           }}
-                          className="hover:text-[#003d29] hover:underline truncate text-left"
+                          className="inline-flex items-center gap-1 hover:text-[#003d29] hover:underline truncate text-left min-w-0"
                           title="Lihat profil toko ini"
                         >
-                          {store.name}
+                          <Store className="w-3 h-3 text-[#003d29] shrink-0" />
+                          <span className="truncate">{store.name}</span>
                         </button>
+                        <span className="hidden sm:inline text-[10px] text-stone-400 font-medium shrink-0">
+                          {store.city}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between gap-1 pt-0.5">
+                        <span className="text-[10px] sm:text-[11px] font-semibold text-[#003d29] bg-[#003d29]/8 px-1.5 sm:px-2 py-0.5 rounded-md inline-flex items-center gap-1 truncate max-w-full">
+                          <MapPin className="w-2.5 h-2.5 text-[#003d29] shrink-0" />
+                          <span className="truncate">{origin.badge}</span>
+                        </span>
+                        <span className="hidden sm:inline text-[11px] text-stone-400 font-medium truncate">
+                          {product.category?.name || 'Oleh-Oleh Khas'}
+                        </span>
                       </div>
 
                       <Link
