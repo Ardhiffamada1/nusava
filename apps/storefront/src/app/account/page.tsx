@@ -145,7 +145,7 @@ const DEFAULT_WALLETS: ConnectedWallet[] = [
 function AccountCenterContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, logout, updateProfile } = useAuthStore();
+  const { user, isLoading: isAuthLoading, logout, updateProfile } = useAuthStore();
   const { addItem, openCart } = useCartStore();
   const { language } = useLanguageStore();
   const isId = language === 'id';
@@ -172,9 +172,9 @@ function AccountCenterContent() {
   };
 
   // ---------------- 1. PROFILE STATE ----------------
-  const [firstName, setFirstName] = useState(user?.firstName || 'Budi');
-  const [lastName, setLastName] = useState(user?.lastName || 'Santoso');
-  const [email, setEmail] = useState(user?.email || 'budi.santoso@email.id');
+  const [firstName, setFirstName] = useState(user?.firstName || '');
+  const [lastName, setLastName] = useState(user?.lastName || '');
+  const [email, setEmail] = useState(user?.email || '');
   const [phone, setPhone] = useState(user?.phone || '0812-3456-7890');
   const [birthDate, setBirthDate] = useState(user?.birthDate || '1994-08-17');
   const [gender, setGender] = useState(user?.gender || 'Laki-laki');
@@ -183,9 +183,9 @@ function AccountCenterContent() {
 
   useEffect(() => {
     if (user) {
-      setFirstName(user.firstName || 'Budi');
+      setFirstName(user.firstName || '');
       setLastName(user.lastName ?? '');
-      setEmail(user.email || 'budi.santoso@email.id');
+      setEmail(user.email || '');
       setPhone(user.phone || '0812-3456-7890');
       setBirthDate(user.birthDate || '1994-08-17');
       setGender(user.gender || 'Laki-laki');
@@ -482,8 +482,8 @@ function AccountCenterContent() {
     enabled: !!selectedOrderId && !selectedOrderId.startsWith('demo-'),
   });
 
-  const fullNameDisplay = `${firstName} ${lastName}`.trim() || 'Budi Santoso';
-  const initials = (firstName?.[0] || 'B').toUpperCase();
+  const fullNameDisplay = `${firstName} ${lastName}`.trim() || 'Pelanggan NUSAVA';
+  const initials = (firstName?.[0] || 'N').toUpperCase();
   const primaryAddress = addresses.find((a) => a.isPrimary) || addresses[0];
   const primaryPayment = payments.find((p) => p.isPrimary) || payments[0];
 
@@ -597,6 +597,38 @@ function AccountCenterContent() {
     reviews: 'Ulasan Produk Saya',
     help: 'Pusat Bantuan',
   };
+
+  if (!isAuthLoading && !user) {
+    return (
+      <div className="max-w-md mx-auto px-4 py-20 font-sans text-center space-y-5">
+        <div className="w-14 h-14 rounded-2xl bg-[#003d29]/10 text-[#003d29] flex items-center justify-center mx-auto">
+          <User className="w-7 h-7 text-[#003d29]" />
+        </div>
+        <div className="space-y-1.5">
+          <h1 className="text-xl font-extrabold text-stone-900">
+            Masuk ke Akun NUSAVA Anda
+          </h1>
+          <p className="text-xs text-stone-500 leading-relaxed">
+            Silakan masuk terlebih dahulu untuk melihat profil, mengelola daftar alamat pengiriman, metode pembayaran tersimpan, serta melacak pesanan Anda.
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-2">
+          <Link
+            href="/login"
+            className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold transition-colors"
+          >
+            Masuk Sekarang
+          </Link>
+          <Link
+            href="/register"
+            className="w-full sm:w-auto px-6 py-2.5 rounded-xl border border-stone-200 hover:bg-[#FAF9F5] text-stone-800 text-xs font-bold transition-colors"
+          >
+            Daftar Akun Baru
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-5 sm:py-8 font-sans overflow-x-hidden">
