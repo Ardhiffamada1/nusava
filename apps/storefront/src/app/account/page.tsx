@@ -591,10 +591,10 @@ function AccountCenterContent() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 font-sans">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-5 sm:py-8 font-sans overflow-x-hidden">
       {/* Top Breadcrumb */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-6 border-b border-stone-200 gap-4">
-        <div className="flex items-center gap-2 text-xs text-stone-500">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 sm:pb-4 mb-4 sm:mb-6 border-b border-stone-200 gap-2 sm:gap-4">
+        <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-stone-500 overflow-x-auto whitespace-nowrap">
           <Link href="/" className="hover:text-[#003d29] transition-colors">
             Beranda
           </Link>
@@ -604,8 +604,8 @@ function AccountCenterContent() {
           <span className="text-[#003d29] font-bold">{sectionLabels[activeSection]}</span>
         </div>
 
-        <div className="flex items-center gap-3 text-xs">
-          <span className="text-stone-500">
+        <div className="flex items-center justify-between sm:justify-end gap-3 text-xs">
+          <span className="text-stone-500 truncate">
             Akun aktif: <strong className="text-stone-900">{fullNameDisplay}</strong>
           </span>
           {user && (
@@ -615,7 +615,7 @@ function AccountCenterContent() {
                 logout();
                 router.push('/');
               }}
-              className="text-stone-400 hover:text-rose-600 font-semibold underline transition-colors"
+              className="text-stone-400 hover:text-rose-600 font-semibold underline transition-colors shrink-0"
             >
               Keluar
             </button>
@@ -624,13 +624,13 @@ function AccountCenterContent() {
       </div>
 
       {/* Main 12-Column Marketplace Account Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 items-start">
         {/* LEFT SIDEBAR: User Card & Account Navigation (3 Cols) */}
-        <aside className="lg:col-span-3 space-y-5">
+        <aside className="lg:col-span-3 space-y-4 sm:space-y-5">
           {/* User Summary Card */}
-          <div className="bg-white border border-stone-200 rounded-2xl p-5 shadow-2xs space-y-4">
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-full bg-[#003d29] text-[#D4AF37] border border-[#C5A059]/60 font-extrabold text-lg flex items-center justify-center shrink-0">
+          <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-5 shadow-2xs space-y-3.5 sm:space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#003d29] text-[#D4AF37] border border-[#C5A059]/60 font-extrabold text-base sm:text-lg flex items-center justify-center shrink-0">
                 {initials}
               </div>
               <div className="min-w-0 flex-1">
@@ -644,7 +644,7 @@ function AccountCenterContent() {
                       switchSection('profile');
                       setIsEditingNameOnly(true);
                     }}
-                    className="text-stone-400 hover:text-[#003d29] transition-colors"
+                    className="text-stone-400 hover:text-[#003d29] transition-colors shrink-0"
                     title="Ubah nama"
                   >
                     <Pencil className="w-3.5 h-3.5" />
@@ -658,41 +658,41 @@ function AccountCenterContent() {
               </div>
             </div>
 
-            {/* Navigation Menu */}
-            <nav className="pt-3 border-t border-stone-100 space-y-1">
+            {/* Navigation Menu (2x2 Grid on Mobile, Vertical Stack on Desktop) */}
+            <nav className="pt-3 border-t border-stone-100 grid grid-cols-2 lg:flex lg:flex-col gap-1.5 lg:gap-1">
               <button
                 type="button"
                 onClick={() => switchSection('profile')}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
                   activeSection === 'profile'
                     ? 'bg-[#003d29] text-white shadow-2xs'
-                    : 'text-stone-700 hover:bg-[#FAF9F5] hover:text-[#003d29]'
+                    : 'bg-[#FAF9F5] lg:bg-transparent text-stone-700 hover:bg-[#FAF9F5] hover:text-[#003d29]'
                 }`}
               >
-                <span className="flex items-center gap-2.5">
-                  <User className="w-4 h-4" />
-                  <span>Biodata Diri (Profil)</span>
+                <span className="flex items-center gap-2 truncate">
+                  <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <span className="truncate">Profil Saya</span>
                 </span>
               </button>
 
               <button
                 type="button"
                 onClick={() => switchSection('addresses')}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
                   activeSection === 'addresses'
                     ? 'bg-[#003d29] text-white shadow-2xs'
-                    : 'text-stone-700 hover:bg-[#FAF9F5] hover:text-[#003d29]'
+                    : 'bg-[#FAF9F5] lg:bg-transparent text-stone-700 hover:bg-[#FAF9F5] hover:text-[#003d29]'
                 }`}
               >
-                <span className="flex items-center gap-2.5">
-                  <MapPin className="w-4 h-4" />
-                  <span>Daftar Alamat</span>
+                <span className="flex items-center gap-2 truncate">
+                  <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <span className="truncate">Alamat</span>
                 </span>
                 <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${
                     activeSection === 'addresses'
                       ? 'bg-white/20 text-white'
-                      : 'bg-stone-100 text-stone-600'
+                      : 'bg-stone-200/70 text-stone-600'
                   }`}
                 >
                   {addresses.length}
@@ -702,21 +702,21 @@ function AccountCenterContent() {
               <button
                 type="button"
                 onClick={() => switchSection('payments')}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
                   activeSection === 'payments'
                     ? 'bg-[#003d29] text-white shadow-2xs'
-                    : 'text-stone-700 hover:bg-[#FAF9F5] hover:text-[#003d29]'
+                    : 'bg-[#FAF9F5] lg:bg-transparent text-stone-700 hover:bg-[#FAF9F5] hover:text-[#003d29]'
                 }`}
               >
-                <span className="flex items-center gap-2.5">
-                  <CreditCard className="w-4 h-4" />
-                  <span>Pembayaran Tersimpan</span>
+                <span className="flex items-center gap-2 truncate">
+                  <CreditCard className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <span className="truncate">Pembayaran</span>
                 </span>
                 <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${
                     activeSection === 'payments'
                       ? 'bg-white/20 text-white'
-                      : 'bg-stone-100 text-stone-600'
+                      : 'bg-stone-200/70 text-stone-600'
                   }`}
                 >
                   {payments.length}
@@ -726,21 +726,21 @@ function AccountCenterContent() {
               <button
                 type="button"
                 onClick={() => switchSection('orders')}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
                   activeSection === 'orders'
                     ? 'bg-[#003d29] text-white shadow-2xs'
-                    : 'text-stone-700 hover:bg-[#FAF9F5] hover:text-[#003d29]'
+                    : 'bg-[#FAF9F5] lg:bg-transparent text-stone-700 hover:bg-[#FAF9F5] hover:text-[#003d29]'
                 }`}
               >
-                <span className="flex items-center gap-2.5">
-                  <Package className="w-4 h-4" />
-                  <span>Daftar Transaksi</span>
+                <span className="flex items-center gap-2 truncate">
+                  <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <span className="truncate">Transaksi</span>
                 </span>
                 <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${
                     activeSection === 'orders'
                       ? 'bg-white/20 text-white'
-                      : 'bg-stone-100 text-stone-600'
+                      : 'bg-stone-200/70 text-stone-600'
                   }`}
                 >
                   {rawOrders.length}
@@ -749,8 +749,8 @@ function AccountCenterContent() {
             </nav>
           </div>
 
-          {/* Customer Care Support Card */}
-          <div className="bg-[#FAF9F5] border border-stone-200 rounded-2xl p-5 space-y-3 text-xs">
+          {/* Customer Care Support Card (Desktop Sidebar) */}
+          <div className="hidden lg:block bg-[#FAF9F5] border border-stone-200 rounded-2xl p-5 space-y-3 text-xs">
             <div className="flex items-center gap-2 font-bold text-stone-900">
               <MessageSquare className="w-4 h-4 text-[#003d29]" />
               <span>Bantuan Pelanggan 24/7</span>
@@ -770,19 +770,19 @@ function AccountCenterContent() {
         </aside>
 
         {/* RIGHT MAIN CONTENT (9 Cols) */}
-        <main className="lg:col-span-9 space-y-6">
+        <main className="lg:col-span-9 space-y-5 sm:space-y-6 min-w-0">
           {/* =====================================================================
               SECTION 1: BIODATA DIRI & UBAH NAMA / PROFIL
           ===================================================================== */}
           {activeSection === 'profile' && (
-            <div className="space-y-6">
-              <div className="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-100">
+            <div className="space-y-5 sm:space-y-6">
+              <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xs space-y-5 sm:space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3.5 sm:pb-4 border-b border-stone-100">
                   <div>
-                    <h1 className="text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight">
+                    <h1 className="text-lg sm:text-2xl font-extrabold text-stone-900 tracking-tight">
                       Biodata Diri
                     </h1>
-                    <p className="text-xs text-stone-500 mt-1">
+                    <p className="text-xs text-stone-500 mt-0.5">
                       Kelola informasi nama, kontak, dan identitas akun Anda untuk kemudahan transaksi di NUSAVA.
                     </p>
                   </div>
@@ -804,19 +804,21 @@ function AccountCenterContent() {
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-8 items-start">
                   {/* Left: Profile Avatar Card */}
-                  <div className="md:col-span-4 bg-[#FAF9F5] border border-stone-200 rounded-2xl p-5 text-center space-y-4">
-                    <div className="w-24 h-24 rounded-full bg-[#003d29] text-[#D4AF37] border-2 border-[#C5A059] font-extrabold text-3xl flex items-center justify-center mx-auto shadow-xs">
-                      {initials}
+                  <div className="md:col-span-4 bg-[#FAF9F5] border border-stone-200 rounded-2xl p-4 sm:p-5 text-center space-y-3 sm:space-y-4">
+                    <div className="flex items-center gap-3.5 md:flex-col text-left md:text-center">
+                      <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-[#003d29] text-[#D4AF37] border-2 border-[#C5A059] font-extrabold text-2xl md:text-3xl flex items-center justify-center shrink-0 md:mx-auto shadow-xs">
+                        {initials}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-sm sm:text-base font-extrabold text-stone-900 truncate">
+                          {fullNameDisplay}
+                        </h3>
+                        <p className="text-xs text-stone-500 mt-0.5 truncate">{email}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-base font-extrabold text-stone-900">
-                        {fullNameDisplay}
-                      </h3>
-                      <p className="text-xs text-stone-500 mt-0.5">{email}</p>
-                    </div>
-                    <div className="pt-3 border-t border-stone-200/80 text-left space-y-2 text-[11px] text-stone-600">
+                    <div className="pt-3 border-t border-stone-200/80 text-left space-y-1.5 text-[11px] text-stone-600">
                       <div className="flex items-center justify-between">
                         <span className="text-stone-400">Status Akun:</span>
                         <span className="font-bold text-[#003d29]">Terverifikasi</span>
@@ -830,7 +832,7 @@ function AccountCenterContent() {
 
                   {/* Right: Editable Profile Form */}
                   <form onSubmit={handleSaveProfile} className="md:col-span-8 space-y-4 text-xs">
-                    <div className="p-4 bg-[#FAF9F5] border border-stone-200 rounded-xl space-y-3">
+                    <div className="p-3.5 sm:p-4 bg-[#FAF9F5] border border-stone-200 rounded-xl space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-stone-900 flex items-center gap-1.5">
                           <User className="w-3.5 h-3.5 text-[#003d29]" />
@@ -872,7 +874,7 @@ function AccountCenterContent() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
                       <div>
                         <label className="block font-semibold text-stone-700 mb-1">
                           Alamat Email
@@ -938,7 +940,7 @@ function AccountCenterContent() {
                     <div className="pt-2 flex items-center justify-end gap-3">
                       <button
                         type="submit"
-                        className="px-6 py-2.5 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold rounded-xl transition-colors shadow-2xs flex items-center gap-2"
+                        className="w-full sm:w-auto justify-center px-6 py-2.5 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold rounded-xl transition-colors shadow-2xs flex items-center gap-2"
                       >
                         <Check className="w-4 h-4" />
                         <span>Simpan Perubahan Profil</span>
@@ -949,9 +951,9 @@ function AccountCenterContent() {
               </div>
 
               {/* Quick Overview Cards: Address & Saved Payment Preview */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 {/* Primary Address Preview */}
-                <div className="bg-white border border-stone-200 rounded-2xl p-5 shadow-2xs flex flex-col justify-between space-y-4">
+                <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-5 shadow-2xs flex flex-col justify-between space-y-4">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
@@ -1000,7 +1002,7 @@ function AccountCenterContent() {
                 </div>
 
                 {/* Primary Payment Preview */}
-                <div className="bg-white border border-stone-200 rounded-2xl p-5 shadow-2xs flex flex-col justify-between space-y-4">
+                <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-5 shadow-2xs flex flex-col justify-between space-y-4">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
@@ -1043,13 +1045,13 @@ function AccountCenterContent() {
               SECTION 2: DAFTAR ALAMAT (BUKU ALAMAT & UBAH ALAMAT)
           ===================================================================== */}
           {activeSection === 'addresses' && (
-            <div className="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-100">
+            <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xs space-y-5 sm:space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-4 border-b border-stone-100">
                 <div>
-                  <h1 className="text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight">
+                  <h1 className="text-lg sm:text-2xl font-extrabold text-stone-900 tracking-tight">
                     Daftar Alamat Pengiriman
                   </h1>
-                  <p className="text-xs text-stone-500 mt-1">
+                  <p className="text-xs text-stone-500 mt-0.5">
                     Kelola alamat tujuan pengiriman oleh-oleh untuk rumah, kantor, maupun kerabat.
                   </p>
                 </div>
@@ -1057,7 +1059,7 @@ function AccountCenterContent() {
                 <button
                   type="button"
                   onClick={openAddAddressModal}
-                  className="px-4 py-2.5 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shrink-0 shadow-2xs"
+                  className="w-full sm:w-auto justify-center px-4 py-2.5 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shrink-0 shadow-2xs"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Tambah Alamat Baru</span>
@@ -1077,17 +1079,17 @@ function AccountCenterContent() {
               </div>
 
               {/* Address Cards List */}
-              <div className="space-y-4">
+              <div className="space-y-3.5 sm:space-y-4">
                 {filteredAddresses.map((addr) => (
                   <div
                     key={addr.id}
-                    className={`p-5 rounded-2xl border transition-colors ${
+                    className={`p-4 sm:p-5 rounded-2xl border transition-colors ${
                       addr.isPrimary
                         ? 'bg-[#FAF9F5] border-[#003d29]'
                         : 'bg-white border-stone-200 hover:border-stone-300'
                     }`}
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3.5 sm:gap-4">
                       <div className="space-y-1.5 text-xs">
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-stone-700 bg-stone-100 border border-stone-200 px-2.5 py-0.5 rounded-md">
@@ -1118,7 +1120,7 @@ function AccountCenterContent() {
                         )}
                       </div>
 
-                      <div className="flex sm:flex-col items-end gap-2 shrink-0">
+                      <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 pt-3 sm:pt-0 border-t sm:border-t-0 border-stone-200/70 shrink-0">
                         <button
                           type="button"
                           onClick={() => openEditAddressModal(addr)}
@@ -1133,7 +1135,7 @@ function AccountCenterContent() {
                             <button
                               type="button"
                               onClick={() => handleSetPrimaryAddress(addr.id)}
-                              className="px-3 py-1.5 text-xs font-semibold text-stone-600 hover:text-[#003d29] hover:underline"
+                              className="px-2.5 py-1.5 text-xs font-semibold text-stone-600 hover:text-[#003d29] hover:underline"
                             >
                               Jadikan Utama
                             </button>
@@ -1159,15 +1161,15 @@ function AccountCenterContent() {
               SECTION 3: PEMBAYARAN TERSIMPAN (KARTU, VA, REKENING & E-WALLET)
           ===================================================================== */}
           {activeSection === 'payments' && (
-            <div className="space-y-6">
+            <div className="space-y-5 sm:space-y-6">
               {/* Saved Cards & Virtual Accounts */}
-              <div className="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-100">
+              <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xs space-y-5 sm:space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-4 border-b border-stone-100">
                   <div>
-                    <h1 className="text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight">
+                    <h1 className="text-lg sm:text-2xl font-extrabold text-stone-900 tracking-tight">
                       Pembayaran Tersimpan
                     </h1>
-                    <p className="text-xs text-stone-500 mt-1">
+                    <p className="text-xs text-stone-500 mt-0.5">
                       Kelola rekening Virtual Account, kartu debit/kredit, dan rekening pencairan pengembalian dana (refund).
                     </p>
                   </div>
@@ -1175,18 +1177,18 @@ function AccountCenterContent() {
                   <button
                     type="button"
                     onClick={openAddPaymentModal}
-                    className="px-4 py-2.5 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shrink-0 shadow-2xs"
+                    className="w-full sm:w-auto justify-center px-4 py-2.5 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shrink-0 shadow-2xs"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Tambah Metode Pembayaran</span>
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
                   {payments.map((pay) => (
                     <div
                       key={pay.id}
-                      className={`p-5 rounded-2xl border flex flex-col justify-between space-y-4 transition-colors ${
+                      className={`p-4 sm:p-5 rounded-2xl border flex flex-col justify-between space-y-4 transition-colors ${
                         pay.isPrimary
                           ? 'bg-[#FAF9F5] border-[#003d29]'
                           : 'bg-white border-stone-200'
@@ -1194,26 +1196,26 @@ function AccountCenterContent() {
                     >
                       <div className="space-y-2">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-900">
+                          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-900 truncate">
                             {pay.type === 'CARD' ? (
-                              <CreditCard className="w-4 h-4 text-[#003d29]" />
+                              <CreditCard className="w-4 h-4 text-[#003d29] shrink-0" />
                             ) : (
-                              <Building2 className="w-4 h-4 text-[#003d29]" />
+                              <Building2 className="w-4 h-4 text-[#003d29] shrink-0" />
                             )}
-                            <span>{pay.provider}</span>
+                            <span className="truncate">{pay.provider}</span>
                           </span>
                           {pay.isPrimary && (
-                            <span className="bg-[#003d29] text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                            <span className="bg-[#003d29] text-white text-[10px] font-bold px-2 py-0.5 rounded shrink-0">
                               Utama
                             </span>
                           )}
                         </div>
 
-                        <p className="text-base font-extrabold font-mono text-stone-900 tracking-wider pt-1">
+                        <p className="text-sm sm:text-base font-extrabold font-mono text-stone-900 tracking-wider pt-1">
                           {pay.accountNumber}
                         </p>
 
-                        <div className="flex items-center justify-between text-[11px] text-stone-500">
+                        <div className="flex flex-wrap items-center justify-between gap-1 text-[11px] text-stone-500">
                           <span>Pemilik: <strong className="text-stone-700">{pay.holderName}</strong></span>
                           {pay.expiry && <span>Berlaku s/d: {pay.expiry}</span>}
                         </div>
@@ -1257,10 +1259,10 @@ function AccountCenterContent() {
               </div>
 
               {/* Connected Digital Wallets (E-Wallets & QRIS) */}
-              <div className="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-2xs space-y-5">
+              <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xs space-y-4 sm:space-y-5">
                 <div className="flex items-center justify-between pb-3 border-b border-stone-100">
                   <div>
-                    <h2 className="text-base font-extrabold text-stone-900 flex items-center gap-2">
+                    <h2 className="text-sm sm:text-base font-extrabold text-stone-900 flex items-center gap-2">
                       <Wallet className="w-4 h-4 text-[#003d29]" />
                       <span>Dompet Digital (E-Wallet) Terhubung</span>
                     </h2>
@@ -1270,13 +1272,13 @@ function AccountCenterContent() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {wallets.map((w) => (
                     <div
                       key={w.id}
-                      className="p-4 rounded-xl border border-stone-200 bg-[#FAF9F5] flex items-center justify-between gap-4"
+                      className="p-3.5 sm:p-4 rounded-xl border border-stone-200 bg-[#FAF9F5] flex items-center justify-between gap-3"
                     >
-                      <div className="space-y-0.5 text-xs">
+                      <div className="space-y-0.5 text-xs min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="font-extrabold text-stone-900 text-sm">{w.name}</span>
                           {w.connected ? (
@@ -1285,19 +1287,19 @@ function AccountCenterContent() {
                             </span>
                           ) : (
                             <span className="text-[10px] font-semibold bg-stone-200 text-stone-600 px-2 py-0.5 rounded">
-                              Belum Terhubung
+                              Belum
                             </span>
                           )}
                         </div>
-                        <p className="text-[11px] text-stone-500">
-                          {w.connected ? `Nomor terdaftar: ${w.phone}` : 'Klik hubungkan untuk aktivasi instan'}
+                        <p className="text-[11px] text-stone-500 truncate">
+                          {w.connected ? `No: ${w.phone}` : 'Klik hubungkan untuk aktivasi'}
                         </p>
                       </div>
 
                       <button
                         type="button"
                         onClick={() => toggleWalletConnection(w.id)}
-                        className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-colors shrink-0 ${
+                        className={`px-3 py-2 rounded-lg text-xs font-bold transition-colors shrink-0 ${
                           w.connected
                             ? 'bg-white border border-stone-200 text-stone-700 hover:text-rose-600 hover:border-rose-200'
                             : 'bg-[#003d29] text-white hover:bg-[#002b1c]'
@@ -1309,8 +1311,8 @@ function AccountCenterContent() {
                   ))}
                 </div>
 
-                <div className="p-3.5 bg-[#FAF9F5] border border-stone-200 rounded-xl flex items-center gap-2.5 text-[11px] text-stone-600">
-                  <Lock className="w-4 h-4 text-[#003d29] shrink-0" />
+                <div className="p-3.5 bg-[#FAF9F5] border border-stone-200 rounded-xl flex items-start sm:items-center gap-2.5 text-[11px] text-stone-600">
+                  <Lock className="w-4 h-4 text-[#003d29] shrink-0 mt-0.5 sm:mt-0" />
                   <span>
                     Seluruh informasi pembayaran Anda dienkripsi dan dilindungi standar keamanan transaksi NUSAVA. Kami tidak pernah menyimpan kode CVV/PIN Anda.
                   </span>
@@ -1323,13 +1325,13 @@ function AccountCenterContent() {
               SECTION 4: DAFTAR TRANSAKSI (PESANAN SAYA)
           ===================================================================== */}
           {activeSection === 'orders' && (
-            <div className="space-y-6">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <h1 className="text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <h1 className="text-lg sm:text-2xl font-extrabold text-stone-900 tracking-tight">
                     Daftar Transaksi
                   </h1>
-                  <span className="bg-stone-100 text-stone-700 px-3 py-0.5 rounded-full text-xs font-extrabold border border-stone-200">
+                  <span className="bg-stone-100 text-stone-700 px-2.5 py-0.5 rounded-full text-xs font-extrabold border border-stone-200">
                     {displayOrders.length}
                   </span>
                 </div>
@@ -1338,7 +1340,7 @@ function AccountCenterContent() {
                 <select
                   value={timeFilter}
                   onChange={(e) => setTimeFilter(e.target.value as any)}
-                  className="text-xs font-semibold text-stone-800 bg-white border border-stone-200 rounded-xl px-3.5 py-2 outline-none cursor-pointer hover:border-stone-300 shadow-2xs"
+                  className="text-xs font-semibold text-stone-800 bg-white border border-stone-200 rounded-xl px-3 py-1.5 sm:py-2 outline-none cursor-pointer hover:border-stone-300 shadow-2xs"
                 >
                   <option value="3_MONTHS">3 Bulan Terakhir</option>
                   <option value="6_MONTHS">6 Bulan Terakhir</option>
@@ -1348,33 +1350,33 @@ function AccountCenterContent() {
               </div>
 
               {/* Order Status Filter Pills */}
-              <div className="flex items-center p-1 bg-stone-100 rounded-xl text-xs font-semibold text-stone-600 w-fit">
+              <div className="flex items-center p-1 bg-stone-100 rounded-xl text-xs font-semibold text-stone-600 w-full sm:w-fit overflow-x-auto scrollbar-none">
                 <button
                   type="button"
                   onClick={() => setActiveOrderTab('ALL')}
-                  className={`px-4 py-2 rounded-lg transition-all ${
+                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-lg transition-all whitespace-nowrap text-center ${
                     activeOrderTab === 'ALL'
                       ? 'bg-white text-stone-900 shadow-2xs font-bold'
                       : 'hover:text-stone-900'
                   }`}
                 >
-                  Semua Pesanan
+                  Semua
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveOrderTab('NOT_SHIPPED')}
-                  className={`px-4 py-2 rounded-lg transition-all ${
+                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-lg transition-all whitespace-nowrap text-center ${
                     activeOrderTab === 'NOT_SHIPPED'
                       ? 'bg-white text-stone-900 shadow-2xs font-bold'
                       : 'hover:text-stone-900'
                   }`}
                 >
-                  Dalam Proses / Dikirim
+                  Dikirim
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveOrderTab('CANCELLED')}
-                  className={`px-4 py-2 rounded-lg transition-all ${
+                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-lg transition-all whitespace-nowrap text-center ${
                     activeOrderTab === 'CANCELLED'
                       ? 'bg-white text-stone-900 shadow-2xs font-bold'
                       : 'hover:text-stone-900'
@@ -1420,8 +1422,8 @@ function AccountCenterContent() {
                         className="border border-stone-200 rounded-2xl overflow-hidden bg-white shadow-2xs"
                       >
                         {/* Header Strip */}
-                        <div className="bg-[#FAF9F5] border-b border-stone-200 px-6 py-4 flex flex-wrap items-center justify-between gap-4 text-xs">
-                          <div className="flex flex-wrap items-center gap-6 sm:gap-10">
+                        <div className="bg-[#FAF9F5] border-b border-stone-200 p-4 sm:px-6 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 text-xs">
+                          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-start sm:items-center gap-3 sm:gap-10">
                             <div>
                               <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block">
                                 TANGGAL TRANSAKSI
@@ -1440,7 +1442,7 @@ function AccountCenterContent() {
                               </span>
                             </div>
 
-                            <div>
+                            <div className="col-span-2 sm:col-span-1">
                               <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block">
                                 DIKIRIM KE
                               </span>
@@ -1449,23 +1451,23 @@ function AccountCenterContent() {
                                 onClick={() => switchSection('addresses')}
                                 className="flex items-center gap-1 font-semibold text-[#003d29] hover:underline mt-0.5"
                               >
-                                <span>{order.shippingAddress?.fullName || fullNameDisplay}</span>
-                                <ChevronDown className="w-3 h-3 text-[#003d29]" />
+                                <span className="truncate">{order.shippingAddress?.fullName || fullNameDisplay}</span>
+                                <ChevronDown className="w-3 h-3 text-[#003d29] shrink-0" />
                               </button>
                             </div>
                           </div>
 
-                          <div className="text-left sm:text-right">
-                            <div className="text-[11px] text-stone-500 font-semibold">
-                              No. Pesanan #{order.orderNumber}
+                          <div className="pt-2 sm:pt-0 border-t sm:border-t-0 border-stone-200/70 flex sm:block items-center justify-between text-left sm:text-right">
+                            <div className="text-[11px] text-stone-500 font-semibold truncate">
+                              #{order.orderNumber}
                             </div>
-                            <div className="flex items-center gap-2 mt-0.5 text-xs">
+                            <div className="flex items-center gap-2 sm:mt-0.5 text-xs shrink-0">
                               <button
                                 type="button"
                                 onClick={() => setSelectedOrderId(order.id)}
                                 className="text-[#003d29] hover:underline font-semibold"
                               >
-                                Lihat rincian
+                                Rincian
                               </button>
                               <span className="text-stone-300">|</span>
                               <button
@@ -1473,16 +1475,16 @@ function AccountCenterContent() {
                                 onClick={() => setSelectedOrderId(order.id)}
                                 className="text-[#003d29] hover:underline font-semibold"
                               >
-                                Lihat invoice
+                                Invoice
                               </button>
                             </div>
                           </div>
                         </div>
 
                         {/* Card Body */}
-                        <div className="p-6 space-y-5">
+                        <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
                           {isDelivered && !bannerDismissed && (
-                            <div className="p-3.5 bg-[#FFF9E6] border border-[#FFE8A3] text-stone-800 text-xs rounded-xl flex items-center justify-between">
+                            <div className="p-3 bg-[#FFF9E6] border border-[#FFE8A3] text-stone-800 text-xs rounded-xl flex items-center justify-between gap-2">
                               <button
                                 type="button"
                                 onClick={() => {
@@ -1510,7 +1512,7 @@ function AccountCenterContent() {
                                 onClick={() =>
                                   setDismissedBanners((prev) => ({ ...prev, [order.id]: true }))
                                 }
-                                className="text-stone-400 hover:text-stone-700 text-sm font-bold ml-2"
+                                className="text-stone-400 hover:text-stone-700 text-sm font-bold ml-1 shrink-0"
                               >
                                 ×
                               </button>
@@ -1531,26 +1533,26 @@ function AccountCenterContent() {
                                 className="space-y-3 pt-4 first:pt-0 border-t first:border-t-0 border-stone-200"
                               >
                                 <div>
-                                  <h3 className="text-sm font-extrabold text-stone-900">
+                                  <h3 className="text-xs sm:text-sm font-extrabold text-stone-900">
                                     {item.deliveredDate ||
                                       (order.status === 'DELIVERED'
                                         ? `Terkirim pada ${formatDate(order.createdAt)}`
                                         : 'Sedang Dalam Pengiriman Kurir')}
                                   </h3>
                                   {item.deliverySubtitle && (
-                                    <p className="text-xs text-stone-500 mt-0.5">
+                                    <p className="text-[11px] sm:text-xs text-stone-500 mt-0.5">
                                       {item.deliverySubtitle}
                                     </p>
                                   )}
                                 </div>
 
-                                <div className="flex flex-col sm:flex-row items-start gap-4">
-                                  <div className="relative w-20 h-20 bg-[#F5F6F6] rounded-xl overflow-hidden shrink-0 border border-stone-200 p-2 flex items-center justify-center">
+                                <div className="flex flex-row items-start gap-3 sm:gap-4">
+                                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-[#F5F6F6] rounded-xl overflow-hidden shrink-0 border border-stone-200 p-1.5 sm:p-2 flex items-center justify-center">
                                     <Image
                                       src={productImg}
                                       alt={productTitle}
                                       fill
-                                      className="object-contain p-1.5"
+                                      className="object-contain p-1"
                                       sizes="80px"
                                     />
                                   </div>
@@ -1558,55 +1560,58 @@ function AccountCenterContent() {
                                   <div className="flex-1 min-w-0 space-y-1.5">
                                     <Link
                                       href={`/products/${productSlug}`}
-                                      className="text-sm font-bold text-stone-900 hover:text-[#003d29] transition-colors line-clamp-2 leading-snug"
+                                      className="text-xs sm:text-sm font-bold text-stone-900 hover:text-[#003d29] transition-colors line-clamp-2 leading-snug block"
                                     >
                                       {productTitle}
                                     </Link>
 
-                                    <p className="text-xs text-stone-500">
+                                    <p className="text-[11px] sm:text-xs text-stone-500">
                                       {item.returnEligible ||
                                         'Garansi pengembalian: Berlaku 7 hari sejak produk diterima'}
                                     </p>
+                                  </div>
+                                </div>
 
-                                    <div className="flex flex-wrap items-center gap-2 pt-1.5">
-                                      <button
-                                        type="button"
-                                        onClick={() => handleBuyAgain(item)}
-                                        className="bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5 shadow-2xs"
-                                      >
-                                        <RotateCcw className="w-3.5 h-3.5" />
-                                        <span>Beli Lagi</span>
-                                      </button>
+                                <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 pt-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleBuyAgain(item)}
+                                    className="bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold px-3.5 py-2 rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-2xs"
+                                  >
+                                    <RotateCcw className="w-3.5 h-3.5 shrink-0" />
+                                    <span>Beli Lagi</span>
+                                  </button>
 
-                                      <Link
-                                        href={`/products/${productSlug}`}
-                                        className="bg-white border border-stone-200 hover:bg-stone-50 text-stone-800 text-xs font-semibold px-4 py-2 rounded-lg transition-colors"
-                                      >
-                                        Lihat Produk
-                                      </Link>
+                                  <Link
+                                    href={`/products/${productSlug}`}
+                                    className="bg-white border border-stone-200 hover:bg-stone-50 text-stone-800 text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors text-center"
+                                  >
+                                    Lihat Produk
+                                  </Link>
 
-                                      <button
-                                        type="button"
-                                        onClick={() => setTrackingOrder({ ...order, currentItem: item })}
-                                        className="bg-white border border-stone-200 hover:bg-stone-50 text-stone-800 text-xs font-semibold px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5"
-                                      >
-                                        <Truck className="w-3.5 h-3.5 text-stone-500" />
-                                        <span>Lacak Paket</span>
-                                      </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setTrackingOrder({ ...order, currentItem: item })}
+                                    className="bg-white border border-stone-200 hover:bg-stone-50 text-stone-800 text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors flex items-center justify-center gap-1.5"
+                                  >
+                                    <Truck className="w-3.5 h-3.5 text-stone-500 shrink-0" />
+                                    <span>Lacak Paket</span>
+                                  </button>
 
-                                      <div className="relative">
-                                        <button
-                                          type="button"
-                                          onClick={() =>
-                                            setMenuOpenId(menuOpenId === item.id ? null : item.id)
-                                          }
-                                          className="bg-white border border-stone-200 hover:bg-stone-50 text-stone-600 px-2.5 py-2 rounded-lg transition-colors flex items-center justify-center"
-                                        >
-                                          <MoreHorizontal className="w-4 h-4" />
-                                        </button>
+                                  <div className="relative">
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        setMenuOpenId(menuOpenId === item.id ? null : item.id)
+                                      }
+                                      className="w-full sm:w-auto bg-white border border-stone-200 hover:bg-stone-50 text-stone-600 px-3 py-2 rounded-lg transition-colors flex items-center justify-center gap-1 text-xs font-semibold"
+                                    >
+                                      <MoreHorizontal className="w-4 h-4" />
+                                      <span className="sm:hidden">Lainnya</span>
+                                    </button>
 
-                                        {menuOpenId === item.id && (
-                                          <div className="absolute left-0 mt-1.5 w-48 bg-white border border-stone-200 rounded-xl shadow-lg py-1 z-20 text-xs font-semibold text-stone-700">
+                                    {menuOpenId === item.id && (
+                                      <div className="absolute right-0 sm:left-0 mt-1.5 w-48 bg-white border border-stone-200 rounded-xl shadow-lg py-1 z-20 text-xs font-semibold text-stone-700">
                                             <button
                                               type="button"
                                               onClick={() => {
@@ -1640,8 +1645,6 @@ function AccountCenterContent() {
                                       </div>
                                     </div>
                                   </div>
-                                </div>
-                              </div>
                             );
                           })}
                         </div>

@@ -269,125 +269,125 @@ export default function MarketplaceStorefrontHome() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 font-sans space-y-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-5 sm:py-8 font-sans space-y-8 sm:space-y-12 overflow-x-hidden">
       {/* 1. TOP MARKETPLACE BENEFIT STRIP */}
-      <section className="bg-white border border-stone-200 rounded-xl p-4 shadow-xs">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-semibold text-stone-700">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center shrink-0">
-              <Truck className="w-4 h-4 text-[#003d29]" />
+      <section className="bg-white border border-stone-200 rounded-xl p-3.5 sm:p-4 shadow-xs">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-xs font-semibold text-stone-700">
+          <div className="flex items-start sm:items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-stone-100 flex items-center justify-center shrink-0">
+              <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#003d29]" />
             </div>
-            <div>
-              <span className="font-bold text-stone-900 block text-xs">Bebas Ongkir Nasional</span>
-              <span className="text-xs text-stone-400 font-normal">Min. belanja Rp 150.000</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-4 h-4 text-[#003d29]" />
-            </div>
-            <div>
-              <span className="font-bold text-stone-900 block text-xs">100% Produk Otentik</span>
-              <span className="text-xs text-stone-400 font-normal">Langsung dari pengrajin daerah</span>
+            <div className="min-w-0">
+              <span className="font-bold text-stone-900 block text-[11px] sm:text-xs truncate">Bebas Ongkir Nasional</span>
+              <span className="text-[10px] sm:text-xs text-stone-400 font-normal block truncate">Min. belanja Rp 150.000</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center shrink-0">
-              <RotateCcw className="w-4 h-4 text-[#003d29]" />
+          <div className="flex items-start sm:items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-stone-100 flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#003d29]" />
             </div>
-            <div>
-              <span className="font-bold text-stone-900 block text-xs">Garansi Sampai Aman</span>
-              <span className="text-xs text-stone-400 font-normal">Ganti baru jika barang rusak</span>
+            <div className="min-w-0">
+              <span className="font-bold text-stone-900 block text-[11px] sm:text-xs truncate">100% Produk Otentik</span>
+              <span className="text-[10px] sm:text-xs text-stone-400 font-normal block truncate">Langsung dari pengrajin</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center shrink-0">
-              <Tag className="w-4 h-4 text-[#003d29]" />
+          <div className="flex items-start sm:items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-stone-100 flex items-center justify-center shrink-0">
+              <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#003d29]" />
             </div>
-            <div>
-              <span className="font-bold text-stone-900 block text-xs">Bisa Bayar di Tempat (COD)</span>
-              <span className="text-xs text-stone-400 font-normal">Belanja tenang dan nyaman</span>
+            <div className="min-w-0">
+              <span className="font-bold text-stone-900 block text-[11px] sm:text-xs truncate">Garansi Sampai Aman</span>
+              <span className="text-[10px] sm:text-xs text-stone-400 font-normal block truncate">Ganti baru jika rusak</span>
+            </div>
+          </div>
+
+          <div className="flex items-start sm:items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-stone-100 flex items-center justify-center shrink-0">
+              <Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#003d29]" />
+            </div>
+            <div className="min-w-0">
+              <span className="font-bold text-stone-900 block text-[11px] sm:text-xs truncate">Bisa Bayar COD</span>
+              <span className="text-[10px] sm:text-xs text-stone-400 font-normal block truncate">Belanja tenang & nyaman</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* 2. HERO MARKETPLACE BANNER */}
-      <section className="bg-[#FCF0E4] border border-stone-200/60 rounded-2xl p-8 sm:p-12 lg:p-14 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
-        <div className="max-w-xl z-10 space-y-5">
-          <div className="inline-flex items-center gap-2 bg-[#003d29] text-white text-xs font-semibold px-3 py-1 rounded-md shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 text-white" />
+      <section className="bg-[#FCF0E4] border border-stone-200/60 rounded-2xl p-5 sm:p-10 lg:p-14 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
+        <div className="max-w-xl z-10 space-y-4 sm:space-y-5 w-full">
+          <div className="inline-flex items-center gap-2 bg-[#003d29] text-white text-[11px] sm:text-xs font-semibold px-3 py-1 rounded-md shadow-xs">
+            <Sparkles className="w-3.5 h-3.5 text-white shrink-0" />
             <span>Pasar Karya & Oleh-Oleh Nusantara</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-[#003d29] tracking-tight leading-[1.15]">
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[#003d29] tracking-tight leading-[1.18]">
             Temukan Citarasa & Karya Otentik Langsung dari Daerah
           </h1>
 
-          <p className="text-sm text-stone-700 leading-relaxed max-w-lg">
+          <p className="text-xs sm:text-sm text-stone-700 leading-relaxed max-w-lg">
             Jelajahi aneka oleh-oleh khas legendaris, batik tulis, kopi single-origin, dan kriya tangan yang diproduksi dengan integritas oleh sentra UMKM terpercaya di Indonesia.
           </p>
 
           {/* Quick Coupon Claim Chips */}
           <div className="pt-1 space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-500 block">
+            <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-stone-500 block">
               Voucher Diskon Siap Pakai di Checkout:
             </span>
-            <div className="flex flex-wrap gap-2">
-              <div className="inline-flex items-center gap-1.5 bg-white border border-stone-300 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-[#003d29] shadow-xs">
-                <Tag className="w-3.5 h-3.5 text-[#003d29]" />
-                <span>NUSANTARA (Diskon 15%)</span>
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
+              <div className="inline-flex items-center gap-1.5 bg-white border border-stone-300 px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-mono font-bold text-[#003d29] shadow-xs">
+                <Tag className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#003d29] shrink-0" />
+                <span>NUSANTARA (15%)</span>
               </div>
-              <div className="inline-flex items-center gap-1.5 bg-white border border-stone-300 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-[#003d29] shadow-xs">
-                <Tag className="w-3.5 h-3.5 text-[#003d29]" />
+              <div className="inline-flex items-center gap-1.5 bg-white border border-stone-300 px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-mono font-bold text-[#003d29] shadow-xs">
+                <Tag className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#003d29] shrink-0" />
                 <span>ONGKIRGRATIS</span>
               </div>
-              <div className="inline-flex items-center gap-1.5 bg-white border border-stone-300 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-[#003d29] shadow-xs">
-                <Tag className="w-3.5 h-3.5 text-[#003d29]" />
+              <div className="inline-flex items-center gap-1.5 bg-white border border-stone-300 px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-mono font-bold text-[#003d29] shadow-xs">
+                <Tag className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#003d29] shrink-0" />
                 <span>OLEHOLEH10</span>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 sm:gap-3 pt-2">
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-semibold px-7 py-3 rounded-lg transition-colors shadow-xs"
+              className="inline-flex items-center justify-center gap-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-semibold px-4 sm:px-7 py-3 rounded-lg transition-colors shadow-xs"
             >
               <span>Mulai Belanja</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 shrink-0" />
             </Link>
 
             <Link
               href="/products?category=kudapan-khas"
-              className="inline-flex items-center gap-2 bg-white hover:bg-stone-50 text-stone-800 border border-stone-300 text-xs font-semibold px-6 py-3 rounded-lg transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-white hover:bg-stone-50 text-stone-800 border border-stone-300 text-xs font-semibold px-4 sm:px-6 py-3 rounded-lg transition-colors"
             >
-              <ShoppingBag className="w-4 h-4 text-[#003d29]" />
-              <span>Oleh-oleh Terpopuler</span>
+              <ShoppingBag className="w-4 h-4 text-[#003d29] shrink-0" />
+              <span className="truncate">Oleh-oleh Populer</span>
             </Link>
           </div>
         </div>
 
         {/* Hero Visual Collage */}
-        <div className="relative w-72 h-72 sm:w-88 sm:h-88 shrink-0">
+        <div className="relative w-full max-w-[260px] sm:max-w-none sm:w-72 lg:w-88 aspect-square shrink-0 mx-auto md:mx-0">
           <Image
             src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Bakpia_pathok.jpg"
             alt="Karya Otentik Nusantara"
             fill
             priority
-            sizes="(max-width: 768px) 288px, 352px"
+            sizes="(max-width: 768px) 260px, 352px"
             className="object-cover rounded-2xl shadow-sm border border-stone-200"
           />
-          <div className="absolute -bottom-2 -left-2 bg-white p-3.5 rounded-xl border border-stone-200 shadow-md text-xs flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#FAF9F5] border border-stone-200 flex items-center justify-center text-[#003d29] font-bold">
+          <div className="absolute bottom-2 left-2 right-2 sm:right-auto sm:-bottom-2 sm:-left-2 bg-white p-2.5 sm:p-3.5 rounded-xl border border-stone-200 shadow-md text-xs flex items-center gap-2.5 sm:gap-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#FAF9F5] border border-stone-200 flex items-center justify-center text-[#003d29] font-bold shrink-0">
               4.9
             </div>
-            <div>
-              <span className="font-bold text-stone-900 block text-xs">Rating Kepuasan Pembeli</span>
-              <span className="text-xs text-stone-400">Dari 15.000+ pesanan terkirim</span>
+            <div className="min-w-0">
+              <span className="font-bold text-stone-900 block text-[11px] sm:text-xs truncate">Rating Kepuasan Pembeli</span>
+              <span className="text-[10px] sm:text-xs text-stone-400 block truncate">Dari 15.000+ pesanan terkirim</span>
             </div>
           </div>
         </div>
@@ -395,32 +395,32 @@ export default function MarketplaceStorefrontHome() {
 
       {/* 3. KATEGORI PILIHAN */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between border-b border-stone-200 pb-3">
+        <div className="flex items-center justify-between border-b border-stone-200 pb-3 gap-2">
           <div>
-            <span className="text-xs font-semibold text-[#003d29] uppercase tracking-wider block">
+            <span className="text-[10px] sm:text-xs font-semibold text-[#003d29] uppercase tracking-wider block">
               KATEGORI PILIHAN
             </span>
-            <h2 className="text-xl font-bold text-stone-900 tracking-tight mt-0.5">
+            <h2 className="text-lg sm:text-xl font-bold text-stone-900 tracking-tight mt-0.5">
               Jelajahi Berdasarkan Produk
             </h2>
           </div>
           <Link
             href="/products"
-            className="text-xs font-semibold text-[#003d29] hover:underline flex items-center gap-1"
+            className="text-xs font-semibold text-[#003d29] hover:underline flex items-center gap-1 shrink-0"
           >
             <span>Semua Kategori</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
           {visualCategories.map((cat, idx) => (
             <Link
               key={idx}
               href={`/products?category=${cat.slug}`}
-              className="bg-[#FAF9F5] hover:bg-white border border-stone-200 hover:border-[#003d29] rounded-xl p-3.5 flex flex-col items-center text-center transition-colors group"
+              className="bg-[#FAF9F5] hover:bg-white border border-stone-200 hover:border-[#003d29] rounded-xl p-2.5 sm:p-3.5 flex flex-col items-center text-center transition-colors group"
             >
-              <div className="relative w-16 h-16 rounded-xl bg-white overflow-hidden mb-2.5 border border-stone-200 p-1 flex items-center justify-center">
+              <div className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-white overflow-hidden mb-2 border border-stone-200 p-1 flex items-center justify-center">
                 <Image
                   src={cat.image}
                   alt={cat.title}
@@ -431,28 +431,28 @@ export default function MarketplaceStorefrontHome() {
                   className="object-cover group-hover:scale-105 transition-transform duration-200 rounded-lg"
                 />
               </div>
-              <h3 className="text-xs font-bold text-stone-900 group-hover:text-[#003d29] line-clamp-2 transition-colors">
+              <h3 className="text-[11px] sm:text-xs font-bold text-stone-900 group-hover:text-[#003d29] line-clamp-2 transition-colors leading-tight">
                 {cat.title}
               </h3>
-              <span className="text-xs text-stone-400 mt-1 font-medium">{cat.itemCount}</span>
+              <span className="text-[10px] sm:text-xs text-stone-400 mt-1 font-medium">{cat.itemCount}</span>
             </Link>
           ))}
         </div>
       </section>
 
       {/* 4. FLASH SALE HARIAN */}
-      <section className="bg-[#FAF9F5] border border-stone-200 rounded-2xl p-6 sm:p-8 text-stone-900 relative">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200 pb-5 mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#003d29] text-white flex items-center justify-center shadow-xs">
-              <Zap className="w-5 h-5 text-white" />
+      <section id="flash-sale" className="bg-[#FAF9F5] border border-stone-200 rounded-2xl p-4 sm:p-6 lg:p-8 text-stone-900 relative">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-stone-200 pb-4 sm:pb-5 mb-4 sm:mb-6">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#003d29] text-white flex items-center justify-center shadow-xs shrink-0">
+              <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
             <div>
-              <div className="flex items-center gap-2.5">
-                <h2 className="text-xl font-bold tracking-tight text-stone-900">
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="text-lg sm:text-xl font-bold tracking-tight text-stone-900">
                   Flash Sale Hari Ini
                 </h2>
-                <span className="bg-[#003d29] text-white text-xs font-semibold uppercase px-2.5 py-0.5 rounded-md">
+                <span className="bg-[#003d29] text-white text-[10px] sm:text-xs font-semibold uppercase px-2 py-0.5 rounded-md">
                   Diskon s/d 50%
                 </span>
               </div>
@@ -463,55 +463,55 @@ export default function MarketplaceStorefrontHome() {
           </div>
 
           {/* Countdown Clock */}
-          <div className="flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-lg border border-stone-200 shadow-xs self-start sm:self-auto">
-            <Clock className="w-4 h-4 text-[#003d29]" />
-            <span className="text-xs font-semibold text-stone-500 mr-1">
+          <div className="flex items-center gap-1.5 sm:gap-2 bg-white px-3 py-1.5 rounded-lg border border-stone-200 shadow-xs self-start sm:self-auto">
+            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#003d29]" />
+            <span className="text-[11px] sm:text-xs font-semibold text-stone-500 mr-0.5">
               Berakhir:
             </span>
-            <div className="flex items-center gap-1.5 font-bold text-xs text-stone-900">
-              <span className="bg-[#003d29] text-white px-2 py-0.5 rounded-md min-w-[26px] text-center font-mono">
+            <div className="flex items-center gap-1 font-bold text-xs text-stone-900">
+              <span className="bg-[#003d29] text-white px-1.5 sm:px-2 py-0.5 rounded-md min-w-[24px] text-center font-mono text-[11px] sm:text-xs">
                 {String(timeLeft.hours).padStart(2, '0')}
               </span>
               <span>:</span>
-              <span className="bg-[#003d29] text-white px-2 py-0.5 rounded-md min-w-[26px] text-center font-mono">
+              <span className="bg-[#003d29] text-white px-1.5 sm:px-2 py-0.5 rounded-md min-w-[24px] text-center font-mono text-[11px] sm:text-xs">
                 {String(timeLeft.minutes).padStart(2, '0')}
               </span>
               <span>:</span>
-              <span className="bg-[#003d29] text-white px-2 py-0.5 rounded-md min-w-[26px] text-center font-mono">
+              <span className="bg-[#003d29] text-white px-1.5 sm:px-2 py-0.5 rounded-md min-w-[24px] text-center font-mono text-[11px] sm:text-xs">
                 {String(timeLeft.seconds).padStart(2, '0')}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Flash Sale Product Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Flash Sale Product Cards Grid (2 Cols on Mobile, 4 Cols on Desktop) */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
           {flashSaleItems.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-xl p-4 border border-stone-200 hover:border-stone-300 shadow-xs flex flex-col justify-between group transition-colors"
+              className="bg-white rounded-xl p-2.5 sm:p-4 border border-stone-200 hover:border-stone-300 shadow-xs flex flex-col justify-between group transition-colors"
             >
               <div>
-                <div className="relative w-full aspect-square bg-[#F5F6F6] rounded-lg overflow-hidden mb-3 border border-stone-100">
+                <div className="relative w-full aspect-square bg-[#F5F6F6] rounded-lg overflow-hidden mb-2.5 sm:mb-3 border border-stone-100">
                   <Image
                     src={item.image}
                     alt={item.title}
                     fill
                     loading="lazy"
                     decoding="async"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
                     className="object-contain p-2 group-hover:scale-105 transition-transform duration-200"
                   />
-                  <div className="absolute top-2 left-2 bg-[#003d29] text-white text-xs font-bold px-2 py-0.5 rounded-md shadow-xs">
+                  <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 bg-[#003d29] text-white text-[10px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 rounded-md shadow-xs">
                     -{item.discount}%
                   </div>
-                  <div className="absolute top-2 right-2 bg-white/95 text-stone-700 text-xs font-semibold px-2 py-0.5 rounded-md flex items-center gap-1 shadow-xs border border-stone-200">
-                    <MapPin className="w-3 h-3 text-[#003d29]" />
-                    <span>{item.origin}</span>
+                  <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-white/95 text-stone-700 text-[10px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-md flex items-center gap-0.5 sm:gap-1 shadow-xs border border-stone-200">
+                    <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#003d29]" />
+                    <span className="truncate max-w-[65px] sm:max-w-none">{item.origin}</span>
                   </div>
                 </div>
 
-                <span className="text-xs font-semibold text-[#003d29] uppercase tracking-wider block">
+                <span className="text-[10px] sm:text-xs font-semibold text-[#003d29] uppercase tracking-wider block truncate">
                   {item.category}
                 </span>
                 <Link
@@ -522,27 +522,27 @@ export default function MarketplaceStorefrontHome() {
                 </Link>
 
                 {/* Rating & Review */}
-                <div className="flex items-center gap-1 mt-1 text-xs text-stone-500">
+                <div className="flex items-center gap-1 mt-1 text-[11px] sm:text-xs text-stone-500">
                   <span className="font-bold text-stone-900">{item.rating}</span>
-                  <div className="flex text-amber-500 text-xs">{'★'.repeat(5)}</div>
+                  <div className="flex text-amber-500 text-[10px] sm:text-xs">{'★'.repeat(5)}</div>
                   <span className="text-stone-400">({item.reviewsCount})</span>
                 </div>
 
                 {/* Pricing */}
-                <div className="flex items-baseline gap-2 mt-2">
-                  <span className="text-base font-bold text-[#003d29]">
+                <div className="flex flex-wrap items-baseline gap-1 sm:gap-2 mt-1.5 sm:mt-2">
+                  <span className="text-sm sm:text-base font-extrabold text-[#003d29]">
                     {formatCurrency(item.flashPrice)}
                   </span>
-                  <span className="text-xs text-stone-400 line-through">
+                  <span className="text-[10px] sm:text-xs text-stone-400 line-through">
                     {formatCurrency(item.originalPrice)}
                   </span>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="mt-3 space-y-1">
-                  <div className="flex justify-between text-xs font-medium text-stone-500">
+                <div className="mt-2.5 sm:mt-3 space-y-1">
+                  <div className="flex justify-between text-[10px] sm:text-xs font-medium text-stone-500">
                     <span>Terjual {item.soldPercentage}%</span>
-                    <span className="text-[#003d29] font-bold">Sisa {item.stockLeft} pcs</span>
+                    <span className="text-[#003d29] font-bold">Sisa {item.stockLeft}</span>
                   </div>
                   <div className="w-full bg-stone-100 rounded-full h-1.5 overflow-hidden">
                     <div
@@ -556,7 +556,7 @@ export default function MarketplaceStorefrontHome() {
               {/* Action Button */}
               <Link
                 href={`/products/${item.slug}`}
-                className="mt-4 w-full bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-semibold py-2.5 rounded-lg transition-colors text-center block shadow-xs"
+                className="mt-3 sm:mt-4 w-full bg-[#003d29] hover:bg-[#002b1c] text-white text-[11px] sm:text-xs font-semibold py-2 sm:py-2.5 rounded-lg transition-colors text-center block shadow-xs"
               >
                 Beli Sekarang
               </Link>
@@ -566,12 +566,12 @@ export default function MarketplaceStorefrontHome() {
       </section>
 
       {/* 5. PILIHAN SENTRA UMKM & TOKO DAERAH RESMI */}
-      <section className="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 space-y-6">
+      <section className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-stone-200 pb-4">
-          <div className="flex items-center gap-2.5">
-            <Store className="w-5 h-5 text-[#003d29]" />
+          <div className="flex items-start sm:items-center gap-2.5">
+            <Store className="w-5 h-5 text-[#003d29] shrink-0 mt-0.5 sm:mt-0" />
             <div>
-              <h2 className="text-xl font-bold text-stone-900 tracking-tight">
+              <h2 className="text-lg sm:text-xl font-bold text-stone-900 tracking-tight">
                 Sentra UMKM Pilihan & Toko Resmi
               </h2>
               <p className="text-xs text-stone-500 mt-0.5">
@@ -579,21 +579,21 @@ export default function MarketplaceStorefrontHome() {
               </p>
             </div>
           </div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#003d29] bg-[#003d29]/10 px-3 py-1 rounded-md inline-flex items-center gap-1.5">
+          <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-[#003d29] bg-[#003d29]/10 px-2.5 sm:px-3 py-1 rounded-md inline-flex items-center gap-1.5 w-fit">
             <CheckCircle2 className="w-3.5 h-3.5 text-[#003d29]" />
             <span>UMKM Terverifikasi</span>
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
           {verifiedMakers.map((maker, idx) => (
             <div
               key={idx}
-              className="p-4 bg-[#FAF9F5] border border-stone-200 rounded-xl flex flex-col justify-between hover:border-stone-300 transition-colors"
+              className="p-3 sm:p-4 bg-[#FAF9F5] border border-stone-200 rounded-xl flex flex-col justify-between hover:border-stone-300 transition-colors"
             >
               <div>
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="relative w-12 h-12 rounded-lg bg-white overflow-hidden shrink-0 border border-stone-200">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2.5 sm:mb-3">
+                  <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-white overflow-hidden shrink-0 border border-stone-200">
                     <Image
                       src={maker.image}
                       alt={maker.name}
@@ -602,30 +602,30 @@ export default function MarketplaceStorefrontHome() {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-xs font-bold text-stone-900 truncate">{maker.name}</h3>
-                    <span className="text-xs text-stone-500 flex items-center gap-1 mt-0.5">
-                      <MapPin className="w-3 h-3 text-[#003d29]" />
-                      <span>{maker.city}</span>
+                    <h3 className="text-xs font-bold text-stone-900 line-clamp-1">{maker.name}</h3>
+                    <span className="text-[11px] sm:text-xs text-stone-500 flex items-center gap-1 mt-0.5">
+                      <MapPin className="w-3 h-3 text-[#003d29] shrink-0" />
+                      <span className="truncate">{maker.city}</span>
                     </span>
                   </div>
                 </div>
 
-                <span className="text-xs font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded block border border-emerald-200/60">
+                <span className="text-[10px] sm:text-xs font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded block border border-emerald-200/60 line-clamp-1">
                   {maker.badge}
                 </span>
 
-                <div className="flex items-center justify-between text-xs text-stone-500 mt-3 pt-2 border-t border-stone-200">
-                  <span className="font-semibold text-stone-700">{maker.sales}</span>
-                  <span className="font-bold text-[#003d29]">{maker.rating} ★</span>
+                <div className="flex items-center justify-between text-[11px] sm:text-xs text-stone-500 mt-2.5 sm:mt-3 pt-2 border-t border-stone-200">
+                  <span className="font-semibold text-stone-700 truncate">{maker.sales}</span>
+                  <span className="font-bold text-[#003d29] shrink-0">{maker.rating} ★</span>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={() => setSelectedStore(maker.storeProfile)}
-                className="mt-4 w-full py-2 bg-white hover:bg-[#003d29] hover:text-white border border-stone-200 text-stone-800 rounded-lg text-xs font-semibold text-center block transition-colors"
+                className="mt-3 sm:mt-4 w-full py-2 bg-white hover:bg-[#003d29] hover:text-white border border-stone-200 text-stone-800 rounded-lg text-[11px] sm:text-xs font-semibold text-center block transition-colors"
               >
-                Lihat Profil Toko
+                Lihat Toko
               </button>
             </div>
           ))}
@@ -634,18 +634,18 @@ export default function MarketplaceStorefrontHome() {
 
       {/* 6. PETA RASA DAERAH & FILTER BELANJA NUSANTARA */}
       <section className="space-y-4 pt-2 pb-2 border-b border-stone-200">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span className="text-xs font-semibold text-[#003d29] uppercase tracking-wider block">
+            <span className="text-[10px] sm:text-xs font-semibold text-[#003d29] uppercase tracking-wider block">
               KATALOG UTAMA
             </span>
-            <h2 className="text-xl font-bold text-stone-900 mt-0.5">
+            <h2 className="text-lg sm:text-xl font-bold text-stone-900 mt-0.5">
               Koleksi Terbaik dari Seluruh Nusantara
             </h2>
           </div>
 
           {/* Right Sort Selector */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 self-start sm:self-auto">
             <span className="text-xs text-stone-500 font-medium">Urutkan:</span>
             <select
               value={sortOption}
@@ -661,10 +661,10 @@ export default function MarketplaceStorefrontHome() {
         </div>
 
         {/* Origin City Filter Pills */}
-        <div className="pt-2 flex items-center gap-2 overflow-x-auto scrollbar-none pb-1">
-          <span className="text-xs font-bold text-[#003d29] uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1.5">
+        <div className="pt-1 flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none pb-1">
+          <span className="text-[11px] sm:text-xs font-bold text-[#003d29] uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1">
             <Compass className="w-3.5 h-3.5 text-[#003d29]" />
-            <span>Peta Rasa Daerah:</span>
+            <span>Daerah:</span>
           </span>
           {NUSANTARA_ORIGIN_TABS.map((tab) => {
             const isSelected = activeOriginFilter === tab.city;
@@ -672,7 +672,7 @@ export default function MarketplaceStorefrontHome() {
               <button
                 key={tab.id || 'all'}
                 onClick={() => setActiveOriginFilter(tab.city)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors border shrink-0 ${
+                className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors border shrink-0 ${
                   isSelected
                     ? 'bg-[#003d29] text-white border-[#003d29] shadow-xs'
                     : 'bg-[#FAF9F5] text-stone-700 border-stone-200 hover:border-stone-400'
@@ -686,14 +686,14 @@ export default function MarketplaceStorefrontHome() {
       </section>
 
       {/* 7. MAIN PRODUCT GRID */}
-      <section className="space-y-6">
-        <div className="flex items-center justify-between">
+      <section className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <p className="text-xs text-stone-500 font-medium">
             Menampilkan produk pilihan terkurasi dari berbagai sentra UMKM Indonesia.
           </p>
           <Link
             href="/products"
-            className="text-xs font-semibold text-[#003d29] hover:underline flex items-center gap-1"
+            className="text-xs font-semibold text-[#003d29] hover:underline flex items-center gap-1 w-fit"
           >
             <span>Lihat Semua Produk ({productsData?.items?.length || 32})</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -702,7 +702,7 @@ export default function MarketplaceStorefrontHome() {
 
         {/* Loading Skeletons */}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-6">
             {[...Array(8)].map((_, i) => (
               <div key={i} className="space-y-3 animate-pulse">
                 <div className="aspect-square bg-stone-100 rounded-xl" />
@@ -717,7 +717,7 @@ export default function MarketplaceStorefrontHome() {
             <p className="text-stone-500 text-xs">Tidak ada produk ditemukan untuk filter ini.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-6">
             {productsData?.items?.map((product: any) => {
               const primaryImage =
                 product.images?.find((img: any) => img.isThumbnail)?.url ||
@@ -733,11 +733,11 @@ export default function MarketplaceStorefrontHome() {
               return (
                 <div
                   key={product.id}
-                  className="flex flex-col justify-between group bg-white border border-stone-200 hover:border-stone-300 rounded-xl p-4 shadow-xs transition-colors"
+                  className="flex flex-col justify-between group bg-white border border-stone-200 hover:border-stone-300 rounded-xl p-2.5 sm:p-4 shadow-xs transition-colors"
                 >
                   <div>
                     {/* Photo Container */}
-                    <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-lg overflow-hidden mb-3 border border-stone-100 p-2 flex items-center justify-center">
+                    <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-lg overflow-hidden mb-2.5 sm:mb-3 border border-stone-100 p-2 flex items-center justify-center">
                       <Link href={`/products/${product.slug}`} className="relative w-full h-full block">
                         <Image
                           src={primaryImage}
@@ -745,7 +745,7 @@ export default function MarketplaceStorefrontHome() {
                           fill
                           loading="lazy"
                           decoding="async"
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                           className="object-contain group-hover:scale-105 transition-transform duration-200"
                         />
                       </Link>
@@ -753,7 +753,7 @@ export default function MarketplaceStorefrontHome() {
                       {/* Wishlist Button */}
                       <button
                         onClick={(e) => toggleWishlist(e, product)}
-                        className={`absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-xs transition-colors border border-stone-200 ${
+                        className={`absolute top-2 right-2 w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-xs transition-colors border border-stone-200 ${
                           isFav ? 'text-rose-600' : 'text-stone-400 hover:text-rose-600'
                         }`}
                         aria-label="Simpan ke favorit"
@@ -762,26 +762,26 @@ export default function MarketplaceStorefrontHome() {
                       </button>
 
                       {/* UMKM Badge */}
-                      <div className="absolute bottom-2 left-2 bg-[#003d29] text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-xs flex items-center gap-1">
-                        <CheckCircle2 className="w-2.5 h-2.5 text-white" />
+                      <div className="absolute bottom-1.5 left-1.5 sm:bottom-2 sm:left-2 bg-[#003d29] text-white text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-md shadow-xs flex items-center gap-1">
+                        <CheckCircle2 className="w-2.5 h-2.5 text-white shrink-0" />
                         <span>UMKM Resmi</span>
                       </div>
                     </div>
 
                     {/* Metadata */}
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between gap-1 mb-0.5">
-                        <span className="text-[11px] font-semibold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-md inline-flex items-center gap-1">
-                          <MapPin className="w-2.5 h-2.5 text-[#003d29]" />
-                          <span>{origin.badge}</span>
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="text-[10px] sm:text-[11px] font-semibold text-[#003d29] bg-[#003d29]/8 px-1.5 sm:px-2 py-0.5 rounded-md inline-flex items-center gap-1 truncate max-w-full">
+                          <MapPin className="w-2.5 h-2.5 text-[#003d29] shrink-0" />
+                          <span className="truncate">{origin.badge}</span>
                         </span>
-                        <span className="text-[11px] text-stone-400 font-medium truncate">
+                        <span className="hidden sm:inline text-[11px] text-stone-400 font-medium truncate">
                           {product.category?.name || 'Oleh-Oleh Khas'}
                         </span>
                       </div>
 
                       {/* Store / Seller Name */}
-                      <div className="flex items-center gap-1 text-[11px] text-stone-500 font-medium">
+                      <div className="flex items-center gap-1 text-[10px] sm:text-[11px] text-stone-500 font-medium">
                         <Store className="w-3 h-3 text-[#003d29] shrink-0" />
                         <button
                           type="button"
@@ -804,25 +804,25 @@ export default function MarketplaceStorefrontHome() {
                         {product.title}
                       </Link>
 
-                      <div className="flex items-baseline gap-1.5 pt-1">
-                        <span className="text-base font-bold text-stone-900">
+                      <div className="flex items-baseline gap-1.5 pt-0.5">
+                        <span className="text-sm sm:text-base font-extrabold text-[#003d29]">
                           {formatCurrency(price)}
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-1 text-xs text-stone-500 pt-0.5">
+                      <div className="flex items-center gap-1 text-[11px] sm:text-xs text-stone-500">
                         <span className="font-bold text-stone-800">4.9</span>
-                        <div className="flex text-[#003d29] text-xs">{'★'.repeat(5)}</div>
-                        <span className="text-stone-400">({product.variants?.length ? 'Banyak varian' : '128 terjual'})</span>
+                        <div className="flex text-amber-500 text-[10px] sm:text-xs">{'★'.repeat(5)}</div>
+                        <span className="text-stone-400 truncate">(128)</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Add to Cart CTA */}
-                  <div className="mt-4 pt-2 border-t border-stone-100">
+                  <div className="mt-3 sm:mt-4 pt-2 border-t border-stone-100">
                     <button
                       onClick={(e) => handleQuickAdd(e, product)}
-                      className={`w-full py-2 px-3 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 border ${
+                      className={`w-full py-2 px-2 sm:px-3 rounded-lg text-[11px] sm:text-xs font-semibold transition-colors flex items-center justify-center gap-1 border ${
                         isAdded
                           ? 'bg-[#003d29] text-white border-[#003d29]'
                           : 'bg-white text-stone-900 border-stone-300 hover:border-[#003d29] hover:bg-[#002b1c] hover:text-white'
@@ -830,11 +830,11 @@ export default function MarketplaceStorefrontHome() {
                     >
                       {isAdded ? (
                         <>
-                          <Check className="w-3.5 h-3.5" />
-                          <span>Sudah di Keranjang</span>
+                          <Check className="w-3.5 h-3.5 shrink-0" />
+                          <span className="truncate">Tersimpan</span>
                         </>
                       ) : (
-                        <span>Masukkan Keranjang</span>
+                        <span className="truncate">+ Keranjang</span>
                       )}
                     </button>
                   </div>

@@ -146,8 +146,8 @@ export function Navbar() {
     <header className="sticky top-0 z-40 bg-white border-b border-stone-200 font-sans">
       {/* 1. Top Marketplace Utility Bar */}
       {topBarVisible && (
-        <div className="bg-[#003d29] text-white text-xs py-2 px-6 lg:px-12 transition-all duration-300">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <div className="bg-[#003d29] text-white text-xs py-1.5 sm:py-2 px-4 sm:px-6 lg:px-12 transition-all duration-300">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
             {/* Left: Marketplace Quick Assurance Links */}
             <div className="hidden md:flex items-center gap-4 text-white/90 text-[11px] shrink-0">
               <span className="inline-flex items-center gap-1.5 font-medium">
@@ -164,15 +164,15 @@ export function Navbar() {
             </div>
 
             {/* Center Promo Text */}
-            <div className="text-center font-medium flex-1 text-[11px] sm:text-xs text-white truncate">
-              <span>Gratis Ongkir se-Indonesia min. belanja Rp150.000 | </span>
-              <Link href="/products" className="underline font-bold text-[#F5E6C4] hover:text-white ml-1">
-                Klaim Voucher Sekarang
+            <div className="text-left sm:text-center font-medium flex-1 text-[11px] sm:text-xs text-white truncate">
+              <span>Gratis Ongkir min. Rp150rb | </span>
+              <Link href="/products" className="underline font-bold text-[#F5E6C4] hover:text-white ml-0.5">
+                Klaim Voucher
               </Link>
             </div>
 
             {/* Right: Help + Language Selector + Close Button */}
-            <div className="flex items-center gap-3 text-white/90 shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3 text-white/90 shrink-0">
               <a
                 href="https://wa.me/6281234567890?text=Halo%20Layanan%20Pelanggan%20NUSAVA!"
                 target="_blank"
@@ -243,9 +243,9 @@ export function Navbar() {
       )}
 
       {/* 2. Main Marketplace Navigation Bar */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-3.5 flex items-center justify-between gap-4 lg:gap-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-2.5 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-4 lg:gap-6">
         {/* Brand Logo: NUSAVA Green & Gold Nusantara Emblem */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 min-w-0">
           <Link href="/" className="group focus:outline-none">
             <NusavaLogo size="md" showTagline={true} />
           </Link>
@@ -409,11 +409,11 @@ export function Navbar() {
         </div>
 
         {/* Right Side: Wishlist, Cart, Transactions & Account Menu */}
-        <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-3.5 shrink-0">
           {/* Wishlist Link */}
           <Link
             href="/wishlist"
-            className="flex items-center gap-1.5 text-xs font-semibold text-stone-700 hover:text-[#003d29] transition-colors relative py-1.5 px-2 rounded-lg hover:bg-stone-50"
+            className="flex items-center gap-1.5 text-xs font-semibold text-stone-700 hover:text-[#003d29] transition-colors relative p-1.5 sm:px-2 rounded-lg hover:bg-stone-50"
             title={isId ? 'Wishlist Saya' : 'My Wishlist'}
           >
             <div className="relative">
@@ -431,7 +431,7 @@ export function Navbar() {
           <button
             onClick={() => openCart()}
             type="button"
-            className="flex items-center gap-1.5 text-xs font-semibold text-stone-700 hover:text-[#003d29] transition-colors relative py-1.5 px-2 rounded-lg hover:bg-stone-50"
+            className="flex items-center gap-1.5 text-xs font-semibold text-stone-700 hover:text-[#003d29] transition-colors relative p-1.5 sm:px-2 rounded-lg hover:bg-stone-50"
             title="Keranjang Belanja"
           >
             <div className="relative">
@@ -552,10 +552,31 @@ export function Navbar() {
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="lg:hidden p-1.5 text-stone-600 hover:text-black rounded-lg"
+            aria-label="Menu navigasi"
           >
             <Menu className="w-5 h-5" />
           </button>
         </div>
+      </div>
+
+      {/* Persistent Mobile Search Bar (< md) */}
+      <div className="md:hidden px-4 pb-2.5">
+        <form onSubmit={handleSearchSubmit} className="relative">
+          <input
+            type="text"
+            placeholder="Cari bakpia, pie susu, kopi gayo, batik..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-3.5 pr-9 py-2 bg-[#F5F6F6] border border-stone-200 focus:bg-white focus:border-[#003d29] rounded-xl text-xs text-stone-800 outline-none"
+          />
+          <button
+            type="submit"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-500"
+            aria-label="Cari"
+          >
+            <Search className="w-3.5 h-3.5" />
+          </button>
+        </form>
       </div>
 
       {/* Mobile Drawer Menu */}

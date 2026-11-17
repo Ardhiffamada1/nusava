@@ -143,28 +143,28 @@ function ShopcartCatalogContent() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10 font-sans space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-6 sm:py-10 font-sans space-y-6 sm:space-y-8 overflow-x-hidden">
       {/* Top Banner / Breadcrumb */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 pb-5 border-b border-stone-200">
         <div>
-          <span className="text-[11px] uppercase tracking-wider text-[#003d29] font-bold block mb-1">
+          <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-[#003d29] font-bold block mb-1">
             KATALOG LENGKAP
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+          <h1 className="text-xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
             {selectedCategory ? selectedCategory.name : 'Semua Pilihan Oleh-oleh'}
           </h1>
-          <p className="text-xs text-gray-500 mt-1 max-w-lg">
+          <p className="text-xs text-stone-500 mt-1 max-w-lg">
             {selectedCategory?.description ||
               'Koleksi lengkap aneka oleh-oleh tradisional, kopi, batik, dan kerajinan khas dari sentra UMKM daerah.'}
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-gray-500">Urutkan:</span>
+        <div className="flex items-center gap-2 sm:gap-3 self-start sm:self-auto">
+          <span className="text-xs text-stone-500">Urutkan:</span>
           <select
             value={sortBy}
             onChange={(e) => updateParam('sortBy', e.target.value)}
-            className="text-xs font-semibold text-gray-800 bg-white border border-gray-200 rounded-full px-3.5 py-1.5 outline-none focus:border-[#003d29] cursor-pointer"
+            className="text-xs font-semibold text-stone-800 bg-white border border-stone-200 rounded-xl px-3 py-1.5 outline-none focus:border-[#003d29] cursor-pointer"
           >
             <option value="newest">Paling Sesuai</option>
             <option value="price_asc">Harga: Rendah ke Tinggi</option>
@@ -175,14 +175,14 @@ function ShopcartCatalogContent() {
       </div>
 
       {/* Filter Pills Strip: Categories */}
-      <div className="space-y-3 pb-2">
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="space-y-3 pb-1">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none pb-1">
           <button
             onClick={() => updateParam('category', null)}
-            className={`px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+            className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-semibold border whitespace-nowrap shrink-0 transition-colors ${
               !categorySlug
                 ? 'bg-[#003d29] text-white border-[#003d29]'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+                : 'bg-white text-stone-700 border-stone-200 hover:border-stone-400'
             }`}
           >
             Semua Kategori
@@ -194,10 +194,10 @@ function ShopcartCatalogContent() {
               <button
                 key={cat.id}
                 onClick={() => updateParam('category', cat.slug)}
-                className={`px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+                className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-semibold border whitespace-nowrap shrink-0 transition-colors ${
                   isSelected
                     ? 'bg-[#003d29] text-white border-[#003d29]'
-                    : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+                    : 'bg-white text-stone-700 border-stone-200 hover:border-stone-400'
                 }`}
               >
                 {cat.name}
@@ -207,10 +207,10 @@ function ShopcartCatalogContent() {
         </div>
 
         {/* Peta Rasa Nusantara - Origin City Filter */}
-        <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pt-1">
-          <span className="text-[11px] font-bold text-[#003d29] uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none pt-0.5 pb-1">
+          <span className="text-[11px] font-bold text-[#003d29] uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1">
             <Compass className="w-3.5 h-3.5 text-[#003d29]" />
-            <span>Asal Daerah:</span>
+            <span>Daerah:</span>
           </span>
           {NUSANTARA_ORIGIN_TABS.map((tab) => {
             const isSelected = originParam === tab.city;
@@ -218,10 +218,10 @@ function ShopcartCatalogContent() {
               <button
                 key={tab.id || 'all-origin'}
                 onClick={() => updateParam('origin', tab.city || null)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border shrink-0 ${
+                className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border shrink-0 ${
                   isSelected
                     ? 'bg-[#003d29] text-white border-[#003d29] shadow-2xs'
-                    : 'bg-[#FAF9F5] text-gray-700 border-gray-200 hover:border-gray-400'
+                    : 'bg-[#FAF9F5] text-stone-700 border-stone-200 hover:border-stone-400'
                 }`}
               >
                 {tab.label}
@@ -231,9 +231,9 @@ function ShopcartCatalogContent() {
         </div>
 
         {/* Filter Cepat: Rentang Harga, Rating, & Layanan (Feature 3) */}
-        <div className="bg-[#FAF9F5] border border-stone-200 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-bold text-gray-700 flex items-center gap-1.5 mr-1">
+        <div className="bg-[#FAF9F5] border border-stone-200 rounded-xl p-2.5 sm:p-3 flex flex-wrap items-center justify-between gap-2 sm:gap-3 text-xs">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <span className="text-[11px] font-bold text-stone-700 flex items-center gap-1 mr-0.5">
               <SlidersHorizontal className="w-3.5 h-3.5 text-[#003d29]" />
               <span>Filter:</span>
             </span>
@@ -242,12 +242,12 @@ function ShopcartCatalogContent() {
             <select
               value={priceRange}
               onChange={(e) => setPriceRange(e.target.value as any)}
-              className="bg-white border border-stone-200 text-gray-800 font-semibold px-2.5 py-1 rounded-lg text-xs outline-none focus:border-[#003d29] cursor-pointer"
+              className="bg-white border border-stone-200 text-stone-800 font-semibold px-2.5 py-1 rounded-lg text-xs outline-none focus:border-[#003d29] cursor-pointer"
             >
               <option value="all">Semua Harga</option>
-              <option value="under50k">&lt; Rp 50.000</option>
-              <option value="50k-150k">Rp 50.000 - Rp 150.000</option>
-              <option value="above150k">&gt; Rp 150.000</option>
+              <option value="under50k">&lt; Rp 50rb</option>
+              <option value="50k-150k">Rp 50rb - 150rb</option>
+              <option value="above150k">&gt; Rp 150rb</option>
             </select>
 
             {/* Rating Filter Pill */}
@@ -256,11 +256,11 @@ function ShopcartCatalogContent() {
               className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors flex items-center gap-1 ${
                 minRating === 4.5
                   ? 'bg-[#003d29] text-white border-[#003d29]'
-                  : 'bg-white text-gray-700 border-stone-200 hover:border-stone-400'
+                  : 'bg-white text-stone-700 border-stone-200 hover:border-stone-400'
               }`}
             >
               <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-              <span>Rating 4.5+</span>
+              <span>4.5+</span>
             </button>
 
             {/* Free Shipping Pill */}
@@ -269,7 +269,7 @@ function ShopcartCatalogContent() {
               className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors flex items-center gap-1 ${
                 freeShippingOnly
                   ? 'bg-[#003d29] text-white border-[#003d29]'
-                  : 'bg-white text-gray-700 border-stone-200 hover:border-stone-400'
+                  : 'bg-white text-stone-700 border-stone-200 hover:border-stone-400'
               }`}
             >
               <Truck className="w-3 h-3 text-[#003d29]" />
@@ -282,7 +282,7 @@ function ShopcartCatalogContent() {
               className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors flex items-center gap-1 ${
                 inStockOnly
                   ? 'bg-[#003d29] text-white border-[#003d29]'
-                  : 'bg-white text-gray-700 border-stone-200 hover:border-stone-400'
+                  : 'bg-white text-stone-700 border-stone-200 hover:border-stone-400'
               }`}
             >
               <Check className="w-3 h-3 text-emerald-600" />
@@ -297,26 +297,26 @@ function ShopcartCatalogContent() {
               className="text-[11px] font-bold text-stone-600 hover:text-[#003d29] underline flex items-center gap-1"
             >
               <RotateCcw className="w-3 h-3" />
-              <span>Reset Filter</span>
+              <span>Reset</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Products Grid (4 columns) */}
+      {/* Products Grid (2 columns on Mobile, 3 on Tablet, 4 on Desktop) */}
       {isLoading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 py-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-6 py-4">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="space-y-3 animate-pulse">
               <div className="aspect-square bg-[#F5F6F6] rounded-2xl" />
-              <div className="h-4 bg-gray-100 rounded w-3/4" />
-              <div className="h-3 bg-gray-100 rounded w-1/2" />
+              <div className="h-4 bg-stone-100 rounded w-3/4" />
+              <div className="h-3 bg-stone-100 rounded w-1/2" />
             </div>
           ))}
         </div>
       ) : displayedProducts.length === 0 ? (
-        <div className="py-24 text-center">
-          <p className="text-sm font-semibold text-gray-800">
+        <div className="py-20 text-center">
+          <p className="text-sm font-semibold text-stone-800">
             Tidak ada produk yang sesuai dengan kriteria filter kamu.
           </p>
           <div className="mt-3 flex items-center justify-center gap-3">
@@ -341,7 +341,7 @@ function ShopcartCatalogContent() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-6">
           {displayedProducts.map((product) => {
             const defaultVariant = product.variants?.[0];
             const price = Number(defaultVariant?.priceOverride || product.basePrice || 0);
@@ -353,13 +353,16 @@ function ShopcartCatalogContent() {
             const store = getProductStore(product);
 
             return (
-              <div key={product.id} className="group flex flex-col justify-between bg-white border border-stone-200 hover:border-stone-300 rounded-xl p-3.5 shadow-xs transition-colors">
+              <div
+                key={product.id}
+                className="group flex flex-col justify-between bg-white border border-stone-200 hover:border-stone-300 rounded-xl p-2.5 sm:p-4 shadow-xs transition-colors"
+              >
                 <div>
                   {/* Image Box with Wishlist Heart */}
-                  <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-lg flex items-center justify-center p-4 mb-3 overflow-hidden border border-stone-100">
+                  <div className="relative aspect-square w-full bg-[#F5F6F6] rounded-lg flex items-center justify-center p-2.5 sm:p-4 mb-2.5 sm:mb-3 overflow-hidden border border-stone-100">
                     <button
                       onClick={(e) => toggleWishlist(e, product)}
-                      className={`absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white shadow-xs flex items-center justify-center transition-colors z-10 border border-stone-200 ${
+                      className={`absolute top-2 right-2 w-7 h-7 rounded-full bg-white shadow-xs flex items-center justify-center transition-colors z-10 border border-stone-200 ${
                         isFav ? 'text-rose-600' : 'text-stone-400 hover:text-rose-600'
                       }`}
                       title="Simpan ke favorit"
@@ -380,17 +383,17 @@ function ShopcartCatalogContent() {
 
                   {/* Origin Badge & Category */}
                   <div className="flex items-center justify-between gap-1 mb-1">
-                    <span className="text-[11px] font-semibold text-[#003d29] bg-[#003d29]/8 px-2 py-0.5 rounded-md inline-flex items-center gap-1">
-                      <MapPin className="w-2.5 h-2.5 text-[#003d29]" />
-                      <span>{origin.badge}</span>
+                    <span className="text-[10px] sm:text-[11px] font-semibold text-[#003d29] bg-[#003d29]/8 px-1.5 sm:px-2 py-0.5 rounded-md inline-flex items-center gap-1 truncate max-w-full">
+                      <MapPin className="w-2.5 h-2.5 text-[#003d29] shrink-0" />
+                      <span className="truncate">{origin.badge}</span>
                     </span>
-                    <span className="text-[11px] text-stone-400 font-medium truncate">
+                    <span className="hidden sm:inline text-[11px] text-stone-400 font-medium truncate">
                       {product.category?.name}
                     </span>
                   </div>
 
                   {/* Store / Seller Name */}
-                  <div className="flex items-center gap-1 text-[11px] text-stone-500 font-medium mb-1">
+                  <div className="flex items-center gap-1 text-[10px] sm:text-[11px] text-stone-500 font-medium mb-1">
                     <Store className="w-3 h-3 text-[#003d29] shrink-0" />
                     <button
                       type="button"
@@ -406,28 +409,24 @@ function ShopcartCatalogContent() {
                     </button>
                   </div>
 
-                  {/* Title & Price */}
-                  <div className="flex items-start justify-between gap-2">
-                    <Link
-                      href={`/products/${product.slug}`}
-                      className="text-xs font-bold text-stone-900 group-hover:text-[#003d29] line-clamp-1 transition-colors"
-                    >
-                      {product.title}
-                    </Link>
-                    <span className="text-sm font-bold text-stone-900 whitespace-nowrap">
+                  {/* Title & Price (Stacked cleanly for mobile 2-col responsiveness) */}
+                  <Link
+                    href={`/products/${product.slug}`}
+                    className="text-xs font-bold text-stone-900 group-hover:text-[#003d29] line-clamp-2 transition-colors block leading-snug"
+                  >
+                    {product.title}
+                  </Link>
+
+                  <div className="mt-1">
+                    <span className="text-sm sm:text-base font-extrabold text-[#003d29] block">
                       {formatCurrency(price)}
                     </span>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-xs text-stone-500 line-clamp-1 mt-0.5">
-                    {product.description}
-                  </p>
-
                   {/* Rating */}
-                  <div className="flex items-center gap-1.5 mt-1 text-xs text-stone-500">
+                  <div className="flex items-center gap-1 mt-1 text-[11px] sm:text-xs text-stone-500">
                     <span className="font-bold text-stone-800">4.9</span>
-                    <div className="flex text-[#003d29] text-xs">
+                    <div className="flex text-amber-500 text-[10px] sm:text-xs">
                       {'★'.repeat(5)}
                     </div>
                     <span className="text-stone-400">(121)</span>
@@ -435,10 +434,10 @@ function ShopcartCatalogContent() {
                 </div>
 
                 {/* Add to Cart Button */}
-                <div className="pt-3 border-t border-stone-100 mt-2">
+                <div className="pt-2.5 sm:pt-3 border-t border-stone-100 mt-2.5">
                   <button
                     onClick={(e) => handleQuickAdd(e, product)}
-                    className={`w-full py-2 px-3 rounded-lg text-xs font-semibold border transition-colors flex items-center justify-center gap-1.5 ${
+                    className={`w-full py-2 px-2 sm:px-3 rounded-lg text-[11px] sm:text-xs font-semibold border transition-colors flex items-center justify-center gap-1 ${
                       addedSlug === product.slug
                         ? 'bg-[#003d29] text-white border-[#003d29]'
                         : 'border-stone-300 text-stone-800 hover:bg-[#003d29] hover:text-white hover:border-[#003d29]'
@@ -446,11 +445,11 @@ function ShopcartCatalogContent() {
                   >
                     {addedSlug === product.slug ? (
                       <>
-                        <Check className="w-3.5 h-3.5" />
-                        <span>Berhasil Masuk!</span>
+                        <Check className="w-3.5 h-3.5 shrink-0" />
+                        <span className="truncate">Tersimpan</span>
                       </>
                     ) : (
-                      <span>Masukkan Keranjang</span>
+                      <span className="truncate">+ Keranjang</span>
                     )}
                   </button>
                 </div>
