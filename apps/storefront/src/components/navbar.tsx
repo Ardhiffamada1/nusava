@@ -19,8 +19,11 @@ import {
   MapPin,
   CreditCard,
   LogOut,
-  ShieldCheck,
   HelpCircle,
+  Tag,
+  Star,
+  Truck,
+  ShieldCheck,
 } from 'lucide-react';
 import { useCartStore } from '../stores/cart-store';
 import { useAuthStore } from '../stores/auth-store';
@@ -54,7 +57,6 @@ export function Navbar() {
   const accountDropdownRef = useRef<HTMLDivElement>(null);
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Check persisted top bar dismissal state
   useEffect(() => {
     const isDismissed = sessionStorage.getItem('top_bar_dismissed');
     if (isDismissed === 'true') {
@@ -67,7 +69,6 @@ export function Navbar() {
     sessionStorage.setItem('top_bar_dismissed', 'true');
   };
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
@@ -87,7 +88,6 @@ export function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Search autocomplete with 200ms debounce
   useEffect(() => {
     if (!searchQuery.trim() || searchQuery.trim().length < 2) {
       setSearchSuggestions([]);
@@ -138,52 +138,30 @@ export function Navbar() {
     { name: 'Khas Surabaya', city: 'Surabaya' },
   ];
 
-  const displayName = user ? `${user.firstName}` : 'Akun Saya';
+  const displayName = user ? `${user.firstName}` : 'Budi';
   const fullName = user ? `${user.firstName} ${user.lastName || ''}`.trim() : 'Budi Santoso';
+  const userEmail = user?.email || 'budi.santoso@email.id';
   const initials = (user?.firstName?.[0] || 'B').toUpperCase();
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-stone-200 font-sans">
-      {/* 1. Top Marketplace Utility Bar */}
+      {/* 1. Simple Top Promo Bar */}
       {topBarVisible && (
-        <div className="bg-[#003d29] text-white text-xs py-1.5 sm:py-2 px-4 sm:px-6 lg:px-12 transition-all duration-300">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
-            {/* Left: Marketplace Quick Assurance Links */}
-            <div className="hidden md:flex items-center gap-4 text-white/90 text-[11px] shrink-0">
-              <span className="inline-flex items-center gap-1.5 font-medium">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37]" />
-                <span>100% Mitra UMKM Terverifikasi</span>
-              </span>
-              <span className="text-white/30">|</span>
-              <Link
-                href="/account?section=orders"
-                className="hover:text-[#F5E6C4] transition-colors font-medium"
-              >
-                Lacak Pesanan
-              </Link>
-            </div>
+        <div className="bg-[#003d29] text-white text-xs py-1.5 px-4 sm:px-6 lg:px-12">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+            <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-white/90 font-medium">
+              <ShieldCheck className="w-3.5 h-3.5 text-white" />
+              <span>100% Produk UMKM Nusantara Terkurasi</span>
+            </span>
 
-            {/* Center Promo Text */}
             <div className="text-left sm:text-center font-medium flex-1 text-[11px] sm:text-xs text-white truncate">
-              <span>Gratis Ongkir min. Rp150rb | </span>
-              <Link href="/products" className="underline font-bold text-[#F5E6C4] hover:text-white ml-0.5">
-                Klaim Voucher
+              <span>Gratis Ongkir se-Indonesia min. Rp150.000 | </span>
+              <Link href="/products" className="underline font-bold hover:text-white/80 ml-0.5">
+                Belanja Sekarang
               </Link>
             </div>
 
-            {/* Right: Help + Language Selector + Close Button */}
-            <div className="flex items-center gap-2 sm:gap-3 text-white/90 shrink-0">
-              <a
-                href="https://wa.me/6281234567890?text=Halo%20Layanan%20Pelanggan%20NUSAVA!"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden sm:inline-flex items-center gap-1 text-[11px] text-white/85 hover:text-white transition-colors"
-              >
-                <HelpCircle className="w-3.5 h-3.5 text-white/75" />
-                <span>Bantuan</span>
-              </a>
-
-              {/* Language Switcher Dropdown */}
+            <div className="flex items-center gap-2 text-white/90 shrink-0">
               <div className="relative" ref={langDropdownRef}>
                 <button
                   type="button"
@@ -196,14 +174,14 @@ export function Navbar() {
                 </button>
 
                 {langDropdownOpen && (
-                  <div className="absolute right-0 mt-1.5 w-36 bg-white text-gray-800 rounded-xl shadow-xl border border-stone-200 py-1.5 z-50 animate-in fade-in zoom-in-95">
+                  <div className="absolute right-0 mt-1.5 w-36 bg-white text-stone-800 rounded-xl shadow-xl border border-stone-200 py-1.5 z-50">
                     <button
                       type="button"
                       onClick={() => {
                         setLanguage('id');
                         setLangDropdownOpen(false);
                       }}
-                      className={`w-full px-3 py-2 text-left text-xs flex items-center justify-between hover:bg-stone-50 transition-colors ${
+                      className={`w-full px-3 py-2 text-left text-xs flex items-center justify-between hover:bg-stone-50 ${
                         language === 'id' ? 'font-bold text-[#003d29] bg-stone-50' : 'text-stone-700'
                       }`}
                     >
@@ -216,7 +194,7 @@ export function Navbar() {
                         setLanguage('en');
                         setLangDropdownOpen(false);
                       }}
-                      className={`w-full px-3 py-2 text-left text-xs flex items-center justify-between hover:bg-stone-50 transition-colors ${
+                      className={`w-full px-3 py-2 text-left text-xs flex items-center justify-between hover:bg-stone-50 ${
                         language === 'en' ? 'font-bold text-[#003d29] bg-stone-50' : 'text-stone-700'
                       }`}
                     >
@@ -227,7 +205,6 @@ export function Navbar() {
                 )}
               </div>
 
-              {/* Dismiss (Close) Button */}
               <button
                 type="button"
                 onClick={dismissTopBar}
@@ -242,33 +219,30 @@ export function Navbar() {
         </div>
       )}
 
-      {/* 2. Main Marketplace Navigation Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-2.5 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-4 lg:gap-6">
-        {/* Brand Logo: NUSAVA Green & Gold Nusantara Emblem */}
-        <div className="flex items-center gap-2 shrink-0 min-w-0">
+      {/* 2. Simplified Main Navigation Bar: Logo + Kategori + Search + Actions */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-3 flex items-center justify-between gap-3 sm:gap-5">
+        {/* Left: NUSAVA Logo + Kategori Dropdown */}
+        <div className="flex items-center gap-3 sm:gap-5 shrink-0">
           <Link href="/" className="group focus:outline-none">
             <NusavaLogo size="md" showTagline={true} />
           </Link>
-        </div>
 
-        {/* Categories Dropdown + Marketplace Navigation */}
-        <nav className="hidden lg:flex items-center gap-5 text-xs font-semibold text-stone-700 shrink-0">
-          {/* Categories Dropdown */}
-          <div className="relative" ref={categoryDropdownRef}>
+          {/* Simple Kategori Button Dropdown */}
+          <div className="hidden lg:block relative" ref={categoryDropdownRef}>
             <button
               onClick={() => setCategoryOpen(!categoryOpen)}
               type="button"
-              className="flex items-center gap-1.5 px-3 py-2 bg-[#FAF9F5] hover:bg-stone-100 border border-stone-200 text-stone-800 rounded-lg transition-colors font-semibold"
+              className="flex items-center gap-1.5 px-3.5 py-2 hover:bg-[#FAF9F5] text-stone-700 hover:text-[#003d29] rounded-xl transition-colors text-xs font-semibold"
             >
               <span>Kategori</span>
               <ChevronDown className="w-3.5 h-3.5 text-stone-500" />
             </button>
 
             {categoryOpen && (
-              <div className="absolute left-0 mt-2 w-72 bg-white border border-stone-200 rounded-2xl shadow-xl p-3 z-50 animate-in fade-in zoom-in-95 space-y-3">
+              <div className="absolute left-0 mt-2 w-72 bg-white border border-stone-200 rounded-2xl shadow-xl p-3 z-50 space-y-3">
                 <div>
                   <span className="px-2.5 text-[10px] font-bold uppercase tracking-wider text-stone-400 block mb-1">
-                    Kategori Produk
+                    Kategori Pilihan
                   </span>
                   {categories.map((cat, idx) => (
                     <Link
@@ -284,7 +258,7 @@ export function Navbar() {
 
                 <div className="pt-2 border-t border-stone-100">
                   <span className="px-2.5 text-[10px] font-bold uppercase tracking-wider text-stone-400 block mb-1.5">
-                    Asal Daerah Populer
+                    Sentra Daerah Populer
                   </span>
                   <div className="grid grid-cols-2 gap-1 px-1">
                     {popularOrigins.map((orig) => (
@@ -300,27 +274,28 @@ export function Navbar() {
                     ))}
                   </div>
                 </div>
+
+                <div className="pt-2 border-t border-stone-100 px-2">
+                  <Link
+                    href="/products"
+                    onClick={() => setCategoryOpen(false)}
+                    className="text-xs font-bold text-[#003d29] hover:underline flex items-center justify-between py-1"
+                  >
+                    <span>Lihat Semua Katalog</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
             )}
           </div>
+        </div>
 
-          <Link href="/products" className="hover:text-[#003d29] transition-colors">
-            Semua Produk
-          </Link>
-          <Link href="/products?sortBy=popular" className="hover:text-[#003d29] transition-colors">
-            Terlaris
-          </Link>
-          <Link href="/#flash-sale" className="hover:text-[#003d29] transition-colors">
-            Kejar Diskon
-          </Link>
-        </nav>
-
-        {/* Center Search Input with Instant Autocomplete */}
-        <div className="flex-1 max-w-md hidden md:block relative" ref={searchContainerRef}>
+        {/* Center: Clean Wide Search Input */}
+        <div className="flex-1 max-w-xl hidden md:block relative" ref={searchContainerRef}>
           <form onSubmit={handleSearchSubmit} className="relative">
             <input
               type="text"
-              placeholder="Cari di NUSAVA: bakpia pathok, pie susu bali, kopi gayo..."
+              placeholder="Cari produk oleh-oleh, kopi gayo, batik, sambal..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -333,8 +308,8 @@ export function Navbar() {
             />
             <button
               type="submit"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-500 hover:text-[#003d29]"
-              title="Cari produk"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-500 hover:text-[#003d29]"
+              title="Cari"
             >
               <Search className="w-4 h-4" />
             </button>
@@ -342,7 +317,7 @@ export function Navbar() {
 
           {/* Autocomplete Search Results Dropdown */}
           {showSearchDropdown && searchQuery.trim().length >= 2 && (
-            <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-stone-200 rounded-2xl shadow-xl overflow-hidden z-50 animate-in fade-in zoom-in-95">
+            <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-stone-200 rounded-2xl shadow-xl overflow-hidden z-50">
               <div className="p-3 bg-stone-50 border-b border-stone-100 flex items-center justify-between text-xs">
                 <span className="font-semibold text-stone-600 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-[#003d29]" />
@@ -408,12 +383,12 @@ export function Navbar() {
           )}
         </div>
 
-        {/* Right Side: Wishlist, Cart, Transactions & Account Menu */}
-        <div className="flex items-center gap-1.5 sm:gap-3.5 shrink-0">
-          {/* Wishlist Link */}
+        {/* Right Side: Wishlist, Cart, & Profile Dropdown */}
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          {/* Wishlist */}
           <Link
             href="/wishlist"
-            className="flex items-center gap-1.5 text-xs font-semibold text-stone-700 hover:text-[#003d29] transition-colors relative p-1.5 sm:px-2 rounded-lg hover:bg-stone-50"
+            className="flex items-center gap-1.5 text-xs font-semibold text-stone-700 hover:text-[#003d29] transition-colors relative p-2 rounded-xl hover:bg-stone-50"
             title={isId ? 'Wishlist Saya' : 'My Wishlist'}
           >
             <div className="relative">
@@ -424,14 +399,14 @@ export function Navbar() {
                 </span>
               )}
             </div>
-            <span className="hidden xl:inline">{isId ? 'Wishlist' : 'Wishlist'}</span>
+            <span className="hidden lg:inline">Wishlist</span>
           </Link>
 
-          {/* Cart Button */}
+          {/* Keranjang */}
           <button
             onClick={() => openCart()}
             type="button"
-            className="flex items-center gap-1.5 text-xs font-semibold text-stone-700 hover:text-[#003d29] transition-colors relative p-1.5 sm:px-2 rounded-lg hover:bg-stone-50"
+            className="flex items-center gap-1.5 text-xs font-semibold text-stone-700 hover:text-[#003d29] transition-colors relative p-2 rounded-xl hover:bg-stone-50"
             title="Keranjang Belanja"
           >
             <div className="relative">
@@ -442,84 +417,180 @@ export function Navbar() {
                 </span>
               )}
             </div>
-            <span className="hidden xl:inline">Keranjang</span>
+            <span className="hidden lg:inline">Keranjang</span>
           </button>
 
-          {/* Transactions / Orders Quick Link */}
-          <Link
-            href="/account?section=orders"
-            className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-stone-700 hover:text-[#003d29] transition-colors py-1.5 px-2 rounded-lg hover:bg-stone-50"
-            title="Daftar Transaksi"
-          >
-            <Package className="w-5 h-5 text-stone-700" />
-            <span className="hidden xl:inline">Transaksi</span>
-          </Link>
+          <div className="hidden sm:block h-5 w-px bg-stone-200 mx-0.5" />
 
-          <div className="hidden sm:block h-5 w-px bg-stone-200" />
-
-          {/* Account Dropdown Menu */}
+          {/* Profile Button & Expanded Marketplace Profile Dropdown */}
           <div className="relative" ref={accountDropdownRef}>
             <button
               type="button"
               onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
-              className="flex items-center gap-2 py-1.5 px-2.5 rounded-xl border border-stone-200 hover:border-stone-300 bg-[#FAF9F5] hover:bg-stone-100 transition-colors text-xs font-semibold text-stone-800"
+              className="flex items-center gap-2 py-1.5 px-2 sm:px-2.5 rounded-xl border border-stone-200 hover:border-stone-300 bg-white hover:bg-[#FAF9F5] transition-colors text-xs font-semibold text-stone-800"
             >
-              <span className="w-6 h-6 rounded-full bg-[#003d29] text-[#D4AF37] font-bold text-[11px] flex items-center justify-center shrink-0">
+              {/* Initial 'B' Badge: Pure Green & White */}
+              <span className="w-6 h-6 rounded-full bg-[#003d29] text-white font-bold text-[11px] flex items-center justify-center shrink-0">
                 {initials}
               </span>
-              <span className="hidden sm:inline max-w-[100px] truncate">{displayName}</span>
+              <span className="hidden sm:inline max-w-[96px] truncate">{displayName}</span>
               <ChevronDown className="w-3.5 h-3.5 text-stone-500 hidden sm:inline" />
             </button>
 
             {accountDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-64 bg-white border border-stone-200 rounded-2xl shadow-xl p-2 z-50 animate-in fade-in zoom-in-95">
-                {/* User Mini Card */}
-                <div className="p-3 bg-[#FAF9F5] rounded-xl border border-stone-200/80 mb-1.5 flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-[#003d29] text-[#D4AF37] font-extrabold text-sm flex items-center justify-center shrink-0">
+              <div className="absolute right-0 mt-2 w-76 bg-white border border-stone-200 rounded-2xl shadow-xl p-3 z-50 space-y-2.5">
+                {/* 1. User Profile Header Card */}
+                <Link
+                  href="/account?section=profile"
+                  onClick={() => setAccountDropdownOpen(false)}
+                  className="p-3 bg-[#FAF9F5] hover:bg-stone-100/80 rounded-xl border border-stone-200/80 flex items-center gap-3 transition-colors"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[#003d29] text-white font-extrabold text-sm flex items-center justify-center shrink-0">
                     {initials}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-bold text-stone-900 truncate">{fullName}</p>
-                    <p className="text-[10px] text-[#003d29] font-semibold">Member Setia NUSAVA</p>
+                    <p className="text-xs font-extrabold text-stone-900 truncate">{fullName}</p>
+                    <p className="text-[11px] text-stone-500 truncate">{userEmail}</p>
+                    <span className="inline-flex items-center gap-1 text-[10px] text-[#003d29] font-bold mt-0.5">
+                      <ShieldCheck className="w-3 h-3 text-[#003d29]" />
+                      <span>Member Setia NUSAVA</span>
+                    </span>
                   </div>
-                </div>
+                </Link>
 
-                <div className="space-y-0.5 text-xs font-medium text-stone-700">
-                  <Link
-                    href="/account?section=profile"
-                    onClick={() => setAccountDropdownOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
-                  >
-                    <User className="w-4 h-4 text-stone-500" />
-                    <span>Biodata Diri (Profil)</span>
-                  </Link>
-                  <Link
-                    href="/account?section=addresses"
-                    onClick={() => setAccountDropdownOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
-                  >
-                    <MapPin className="w-4 h-4 text-stone-500" />
-                    <span>Daftar Alamat</span>
-                  </Link>
+                {/* 2. Quick Wallet & Voucher Summary Strip */}
+                <div className="grid grid-cols-2 gap-2">
                   <Link
                     href="/account?section=payments"
                     onClick={() => setAccountDropdownOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
+                    className="p-2.5 rounded-xl border border-stone-200 hover:border-[#003d29] bg-white transition-colors"
                   >
-                    <CreditCard className="w-4 h-4 text-stone-500" />
-                    <span>Pembayaran Tersimpan</span>
+                    <span className="text-[10px] text-stone-400 font-semibold block">Pembayaran</span>
+                    <span className="text-xs font-bold text-stone-900 flex items-center gap-1 mt-0.5">
+                      <CreditCard className="w-3.5 h-3.5 text-[#003d29]" />
+                      <span className="truncate">BCA VA & GoPay</span>
+                    </span>
                   </Link>
+
                   <Link
-                    href="/account?section=orders"
+                    href="/account?section=vouchers"
                     onClick={() => setAccountDropdownOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
+                    className="p-2.5 rounded-xl border border-stone-200 hover:border-[#003d29] bg-white transition-colors"
                   >
-                    <Package className="w-4 h-4 text-stone-500" />
-                    <span>Daftar Transaksi</span>
+                    <span className="text-[10px] text-stone-400 font-semibold block">Voucher Promo</span>
+                    <span className="text-xs font-bold text-[#003d29] flex items-center gap-1 mt-0.5">
+                      <Tag className="w-3.5 h-3.5 text-[#003d29]" />
+                      <span>3 Kupon Aktif</span>
+                    </span>
                   </Link>
                 </div>
 
-                <div className="mt-1.5 pt-1.5 border-t border-stone-100">
+                {/* 3. Comprehensive Feature List */}
+                <div className="space-y-0.5 text-xs font-medium text-stone-700 pt-1 border-t border-stone-100">
+                  <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-stone-400 block">
+                    Aktivitas & Pesanan
+                  </span>
+                  <Link
+                    href="/account?section=orders"
+                    onClick={() => setAccountDropdownOpen(false)}
+                    className="flex items-center justify-between px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <Package className="w-4 h-4 text-stone-500" />
+                      <span>Daftar Transaksi & Pesanan</span>
+                    </span>
+                    <span className="text-[10px] font-bold bg-[#003d29]/10 text-[#003d29] px-1.5 py-0.5 rounded">
+                      2
+                    </span>
+                  </Link>
+
+                  <Link
+                    href="/account?section=orders"
+                    onClick={() => setAccountDropdownOpen(false)}
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
+                  >
+                    <Truck className="w-4 h-4 text-stone-500" />
+                    <span>Lacak Pengiriman Paket</span>
+                  </Link>
+
+                  <Link
+                    href="/account?section=reviews"
+                    onClick={() => setAccountDropdownOpen(false)}
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
+                  >
+                    <Star className="w-4 h-4 text-stone-500" />
+                    <span>Ulasan Produk Saya</span>
+                  </Link>
+
+                  <Link
+                    href="/wishlist"
+                    onClick={() => setAccountDropdownOpen(false)}
+                    className="flex items-center justify-between px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <Heart className="w-4 h-4 text-stone-500" />
+                      <span>Wishlist & Produk Favorit</span>
+                    </span>
+                    {wishlistCount > 0 && (
+                      <span className="text-[10px] font-bold bg-rose-50 text-rose-600 px-1.5 py-0.5 rounded">
+                        {wishlistCount}
+                      </span>
+                    )}
+                  </Link>
+                </div>
+
+                <div className="space-y-0.5 text-xs font-medium text-stone-700 pt-1.5 border-t border-stone-100">
+                  <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-stone-400 block">
+                    Pengaturan Akun
+                  </span>
+                  <Link
+                    href="/account?section=profile"
+                    onClick={() => setAccountDropdownOpen(false)}
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
+                  >
+                    <User className="w-4 h-4 text-stone-500" />
+                    <span>Biodata Diri (Ubah Nama & Profil)</span>
+                  </Link>
+
+                  <Link
+                    href="/account?section=addresses"
+                    onClick={() => setAccountDropdownOpen(false)}
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
+                  >
+                    <MapPin className="w-4 h-4 text-stone-500" />
+                    <span>Daftar Alamat Pengiriman</span>
+                  </Link>
+
+                  <Link
+                    href="/account?section=payments"
+                    onClick={() => setAccountDropdownOpen(false)}
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
+                  >
+                    <CreditCard className="w-4 h-4 text-stone-500" />
+                    <span>Pembayaran & Rekening Tersimpan</span>
+                  </Link>
+
+                  <Link
+                    href="/account?section=vouchers"
+                    onClick={() => setAccountDropdownOpen(false)}
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
+                  >
+                    <Tag className="w-4 h-4 text-stone-500" />
+                    <span>Voucher & Kupon Promo Saya</span>
+                  </Link>
+
+                  <Link
+                    href="/account?section=help"
+                    onClick={() => setAccountDropdownOpen(false)}
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
+                  >
+                    <HelpCircle className="w-4 h-4 text-stone-500" />
+                    <span>Pusat Bantuan & Komplain</span>
+                  </Link>
+                </div>
+
+                {/* 4. Sign Out / Login Footer */}
+                <div className="pt-2 border-t border-stone-100 flex items-center justify-between gap-2">
                   {user ? (
                     <button
                       type="button"
@@ -528,7 +599,7 @@ export function Navbar() {
                         logout();
                         router.push('/');
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors"
+                      className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors"
                     >
                       <LogOut className="w-4 h-4" />
                       <span>Keluar Akun</span>
@@ -537,7 +608,7 @@ export function Navbar() {
                     <Link
                       href="/login"
                       onClick={() => setAccountDropdownOpen(false)}
-                      className="w-full flex items-center justify-center py-2 px-3 rounded-lg bg-[#003d29] text-white text-xs font-bold hover:bg-[#002b1c] transition-colors"
+                      className="w-full flex items-center justify-center py-2 px-3 rounded-xl bg-[#003d29] text-white text-xs font-bold hover:bg-[#002b1c] transition-colors"
                     >
                       Masuk / Daftar Akun
                     </Link>
@@ -581,28 +652,12 @@ export function Navbar() {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-stone-100 px-6 py-4 space-y-4 animate-in slide-in-from-top duration-200">
-          <form onSubmit={handleSearchSubmit} className="relative">
-            <input
-              type="text"
-              placeholder="Cari di NUSAVA..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-10 py-2.5 bg-[#F5F6F6] border border-stone-200 rounded-xl text-xs text-stone-800 outline-none"
-            />
-            <button
-              type="submit"
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-500"
-            >
-              <Search className="w-4 h-4" />
-            </button>
-          </form>
-
-          <div className="grid grid-cols-2 gap-2 pt-1 text-xs font-semibold text-stone-700">
+        <div className="lg:hidden bg-white border-t border-stone-100 px-4 py-4 space-y-4">
+          <div className="grid grid-cols-2 gap-2 text-xs font-semibold text-stone-700">
             <Link
               href="/account?section=profile"
               onClick={() => setMobileMenuOpen(false)}
-              className="p-2.5 rounded-lg bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+              className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
             >
               <User className="w-4 h-4 text-[#003d29]" />
               <span>Profil Saya</span>
@@ -610,7 +665,7 @@ export function Navbar() {
             <Link
               href="/account?section=orders"
               onClick={() => setMobileMenuOpen(false)}
-              className="p-2.5 rounded-lg bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+              className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
             >
               <Package className="w-4 h-4 text-[#003d29]" />
               <span>Transaksi</span>
@@ -618,7 +673,7 @@ export function Navbar() {
             <Link
               href="/account?section=addresses"
               onClick={() => setMobileMenuOpen(false)}
-              className="p-2.5 rounded-lg bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+              className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
             >
               <MapPin className="w-4 h-4 text-[#003d29]" />
               <span>Daftar Alamat</span>
@@ -626,10 +681,26 @@ export function Navbar() {
             <Link
               href="/account?section=payments"
               onClick={() => setMobileMenuOpen(false)}
-              className="p-2.5 rounded-lg bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+              className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
             >
               <CreditCard className="w-4 h-4 text-[#003d29]" />
               <span>Pembayaran</span>
+            </Link>
+            <Link
+              href="/account?section=vouchers"
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+            >
+              <Tag className="w-4 h-4 text-[#003d29]" />
+              <span>Voucher Promo</span>
+            </Link>
+            <Link
+              href="/account?section=reviews"
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+            >
+              <Star className="w-4 h-4 text-[#003d29]" />
+              <span>Ulasan Saya</span>
             </Link>
           </div>
 

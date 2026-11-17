@@ -33,6 +33,9 @@ import {
   Phone,
   Mail,
   Calendar,
+  Tag,
+  Copy,
+  HelpCircle,
 } from 'lucide-react';
 import { apiRequest } from '../../lib/api';
 import { useAuthStore } from '../../stores/auth-store';
@@ -40,7 +43,8 @@ import { useCartStore } from '../../stores/cart-store';
 import { useLanguageStore } from '../../stores/language-store';
 import { formatCurrency, formatDate, formatDateTime } from '@commerceos/ui';
 
-type AccountSection = 'profile' | 'addresses' | 'payments' | 'orders';
+type AccountSection = 'profile' | 'addresses' | 'payments' | 'orders' | 'vouchers' | 'reviews' | 'help';
+const VALID_SECTIONS: AccountSection[] = ['profile', 'addresses', 'payments', 'orders', 'vouchers', 'reviews', 'help'];
 
 interface SavedAddress {
   id: string;
@@ -149,14 +153,15 @@ function AccountCenterContent() {
   // Active Section State (synced with ?section= query parameter)
   const initialSectionParam = searchParams.get('section') as AccountSection | null;
   const [activeSection, setActiveSection] = useState<AccountSection>(
-    initialSectionParam && ['profile', 'addresses', 'payments', 'orders'].includes(initialSectionParam)
+    initialSectionParam && VALID_SECTIONS.includes(initialSectionParam)
       ? initialSectionParam
       : 'profile',
   );
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   useEffect(() => {
     const param = searchParams.get('section') as AccountSection | null;
-    if (param && ['profile', 'addresses', 'payments', 'orders'].includes(param)) {
+    if (param && VALID_SECTIONS.includes(param)) {
       setActiveSection(param);
     }
   }, [searchParams]);
@@ -588,6 +593,9 @@ function AccountCenterContent() {
     addresses: 'Daftar Alamat',
     payments: 'Pembayaran Tersimpan',
     orders: 'Daftar Transaksi',
+    vouchers: 'Voucher & Kupon Promo',
+    reviews: 'Ulasan Produk Saya',
+    help: 'Pusat Bantuan',
   };
 
   return (
@@ -630,7 +638,7 @@ function AccountCenterContent() {
           {/* User Summary Card */}
           <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-5 shadow-2xs space-y-3.5 sm:space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#003d29] text-[#D4AF37] border border-[#C5A059]/60 font-extrabold text-base sm:text-lg flex items-center justify-center shrink-0">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#003d29] text-white font-extrabold text-base sm:text-lg flex items-center justify-center shrink-0">
                 {initials}
               </div>
               <div className="min-w-0 flex-1">
@@ -658,7 +666,7 @@ function AccountCenterContent() {
               </div>
             </div>
 
-            {/* Navigation Menu (2x2 Grid on Mobile, Vertical Stack on Desktop) */}
+            {/* Navigation Menu (Grid on Mobile, Vertical Stack on Desktop) */}
             <nav className="pt-3 border-t border-stone-100 grid grid-cols-2 lg:flex lg:flex-col gap-1.5 lg:gap-1">
               <button
                 type="button"
@@ -672,6 +680,30 @@ function AccountCenterContent() {
                 <span className="flex items-center gap-2 truncate">
                   <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                   <span className="truncate">Profil Saya</span>
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => switchSection('orders')}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
+                  activeSection === 'orders'
+                    ? 'bg-[#003d29] text-white shadow-2xs'
+                    : 'bg-[#FAF9F5] lg:bg-transparent text-stone-700 hover:bg-[#FAF9F5] hover:text-[#003d29]'
+                }`}
+              >
+                <span className="flex items-center gap-2 truncate">
+                  <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <span className="truncate">Transaksi</span>
+                </span>
+                <span
+                  className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${
+                    activeSection === 'orders'
+                      ? 'bg-white/20 text-white'
+                      : 'bg-stone-200/70 text-stone-600'
+                  }`}
+                >
+                  {rawOrders.length}
                 </span>
               </button>
 
@@ -725,25 +757,55 @@ function AccountCenterContent() {
 
               <button
                 type="button"
-                onClick={() => switchSection('orders')}
+                onClick={() => switchSection('vouchers')}
                 className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
-                  activeSection === 'orders'
+                  activeSection === 'vouchers'
                     ? 'bg-[#003d29] text-white shadow-2xs'
                     : 'bg-[#FAF9F5] lg:bg-transparent text-stone-700 hover:bg-[#FAF9F5] hover:text-[#003d29]'
                 }`}
               >
                 <span className="flex items-center gap-2 truncate">
-                  <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                  <span className="truncate">Transaksi</span>
+                  <Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <span className="truncate">Voucher Promo</span>
                 </span>
                 <span
                   className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${
-                    activeSection === 'orders'
+                    activeSection === 'vouchers'
                       ? 'bg-white/20 text-white'
                       : 'bg-stone-200/70 text-stone-600'
                   }`}
                 >
-                  {rawOrders.length}
+                  3
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => switchSection('reviews')}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
+                  activeSection === 'reviews'
+                    ? 'bg-[#003d29] text-white shadow-2xs'
+                    : 'bg-[#FAF9F5] lg:bg-transparent text-stone-700 hover:bg-[#FAF9F5] hover:text-[#003d29]'
+                }`}
+              >
+                <span className="flex items-center gap-2 truncate">
+                  <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <span className="truncate">Ulasan Saya</span>
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => switchSection('help')}
+                className={`col-span-2 lg:col-span-1 w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
+                  activeSection === 'help'
+                    ? 'bg-[#003d29] text-white shadow-2xs'
+                    : 'bg-[#FAF9F5] lg:bg-transparent text-stone-700 hover:bg-[#FAF9F5] hover:text-[#003d29]'
+                }`}
+              >
+                <span className="flex items-center gap-2 truncate">
+                  <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <span className="truncate">Pusat Bantuan & Komplain</span>
                 </span>
               </button>
             </nav>
@@ -808,7 +870,7 @@ function AccountCenterContent() {
                   {/* Left: Profile Avatar Card */}
                   <div className="md:col-span-4 bg-[#FAF9F5] border border-stone-200 rounded-2xl p-4 sm:p-5 text-center space-y-3 sm:space-y-4">
                     <div className="flex items-center gap-3.5 md:flex-col text-left md:text-center">
-                      <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-[#003d29] text-[#D4AF37] border-2 border-[#C5A059] font-extrabold text-2xl md:text-3xl flex items-center justify-center shrink-0 md:mx-auto shadow-xs">
+                      <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-[#003d29] text-white font-extrabold text-2xl md:text-3xl flex items-center justify-center shrink-0 md:mx-auto shadow-xs">
                         {initials}
                       </div>
                       <div className="min-w-0 flex-1">
@@ -1653,6 +1715,246 @@ function AccountCenterContent() {
                   })}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* =====================================================================
+              SECTION 5: VOUCHER & KUPON PROMO SAYA
+          ===================================================================== */}
+          {activeSection === 'vouchers' && (
+            <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xs space-y-5 sm:space-y-6">
+              <div className="pb-4 border-b border-stone-100">
+                <h1 className="text-lg sm:text-2xl font-extrabold text-stone-900 tracking-tight">
+                  Voucher & Kupon Promo Saya
+                </h1>
+                <p className="text-xs text-stone-500 mt-0.5">
+                  Salin kode voucher aktif di bawah ini dan gunakan pada halaman Keranjang atau Pembayaran (Checkout).
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  {
+                    code: 'NUSANTARA',
+                    title: 'Diskon Spesial 15% Karya Nusantara',
+                    desc: 'Potongan harga 15% (maks. Rp50.000) untuk seluruh produk oleh-oleh, kopi, batik, dan kriya.',
+                    minSpend: 'Min. belanja Rp100.000',
+                    validUntil: 'Berlaku s/d 31 Desember 2026',
+                  },
+                  {
+                    code: 'ONGKIRGRATIS',
+                    title: 'Subsidi Bebas Ongkir Nasional',
+                    desc: 'Gratis ongkos kirim hingga Rp25.000 untuk pengiriman JNE, J&T, dan SiCepat ke seluruh Indonesia.',
+                    minSpend: 'Min. belanja Rp150.000',
+                    validUntil: 'Berlaku setiap hari',
+                  },
+                  {
+                    code: 'OLEHOLEH10',
+                    title: 'Potongan Langsung Rp10.000 Kuliner Daerah',
+                    desc: 'Hemat Rp10.000 khusus kategori Oleh-oleh & Makanan Khas Daerah (Bakpia, Pie Susu, Sambal).',
+                    minSpend: 'Min. belanja Rp75.000',
+                    validUntil: 'Berlaku untuk semua metode bayar',
+                  },
+                ].map((v) => (
+                  <div
+                    key={v.code}
+                    className="p-4 sm:p-5 rounded-2xl border border-stone-200 bg-[#FAF9F5] flex flex-col justify-between space-y-4"
+                  >
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="inline-flex items-center gap-1.5 bg-[#003d29] text-white text-xs font-mono font-bold px-2.5 py-1 rounded-lg">
+                          <Tag className="w-3.5 h-3.5" />
+                          <span>{v.code}</span>
+                        </span>
+                        <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                          Siap Pakai
+                        </span>
+                      </div>
+                      <h3 className="text-sm font-extrabold text-stone-900 pt-1">{v.title}</h3>
+                      <p className="text-xs text-stone-600 leading-relaxed">{v.desc}</p>
+                    </div>
+
+                    <div className="pt-3 border-t border-stone-200/80 flex items-center justify-between gap-2 text-xs">
+                      <div className="text-[11px] text-stone-500">
+                        <span className="font-semibold text-stone-700 block">{v.minSpend}</span>
+                        <span>{v.validUntil}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (typeof navigator !== 'undefined') {
+                            navigator.clipboard.writeText(v.code);
+                            setCopiedCode(v.code);
+                            setTimeout(() => setCopiedCode(null), 2000);
+                          }
+                        }}
+                        className="px-3.5 py-2 bg-white hover:bg-[#003d29] hover:text-white text-[#003d29] border border-stone-200 font-bold rounded-xl transition-colors flex items-center gap-1.5 shrink-0"
+                      >
+                        {copiedCode === v.code ? (
+                          <>
+                            <Check className="w-3.5 h-3.5" />
+                            <span>Tersalin</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5" />
+                            <span>Salin Kode</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* =====================================================================
+              SECTION 6: ULASAN PRODUK SAYA
+          ===================================================================== */}
+          {activeSection === 'reviews' && (
+            <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xs space-y-5 sm:space-y-6">
+              <div className="pb-4 border-b border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h1 className="text-lg sm:text-2xl font-extrabold text-stone-900 tracking-tight">
+                    Ulasan Produk Saya
+                  </h1>
+                  <p className="text-xs text-stone-500 mt-0.5">
+                    Riwayat penilaian dan testimoni yang Anda berikan untuk produk UMKM di NUSAVA.
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {[
+                  {
+                    id: 'my-rev-1',
+                    productTitle: 'Bakpia Pathok 25 Asli Khas Yogyakarta (Isi 15 Pcs)',
+                    slug: 'bakpia-pathok-25-yogyakarta',
+                    image: 'https://upload.wikimedia.org/wikipedia/commons/2/27/Bakpia_pathuk.jpg',
+                    date: '6 Juni 2024',
+                    rating: 5,
+                    tags: ['Rasa Otentik Khas Daerah', 'Kemasan Rapi & Tebal'],
+                    comment:
+                      'Paket mendarat dengan sangat aman di Jakarta. Bakpia masih hangat dan lembut, kulitnya berlapis renyah persis seperti beli langsung di Jogja!',
+                  },
+                  {
+                    id: 'my-rev-2',
+                    productTitle: 'Kopi Arabika Gayo Aceh Specialty Single Origin 250g',
+                    slug: 'kopi-arabika-gayo-aceh',
+                    image: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Biji_Kopi.jpg',
+                    date: '31 Mei 2024',
+                    rating: 5,
+                    tags: ['Fresh Langsung dari Dapur', 'Pengiriman Tepat Waktu'],
+                    comment:
+                      'Aroma biji kopinya luar biasa harum begitu kemasan dibuka. Roast date masih sangat baru dan cocok untuk seduhan V60 setiap pagi.',
+                  },
+                ].map((rev) => (
+                  <div
+                    key={rev.id}
+                    className="p-4 sm:p-5 rounded-2xl border border-stone-200 bg-[#FAF9F5] space-y-3 text-xs"
+                  >
+                    <div className="flex items-center justify-between gap-3 pb-3 border-b border-stone-200/70">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="relative w-12 h-12 rounded-xl bg-white border border-stone-200 overflow-hidden shrink-0">
+                          <Image
+                            src={rev.image}
+                            alt={rev.productTitle}
+                            fill
+                            className="object-contain p-1"
+                            sizes="48px"
+                          />
+                        </div>
+                        <div className="min-w-0">
+                          <Link
+                            href={`/products/${rev.slug}`}
+                            className="font-bold text-stone-900 hover:text-[#003d29] truncate block"
+                          >
+                            {rev.productTitle}
+                          </Link>
+                          <span className="text-[11px] text-stone-400">Diulas pada {rev.date}</span>
+                        </div>
+                      </div>
+                      <div className="flex text-amber-500 text-xs shrink-0">
+                        {'★'.repeat(rev.rating)}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1.5">
+                      {rev.tags.map((t) => (
+                        <span
+                          key={t}
+                          className="text-[10px] font-semibold bg-white border border-stone-200 text-stone-700 px-2.5 py-0.5 rounded-md"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+
+                    <p className="text-stone-700 leading-relaxed">{rev.comment}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* =====================================================================
+              SECTION 7: PUSAT BANTUAN & KOMPLAIN PESANAN
+          ===================================================================== */}
+          {activeSection === 'help' && (
+            <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xs space-y-6">
+              <div className="pb-4 border-b border-stone-100">
+                <h1 className="text-lg sm:text-2xl font-extrabold text-stone-900 tracking-tight">
+                  Pusat Bantuan & Komplain Pesanan
+                </h1>
+                <p className="text-xs text-stone-500 mt-0.5">
+                  Layanan perlindungan pembeli NUSAVA siap membantu kendala pengiriman, klaim garansi produk rusak, dan pengembalian dana.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                <div className="p-4 rounded-xl bg-[#FAF9F5] border border-stone-200 space-y-2">
+                  <Truck className="w-5 h-5 text-[#003d29]" />
+                  <h3 className="font-bold text-stone-900">Kendala Kurir & Resi</h3>
+                  <p className="text-stone-500 leading-relaxed">
+                    Paket terlambat atau status resi belum bergerak lebih dari 24 jam.
+                  </p>
+                </div>
+                <div className="p-4 rounded-xl bg-[#FAF9F5] border border-stone-200 space-y-2">
+                  <RotateCcw className="w-5 h-5 text-[#003d29]" />
+                  <h3 className="font-bold text-stone-900">Klaim Garansi Ganti Baru</h3>
+                  <p className="text-stone-500 leading-relaxed">
+                    Penggantian 100% gratis jika makanan tiba dalam kondisi basi atau kemasan hancur.
+                  </p>
+                </div>
+                <div className="p-4 rounded-xl bg-[#FAF9F5] border border-stone-200 space-y-2">
+                  <CreditCard className="w-5 h-5 text-[#003d29]" />
+                  <h3 className="font-bold text-stone-900">Pencairan Refund Instan</h3>
+                  <p className="text-stone-500 leading-relaxed">
+                    Dana pengembalian langsung ditransfer ke rekening utama yang tersimpan di akun Anda.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-[#FAF9F5] border border-stone-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="space-y-1 text-xs">
+                  <h3 className="text-sm font-extrabold text-stone-900">
+                    Hubungi Concierge WhatsApp Resmi NUSAVA
+                  </h3>
+                  <p className="text-stone-500">
+                    Sertakan nomor pesanan dan foto kondisi paket untuk penanganan prioritas dalam 15 menit.
+                  </p>
+                </div>
+                <a
+                  href="https://wa.me/6281234567890?text=Halo%20Layanan%20Pelanggan%20NUSAVA,%20saya%20ingin%20mengajukan%20bantuan%20pesanan."
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full sm:w-auto justify-center px-5 py-2.5 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-2 shrink-0"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Hubungi via WhatsApp</span>
+                </a>
+              </div>
             </div>
           )}
         </main>
