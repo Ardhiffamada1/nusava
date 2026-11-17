@@ -2,13 +2,51 @@
 
 import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RegisterDto, RegisterDtoSchema } from '@commerceos/contracts';
 import { apiRequest } from '../../lib/api';
 import { useAuthStore } from '../../stores/auth-store';
-import { ArrowRight, AlertCircle, ShoppingBag } from 'lucide-react';
+import { NusavaLogo } from '../../components/nusava-logo';
+import {
+  ArrowRight,
+  AlertCircle,
+  User,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  ShieldCheck,
+  Tag,
+  Truck,
+  CheckCircle2,
+  Info,
+} from 'lucide-react';
+
+function GoogleLogoSvg() {
+  return (
+    <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="#4285F4"
+        d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82Z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24Z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.98-3.09Z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96Z"
+      />
+    </svg>
+  );
+}
 
 function RegisterContent() {
   const router = useRouter();
@@ -17,6 +55,8 @@ function RegisterContent() {
 
   const setUser = useAuthStore((s) => s.setUser);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [googleNotice, setGoogleNotice] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -31,6 +71,7 @@ function RegisterContent() {
     try {
       setIsSubmitting(true);
       setErrorMessage(null);
+      setGoogleNotice(false);
 
       const res = await apiRequest<{ user: any }>('/auth/register', {
         method: 'POST',
@@ -40,102 +81,257 @@ function RegisterContent() {
       setUser(res.user);
       router.push(redirect);
     } catch (err: any) {
-      setErrorMessage(err.message || 'Pendaftaran gagal, coba periksa data Anda kembali.');
+      setErrorMessage(err.message || 'Pendaftaran gagal, silakan periksa kembali data Anda.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto px-6 py-14">
-      <div className="bg-white p-8 rounded-2xl border border-stone-200 shadow-xs">
-        <div className="text-center mb-6">
-          <div className="w-12 h-12 mx-auto rounded-xl bg-[#FCF0E4] flex items-center justify-center text-[#003d29] mb-3">
-            <ShoppingBag className="w-6 h-6" />
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-14 font-sans">
+      <div className="grid grid-cols-1 lg:grid-cols-12 bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-xs">
+        {/* LEFT COLUMN: Nusantara Brand Showcase & Member Perks */}
+        <div className="lg:col-span-6 bg-[#FAF9F5] border-b lg:border-b-0 lg:border-r border-stone-200 p-6 sm:p-10 lg:p-12 flex flex-col justify-between space-y-8">
+          <div className="space-y-6">
+            <Link href="/" className="inline-block focus:outline-none">
+              <NusavaLogo size="md" showTagline={true} />
+            </Link>
+
+            <div className="space-y-2.5 pt-2">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#003d29] bg-[#003d29]/10 px-2.5 py-1 rounded-md">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#003d29]" />
+                <span>Keanggotaan Gratis NUSAVA</span>
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight leading-snug">
+                Gabung dan Dukung Ribuan Pengrajin & UMKM Nusantara
+              </h2>
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
+                Buat akun dalam hitungan detik untuk mendapatkan akses ke voucher diskon pengguna baru, simpan alamat pengiriman, serta lacak pesanan Anda secara real-time.
+              </p>
+            </div>
+
+            {/* Member Perks List */}
+            <div className="space-y-3.5 pt-2">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-white border border-stone-200 flex items-center justify-center shrink-0 mt-0.5">
+                  <Tag className="w-4 h-4 text-[#003d29]" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-stone-900">
+                    Paket Voucher Pengguna Baru (NUSANTARA 15%)
+                  </h3>
+                  <p className="text-[11px] text-stone-500 mt-0.5 leading-relaxed">
+                    Langsung dapatkan 3 kupon aktif termasuk potongan harga 15% dan gratis ongkir nasional.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-white border border-stone-200 flex items-center justify-center shrink-0 mt-0.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#003d29]" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-stone-900">
+                    Buku Alamat & Pembayaran Satu Klik
+                  </h3>
+                  <p className="text-[11px] text-stone-500 mt-0.5 leading-relaxed">
+                    Simpan banyak alamat pengiriman rumah, kantor, maupun kerabat untuk fitur kirim hadiah/dropship.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-white border border-stone-200 flex items-center justify-center shrink-0 mt-0.5">
+                  <Truck className="w-4 h-4 text-[#003d29]" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-stone-900">
+                    Garansi Kepuasan & Penggantian 100%
+                  </h3>
+                  <p className="text-[11px] text-stone-500 mt-0.5 leading-relaxed">
+                    Perlindungan penuh setiap transaksi terhadap risiko kerusakan selama perjalanan ekspedisi.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Daftar Akun Baru</h1>
-          <p className="text-xs text-gray-500 mt-1">
-            Simpan alamat pengiriman dan lacak kiriman oleh-oleh favoritmu.
-          </p>
+
+          {/* Bottom Visual Highlight */}
+          <div className="p-4 bg-white border border-stone-200 rounded-xl flex items-center gap-3.5">
+            <div className="relative w-14 h-14 rounded-lg overflow-hidden shrink-0 border border-stone-200 bg-[#F5F6F6]">
+              <Image
+                src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Batik_pedalaman_-_parang_klithik.JPG"
+                alt="Kriya & Kuliner Nusantara"
+                fill
+                className="object-cover"
+                sizes="56px"
+              />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-stone-900">
+                Satu Indonesia, Banyak Cerita.
+              </p>
+              <p className="text-[11px] text-stone-500 mt-0.5">
+                Menghubungkan dapur kuliner dan bengkel kriya daerah langsung ke rumah Anda.
+              </p>
+            </div>
+          </div>
         </div>
 
-        {errorMessage && (
-          <div className="mb-6 p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-lg flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
-            <span>{errorMessage}</span>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
+        {/* RIGHT COLUMN: Registration Form & Google Sign-Up */}
+        <div className="lg:col-span-6 p-6 sm:p-10 lg:p-12 flex flex-col justify-center">
+          <div className="max-w-md mx-auto w-full space-y-6">
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
-                Nama Depan
-              </label>
-              <input
-                type="text"
-                {...register('firstName')}
-                className="w-full text-sm p-3 border border-stone-200 bg-white rounded-lg focus:outline-hidden focus:border-[#003d29] transition-colors"
-                placeholder="Rian"
-              />
-              {errors.firstName && <p className="text-[11px] text-rose-600 mt-1">{errors.firstName.message}</p>}
+              <h1 className="text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight">
+                Buat Akun Baru
+              </h1>
+              <p className="text-xs text-stone-500 mt-1">
+                Sudah memiliki akun NUSAVA?{' '}
+                <Link
+                  href={`/login?redirect=${redirect}`}
+                  className="text-[#003d29] font-bold hover:underline"
+                >
+                  Masuk di sini
+                </Link>
+              </p>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
-                Nama Belakang
-              </label>
-              <input
-                type="text"
-                {...register('lastName')}
-                className="w-full text-sm p-3 border border-stone-200 bg-white rounded-lg focus:outline-hidden focus:border-[#003d29] transition-colors"
-                placeholder="Pratama"
-              />
-              {errors.lastName && <p className="text-[11px] text-rose-600 mt-1">{errors.lastName.message}</p>}
+            {/* Google Sign-Up Button (Visual Display Only) */}
+            <div className="space-y-2.5">
+              <button
+                type="button"
+                onClick={() => setGoogleNotice(true)}
+                className="w-full py-3 px-4 bg-white hover:bg-[#FAF9F5] border border-stone-300 rounded-xl text-xs font-bold text-stone-800 flex items-center justify-center gap-2.5 transition-colors shadow-2xs"
+              >
+                <GoogleLogoSvg />
+                <span>Daftar Cepat dengan Google</span>
+              </button>
+
+              {googleNotice && (
+                <div className="p-3 bg-[#FAF9F5] border border-stone-200 text-stone-700 text-[11px] rounded-xl flex items-start gap-2">
+                  <Info className="w-4 h-4 text-[#003d29] shrink-0 mt-0.5" />
+                  <span>
+                    Tombol <strong>Daftar dengan Google</strong> ditampilkan untuk pratinjau antarmuka. Silakan lengkapi formulir pendaftaran singkat di bawah ini.
+                  </span>
+                </div>
+              )}
             </div>
+
+            {/* Divider */}
+            <div className="relative flex items-center justify-center">
+              <div className="border-t border-stone-200 w-full" />
+              <span className="bg-white px-3 text-[10px] font-bold uppercase tracking-wider text-stone-400 whitespace-nowrap">
+                Atau daftar dengan email
+              </span>
+              <div className="border-t border-stone-200 w-full" />
+            </div>
+
+            {errorMessage && (
+              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+                <span>{errorMessage}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 mb-1.5">
+                    Nama Depan
+                  </label>
+                  <div className="relative">
+                    <User className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      {...register('firstName')}
+                      className="w-full text-xs sm:text-sm pl-10 pr-3.5 py-3 border border-stone-200 bg-white rounded-xl focus:outline-none focus:border-[#003d29] transition-colors"
+                      placeholder="Budi"
+                    />
+                  </div>
+                  {errors.firstName && (
+                    <p className="text-[11px] text-rose-600 mt-1">{errors.firstName.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 mb-1.5">
+                    Nama Belakang
+                  </label>
+                  <div className="relative">
+                    <User className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      {...register('lastName')}
+                      className="w-full text-xs sm:text-sm pl-10 pr-3.5 py-3 border border-stone-200 bg-white rounded-xl focus:outline-none focus:border-[#003d29] transition-colors"
+                      placeholder="Santoso"
+                    />
+                  </div>
+                  {errors.lastName && (
+                    <p className="text-[11px] text-rose-600 mt-1">{errors.lastName.message}</p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-stone-700 mb-1.5">
+                  Alamat Email
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    {...register('email')}
+                    className="w-full text-xs sm:text-sm pl-10 pr-4 py-3 border border-stone-200 bg-white rounded-xl focus:outline-none focus:border-[#003d29] transition-colors"
+                    placeholder="nama@email.com"
+                  />
+                </div>
+                {errors.email && (
+                  <p className="text-[11px] text-rose-600 mt-1">{errors.email.message}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-stone-700 mb-1.5">
+                  Kata Sandi (Min. 8 Karakter)
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    {...register('password')}
+                    className="w-full text-xs sm:text-sm pl-10 pr-10 py-3 border border-stone-200 bg-white rounded-xl focus:outline-none focus:border-[#003d29] transition-colors"
+                    placeholder="Minimal 8 karakter"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700"
+                    aria-label="Tampilkan kata sandi"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="text-[11px] text-rose-600 mt-1">{errors.password.message}</p>
+                )}
+              </div>
+
+              <p className="text-[11px] text-stone-500 leading-relaxed">
+                Dengan mendaftar, Anda menyetujui{' '}
+                <span className="font-semibold text-stone-700">Syarat & Ketentuan</span> serta{' '}
+                <span className="font-semibold text-stone-700">Kebijakan Privasi</span> NUSAVA.
+              </p>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold uppercase tracking-wider py-3.5 px-4 rounded-xl disabled:opacity-40 transition-colors flex items-center justify-center gap-2 shadow-xs"
+              >
+                <span>{isSubmitting ? 'Mendaftarkan Akun...' : 'Buat Akun Sekarang'}</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </form>
           </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">
-              Alamat Email
-            </label>
-            <input
-              type="email"
-              {...register('email')}
-              className="w-full text-sm p-3 border border-stone-200 bg-white rounded-lg focus:outline-hidden focus:border-[#003d29] transition-colors"
-              placeholder="nama@email.com"
-            />
-            {errors.email && <p className="text-[11px] text-rose-600 mt-1">{errors.email.message}</p>}
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">
-              Kata Sandi (Min. 8 Karakter)
-            </label>
-            <input
-              type="password"
-              {...register('password')}
-              className="w-full text-sm p-3 border border-stone-200 bg-white rounded-lg focus:outline-hidden focus:border-[#003d29] transition-colors"
-              placeholder="••••••••••••"
-            />
-            {errors.password && <p className="text-[11px] text-rose-600 mt-1">{errors.password.message}</p>}
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full mt-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold uppercase tracking-wider py-3.5 px-4 rounded-lg disabled:opacity-40 transition-colors flex items-center justify-center gap-2 shadow-xs"
-          >
-            <span>{isSubmitting ? 'Mendaftarkan akun...' : 'Buat Akun Sekarang'}</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </form>
-
-        <div className="mt-6 text-center text-xs text-gray-500">
-          Sudah punya akun?{' '}
-          <Link href={`/login?redirect=${redirect}`} className="text-[#003d29] font-semibold hover:underline">
-            Masuk di sini
-          </Link>
         </div>
       </div>
     </div>
@@ -144,7 +340,13 @@ function RegisterContent() {
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div className="max-w-md mx-auto px-6 py-20 text-xs text-gray-400">Memuat halaman pendaftaran...</div>}>
+    <Suspense
+      fallback={
+        <div className="max-w-md mx-auto px-6 py-20 text-center text-xs text-stone-400 font-sans">
+          Memuat halaman pendaftaran...
+        </div>
+      }
+    >
       <RegisterContent />
     </Suspense>
   );
