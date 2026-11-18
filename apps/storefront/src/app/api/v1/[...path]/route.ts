@@ -6,6 +6,213 @@ const USER_COOKIE = 'nusava_session_user';
 const CART_COOKIE = 'nusava_cart_v1';
 const ORDERS_COOKIE = 'nusava_orders_v1';
 
+const BASE_DEMO_ORDERS = [
+  {
+    id: 'ord-demo-101',
+    orderNumber: 'ORD-20261118-8841',
+    status: 'DELIVERED',
+    subtotal: 295000,
+    discountTotal: 0,
+    taxTotal: 0,
+    shippingCost: 0,
+    grandTotal: 295000,
+    currency: 'IDR',
+    createdAt: '2026-11-18T03:15:00.000Z',
+    user: {
+      firstName: 'Budi',
+      lastName: 'Santoso',
+      email: 'budi.santoso@gmail.com',
+    },
+    shippingAddress: {
+      fullName: 'Budi Santoso',
+      phone: '081234567890',
+      streetAddress: 'Jl. Wijaya II No. 48, Kebayoran Baru',
+      city: 'Jakarta Selatan',
+      state: 'DKI Jakarta',
+      postalCode: '12160',
+    },
+    payment: { method: 'QRIS', status: 'PAID' },
+    items: [
+      {
+        id: 'oi-1',
+        productNameSnapshot: 'Pie Susu Dhian Bali Asli (Kotak Besar 25 Pcs)',
+        variantSkuSnapshot: 'NUS-BALI-PIE-25',
+        unitPriceSnapshot: 95000,
+        quantity: 2,
+        lineTotal: 190000,
+      },
+      {
+        id: 'oi-2',
+        productNameSnapshot: 'Kopi Arabika Gayo Specialty Aceh (250g)',
+        variantSkuSnapshot: 'NUS-ACEH-GAYO-250',
+        unitPriceSnapshot: 105000,
+        quantity: 1,
+        lineTotal: 105000,
+      },
+    ],
+  },
+  {
+    id: 'ord-demo-102',
+    orderNumber: 'ORD-20261118-7732',
+    status: 'SHIPPED',
+    subtotal: 340000,
+    discountTotal: 15000,
+    taxTotal: 0,
+    shippingCost: 0,
+    grandTotal: 325000,
+    currency: 'IDR',
+    createdAt: '2026-11-18T02:10:00.000Z',
+    user: {
+      firstName: 'Nadia',
+      lastName: 'Putri',
+      email: 'nadia.putri@yahoo.com',
+    },
+    shippingAddress: {
+      fullName: 'Nadia Putri',
+      phone: '081398765432',
+      streetAddress: 'Jl. Dago Asri No. 12, Coblong',
+      city: 'Kota Bandung',
+      state: 'Jawa Barat',
+      postalCode: '40135',
+    },
+    payment: { method: 'VIRTUAL_ACCOUNT_BCA', status: 'PAID' },
+    items: [
+      {
+        id: 'oi-3',
+        productNameSnapshot: 'Bika Ambon Zulaikha Medan Original (Kotak Besar)',
+        variantSkuSnapshot: 'NUS-MDN-BIKA-01',
+        unitPriceSnapshot: 135000,
+        quantity: 2,
+        lineTotal: 270000,
+      },
+      {
+        id: 'oi-4',
+        productNameSnapshot: 'Sambal Roa Jupe Manado Asli (Botol Kaca 200g)',
+        variantSkuSnapshot: 'NUS-MDO-ROA-200',
+        unitPriceSnapshot: 70000,
+        quantity: 1,
+        lineTotal: 70000,
+      },
+    ],
+  },
+  {
+    id: 'ord-demo-103',
+    orderNumber: 'ORD-20261117-6490',
+    status: 'PROCESSING',
+    subtotal: 255000,
+    discountTotal: 0,
+    taxTotal: 0,
+    shippingCost: 0,
+    grandTotal: 255000,
+    currency: 'IDR',
+    createdAt: '2026-11-17T14:40:00.000Z',
+    user: {
+      firstName: 'Hendra',
+      lastName: 'Wijaya',
+      email: 'hendra.wijaya@outlook.com',
+    },
+    shippingAddress: {
+      fullName: 'Hendra Wijaya',
+      phone: '081122334455',
+      streetAddress: 'Jl. Raya Darmo No. 88, Tegalsari',
+      city: 'Kota Surabaya',
+      state: 'Jawa Timur',
+      postalCode: '60264',
+    },
+    payment: { method: 'MANUAL_BANK_TRANSFER', status: 'PAID' },
+    items: [
+      {
+        id: 'oi-5',
+        productNameSnapshot: 'Rendang Daging Sapi Asli Padang Kemasan Vakum (500g)',
+        variantSkuSnapshot: 'NUS-PDG-RND-500',
+        unitPriceSnapshot: 165000,
+        quantity: 1,
+        lineTotal: 165000,
+      },
+      {
+        id: 'oi-6',
+        productNameSnapshot: 'Bakpia Pathok 25 Yogyakarta Kacang Hijau (Isi 20)',
+        variantSkuSnapshot: 'NUS-JOG-BKP-20',
+        unitPriceSnapshot: 90000,
+        quantity: 1,
+        lineTotal: 90000,
+      },
+    ],
+  },
+  {
+    id: 'ord-demo-104',
+    orderNumber: 'ORD-20261117-5120',
+    status: 'DELIVERED',
+    subtotal: 480000,
+    discountTotal: 20000,
+    taxTotal: 0,
+    shippingCost: 0,
+    grandTotal: 460000,
+    currency: 'IDR',
+    createdAt: '2026-11-17T09:20:00.000Z',
+    user: {
+      firstName: 'Siti',
+      lastName: 'Aisyah',
+      email: 'siti.aisyah@gmail.com',
+    },
+    shippingAddress: {
+      fullName: 'Siti Aisyah',
+      phone: '085712345678',
+      streetAddress: 'Jl. Pandanaran No. 32, Semarang Tengah',
+      city: 'Kota Semarang',
+      state: 'Jawa Tengah',
+      postalCode: '50134',
+    },
+    payment: { method: 'QRIS', status: 'PAID' },
+    items: [
+      {
+        id: 'oi-7',
+        productNameSnapshot: 'Lapis Legit Prunes Spesial Wisman (Loyang 20x20)',
+        variantSkuSnapshot: 'NUS-JKT-LPS-20',
+        unitPriceSnapshot: 240000,
+        quantity: 2,
+        lineTotal: 480000,
+      },
+    ],
+  },
+  {
+    id: 'ord-demo-105',
+    orderNumber: 'ORD-20261116-3918',
+    status: 'PAID',
+    subtotal: 195000,
+    discountTotal: 0,
+    taxTotal: 0,
+    shippingCost: 18000,
+    grandTotal: 213000,
+    currency: 'IDR',
+    createdAt: '2026-11-16T18:05:00.000Z',
+    user: {
+      firstName: 'Reza',
+      lastName: 'Pratama',
+      email: 'reza.pratama@gmail.com',
+    },
+    shippingAddress: {
+      fullName: 'Reza Pratama',
+      phone: '081876543210',
+      streetAddress: 'Jl. Malioboro No. 55, Danurejan',
+      city: 'Kota Yogyakarta',
+      state: 'DI Yogyakarta',
+      postalCode: '55213',
+    },
+    payment: { method: 'VIRTUAL_ACCOUNT_MANDIRI', status: 'PAID' },
+    items: [
+      {
+        id: 'oi-8',
+        productNameSnapshot: 'Pempek Kapal Selam & Lenjer Asli Palembang (Paket Vakum 10 Pcs)',
+        variantSkuSnapshot: 'NUS-PLB-PMP-10',
+        unitPriceSnapshot: 195000,
+        quantity: 1,
+        lineTotal: 195000,
+      },
+    ],
+  },
+];
+
 interface CookieCartEntry {
   id: string;
   variantId: string;
@@ -201,7 +408,64 @@ export async function GET(
   // 7. GET /api/v1/orders
   if (route === 'orders') {
     const customOrders = getOrdersFromRequest(req);
-    return NextResponse.json({ items: customOrders });
+    const merged = [...customOrders, ...BASE_DEMO_ORDERS];
+    return NextResponse.json({
+      items: merged,
+      meta: { total: merged.length, page: 1, limit: 50, totalPages: 1 },
+    });
+  }
+
+  // 7b. GET /api/v1/analytics/overview
+  if (route === 'analytics/overview') {
+    const customOrders = getOrdersFromRequest(req);
+    const customRevenue = customOrders.reduce((acc, o) => acc + Number(o.grandTotal || 0), 0);
+    const baseRevenue = 14635000;
+    const totalRevenue = baseRevenue + customRevenue;
+    const totalOrders = 131 + customOrders.length;
+    const averageOrderValue = Math.round(totalRevenue / totalOrders);
+    const recentOrders = [...customOrders, ...BASE_DEMO_ORDERS].slice(0, 10);
+
+    return NextResponse.json({
+      totalRevenue,
+      totalOrders,
+      averageOrderValue,
+      lowStockCount: 3,
+      activeProducts: CATALOG_PRODUCTS.length,
+      recentOrders,
+    });
+  }
+
+  // 7c. GET /api/v1/reports/export-csv
+  if (route === 'reports/export-csv') {
+    const customOrders = getOrdersFromRequest(req);
+    const allOrders = [...customOrders, ...BASE_DEMO_ORDERS];
+    const header = 'Order Number,Date,Customer,City,Status,Payment Method,Subtotal (IDR),Shipping (IDR),Grand Total (IDR)';
+    const rows = allOrders.map((o) => {
+      const customerName =
+        o.shippingAddress?.fullName ||
+        (o.user ? `${o.user.firstName} ${o.user.lastName}` : 'Pelanggan NUSAVA');
+      const city = o.shippingAddress?.city || 'Jakarta';
+      const paymentMethod = o.payment?.method || 'MANUAL_BANK_TRANSFER';
+      return [
+        o.orderNumber,
+        o.createdAt,
+        `"${customerName}"`,
+        `"${city}"`,
+        o.status,
+        paymentMethod,
+        o.subtotal || o.grandTotal,
+        o.shippingCost || 0,
+        o.grandTotal,
+      ].join(',');
+    });
+    const csv = [header, ...rows].join('\n');
+    return new NextResponse(csv, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': 'attachment; filename="nusava-revenue-report-2026.csv"',
+      },
+    });
   }
 
   // 8. GET /api/v1/orders/track/:orderNumber
