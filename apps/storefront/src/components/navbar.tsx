@@ -425,9 +425,9 @@ export function Navbar() {
 
           <div className="hidden lg:block h-5 w-px bg-stone-200 mx-0.5" />
 
-          {/* Profile Button & Expanded Marketplace Profile Dropdown (ONLY when user is logged in) */}
+          {/* Profile Button & Expanded Marketplace Profile Dropdown (ONLY on Desktop lg+ when user is logged in) */}
           {user ? (
-            <div className="relative" ref={accountDropdownRef}>
+            <div className="hidden lg:block relative" ref={accountDropdownRef}>
               <button
                 type="button"
                 onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
@@ -662,57 +662,141 @@ export function Navbar() {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-stone-100 px-4 py-4 space-y-4">
+        <div className="lg:hidden bg-white border-t border-stone-100 px-4 py-4 space-y-4 max-h-[82vh] overflow-y-auto">
           {user ? (
-            <div className="grid grid-cols-2 gap-2 text-xs font-semibold text-stone-700">
+            <div className="space-y-3">
+              {/* 1. User Profile Header Card inside Hamburger Menu */}
               <Link
                 href="/account?section=profile"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+                className="p-3 bg-[#FAF9F5] rounded-xl border border-stone-200 flex items-center gap-3"
               >
-                <User className="w-4 h-4 text-[#003d29]" />
-                <span>Profil</span>
+                <div className="w-10 h-10 rounded-full bg-[#003d29] text-white font-extrabold text-sm flex items-center justify-center shrink-0">
+                  {initials}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-extrabold text-stone-900 truncate">{fullName}</p>
+                  <p className="text-[11px] text-stone-500 truncate">{userEmail}</p>
+                  <span className="inline-flex items-center gap-1 text-[10px] text-[#003d29] font-bold mt-0.5">
+                    <ShieldCheck className="w-3 h-3 text-[#003d29]" />
+                    <span>{tier}</span>
+                  </span>
+                </div>
               </Link>
-              <Link
-                href="/account?section=orders"
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+
+              {/* 2. Quick Poin & Voucher Summary inside Hamburger Menu */}
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  href="/account?section=vouchers"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 rounded-xl border border-stone-200 bg-white"
+                >
+                  <span className="text-[10px] text-stone-400 font-semibold block">NUSAVA Poin</span>
+                  <span className="text-xs font-bold text-[#003d29] flex items-center gap-1 mt-0.5">
+                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500 shrink-0" />
+                    <span className="truncate">{points.toLocaleString('id-ID')} Poin</span>
+                  </span>
+                </Link>
+
+                <Link
+                  href="/account?section=vouchers"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 rounded-xl border border-stone-200 bg-white"
+                >
+                  <span className="text-[10px] text-stone-400 font-semibold block">Voucher</span>
+                  <span className="text-xs font-bold text-[#003d29] flex items-center gap-1 mt-0.5">
+                    <Tag className="w-3.5 h-3.5 text-[#003d29] shrink-0" />
+                    <span>3 Kupon</span>
+                  </span>
+                </Link>
+              </div>
+
+              {/* 3. Menu Akun & Transaksi Lengkap */}
+              <div className="grid grid-cols-2 gap-2 text-xs font-semibold text-stone-700">
+                <Link
+                  href="/account?section=orders"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center justify-between"
+                >
+                  <span className="flex items-center gap-2">
+                    <Package className="w-4 h-4 text-[#003d29]" />
+                    <span>Pesanan Saya</span>
+                  </span>
+                  <span className="text-[10px] font-bold bg-[#003d29]/10 text-[#003d29] px-1.5 py-0.5 rounded">
+                    2
+                  </span>
+                </Link>
+                <Link
+                  href="/account?section=orders"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+                >
+                  <Truck className="w-4 h-4 text-[#003d29]" />
+                  <span>Lacak Paket</span>
+                </Link>
+                <Link
+                  href="/account?section=profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+                >
+                  <User className="w-4 h-4 text-[#003d29]" />
+                  <span>Profil</span>
+                </Link>
+                <Link
+                  href="/account?section=addresses"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+                >
+                  <MapPin className="w-4 h-4 text-[#003d29]" />
+                  <span>Alamat</span>
+                </Link>
+                <Link
+                  href="/account?section=payments"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+                >
+                  <CreditCard className="w-4 h-4 text-[#003d29]" />
+                  <span>Pembayaran</span>
+                </Link>
+                <Link
+                  href="/account?section=vouchers"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+                >
+                  <Tag className="w-4 h-4 text-[#003d29]" />
+                  <span>Voucher & Poin</span>
+                </Link>
+                <Link
+                  href="/account?section=reviews"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+                >
+                  <Star className="w-4 h-4 text-[#003d29]" />
+                  <span>Ulasan</span>
+                </Link>
+                <Link
+                  href="/account?section=help"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
+                >
+                  <HelpCircle className="w-4 h-4 text-[#003d29]" />
+                  <span>Bantuan</span>
+                </Link>
+              </div>
+
+              {/* 4. Tombol Keluar di Mobile Hamburger Menu */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  logout();
+                  router.push('/');
+                }}
+                className="w-full py-2.5 px-3 rounded-xl border border-rose-200 bg-rose-50/60 text-xs font-bold text-rose-600 flex items-center justify-center gap-2"
               >
-                <Package className="w-4 h-4 text-[#003d29]" />
-                <span>Pesanan Saya</span>
-              </Link>
-              <Link
-                href="/account?section=addresses"
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
-              >
-                <MapPin className="w-4 h-4 text-[#003d29]" />
-                <span>Alamat</span>
-              </Link>
-              <Link
-                href="/account?section=payments"
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
-              >
-                <CreditCard className="w-4 h-4 text-[#003d29]" />
-                <span>Pembayaran</span>
-              </Link>
-              <Link
-                href="/account?section=vouchers"
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
-              >
-                <Tag className="w-4 h-4 text-[#003d29]" />
-                <span>Voucher & Poin</span>
-              </Link>
-              <Link
-                href="/account?section=reviews"
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
-              >
-                <Star className="w-4 h-4 text-[#003d29]" />
-                <span>Ulasan</span>
-              </Link>
+                <LogOut className="w-4 h-4" />
+                <span>Keluar</span>
+              </button>
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-2.5 text-xs font-bold">
