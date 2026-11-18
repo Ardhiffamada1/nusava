@@ -98,7 +98,7 @@ export default function WiNkDashboardOverview() {
         </div>
 
         <a
-          href="http://localhost:3000"
+          href="https://nusava-jet.vercel.app"
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-2 bg-black text-white hover:bg-gray-800 text-xs font-semibold px-4 py-2 rounded-full transition-colors shadow-2xs"

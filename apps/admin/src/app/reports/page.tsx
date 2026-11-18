@@ -58,7 +58,7 @@ export default function AdminReportsPage() {
               </div>
 
               <a
-                href={`http://localhost:4000/api/v1/reports/export-csv?type=${rep.type}`}
+                href={`/api/v1/reports/export-csv?type=${rep.type}`}
                 target="_blank"
                 rel="noreferrer"
                 download

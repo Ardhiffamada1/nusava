@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
 
 export class ApiError extends Error {
   statusCode: number;
@@ -16,18 +16,33 @@ export async function apiRequest<T = any>(
   endpoint: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+  const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const primaryUrl = `${API_BASE_URL}${normalizedEndpoint}`;
+  const fallbackUrl = `/api/v1${normalizedEndpoint}`;
 
   const headers = new Headers(options.headers);
   if (!headers.has('Content-Type') && !(options.body instanceof FormData)) {
     headers.set('Content-Type', 'application/json');
   }
 
-  const response = await fetch(url, {
-    ...options,
-    headers,
-    credentials: 'include',
-  });
+  let response: Response;
+  try {
+    response = await fetch(primaryUrl, {
+      ...options,
+      headers,
+      credentials: 'include',
+    });
+  } catch (err) {
+    if (primaryUrl !== fallbackUrl) {
+      response = await fetch(fallbackUrl, {
+        ...options,
+        headers,
+        credentials: 'include',
+      });
+    } else {
+      throw err;
+    }
+  }
 
   const contentType = response.headers.get('content-type');
   let data: any = null;
