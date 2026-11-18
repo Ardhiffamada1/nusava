@@ -16,7 +16,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'NUSAVA — Satu Indonesia, Banyak Cerita.',
   description:
-    'Platform kurasi resmi oleh-oleh khas daerah, kopi nusantara, batik, dan kriya tradisional langsung dari sentra UMKM Indonesia.',
+    'Pusat belanja online oleh-oleh khas daerah, kuliner nusantara, batik, dan kerajinan langsung dari produsen lokal Indonesia.',
 };
 
 export default function RootLayout({
@@ -26,6 +26,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className={inter.variable}>
+      <head>
+        {/* Preconnect to external image origins to reduce TTFB & DNS lookup latency */}
+        <link rel="preconnect" href="https://upload.wikimedia.org" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://upload.wikimedia.org" />
+        <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+      </head>
       <body className={`${inter.className} min-h-screen flex flex-col font-sans antialiased text-ink bg-white`}>
         <Providers>
           <Navbar />

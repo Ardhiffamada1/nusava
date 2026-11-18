@@ -8,6 +8,7 @@ import {
   Heart,
   ChevronDown,
   Check,
+  Copy,
   ArrowRight,
   ShieldCheck,
   Truck,
@@ -46,6 +47,15 @@ export default function MarketplaceStorefrontHome() {
   const [activeOriginFilter, setActiveOriginFilter] = useState<string>('');
   const [sortOption, setSortOption] = useState<string>('newest');
   const [selectedStore, setSelectedStore] = useState<StoreProfile | null>(null);
+  const [copiedCoupon, setCopiedCoupon] = useState<string | null>(null);
+
+  const handleCopyCoupon = (code: string) => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(code);
+    }
+    setCopiedCoupon(code);
+    setTimeout(() => setCopiedCoupon(null), 2000);
+  };
 
   // Flash Sale Live Countdown Timer
   const [timeLeft, setTimeLeft] = useState({
@@ -110,8 +120,7 @@ export default function MarketplaceStorefrontHome() {
 
     await addItem(defaultVariant.id, 1);
     setAddedId(product.id);
-    setTimeout(() => setAddedId(null), 1200);
-    openCart();
+    setTimeout(() => setAddedId(null), 1500);
   };
 
   // Curated Flash Sale items
@@ -228,13 +237,16 @@ export default function MarketplaceStorefrontHome() {
     },
   ];
 
-  // Verified Artisans & Official Makers -> Sentra UMKM Terverifikasi
+  // Official Stores & Toko Pilihan Daerah (Gaya Blibli / Tokopedia Official Store)
   const verifiedMakers = [
     {
       name: 'Dapur Bakpia Pathok 25',
       city: 'Yogyakarta',
-      badge: 'UMKM Legendaris (Est. 1948)',
-      sales: '12.4k Terjual',
+      originQuery: 'Jogja',
+      specialty: 'Bakpia Kukus & Pathok Basah',
+      promoInfo: 'Cashback 2% Poin • Stok Hari Ini',
+      priceStart: 'Mulai Rp 31.000',
+      sales: '12,4rb+ terjual',
       rating: '4.9',
       image: 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Bakpia_pathok.jpg',
       storeProfile: VERIFIED_UMKM_STORES['bakpia-25'],
@@ -242,8 +254,11 @@ export default function MarketplaceStorefrontHome() {
     {
       name: 'Sentra Tenun Ikat Troso',
       city: 'Jepara',
-      badge: 'Alat Tenun Bukan Mesin (ATBM)',
-      sales: '4.8k Terjual',
+      originQuery: 'Solo',
+      specialty: 'Kain Tenun ATBM & Batik Tulis',
+      promoInfo: 'Cashback 2% Poin • Garansi Asli',
+      priceStart: 'Mulai Rp 125.000',
+      sales: '4,8rb+ terjual',
       rating: '5.0',
       image: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Batik_pedalaman_-_parang_klithik.JPG',
       storeProfile: VERIFIED_UMKM_STORES['tenun-troso'],
@@ -251,17 +266,23 @@ export default function MarketplaceStorefrontHome() {
     {
       name: 'Dapur Sambal Bu Rudy',
       city: 'Surabaya',
-      badge: 'Resep Asli Jawa Timur Terkurasi',
-      sales: '18.9k Terjual',
+      originQuery: 'Surabaya',
+      specialty: 'Sambal Bawang, Bajak & Udang',
+      promoInfo: 'Cashback 2% Poin • Segel Higienis',
+      priceStart: 'Mulai Rp 32.000',
+      sales: '18,9rb+ terjual',
       rating: '4.9',
       image: 'https://upload.wikimedia.org/wikipedia/commons/5/5a/SAMBAL_BAWANG.jpg',
       storeProfile: VERIFIED_UMKM_STORES['sambal-bu-rudy'],
     },
     {
-      name: 'Kopi Gayo Single Origin Roastery',
+      name: 'Kopi Gayo Specialty Roastery',
       city: 'Aceh Takengon',
-      badge: 'Kemitraan Petani Dataran Tinggi',
-      sales: '7.2k Terjual',
+      originQuery: 'Aceh',
+      specialty: 'Arabika Gayo Wine & Peaberry',
+      promoInfo: 'Cashback 2% Poin • Fresh Roast',
+      priceStart: 'Mulai Rp 52.000',
+      sales: '7,2rb+ terjual',
       rating: '4.9',
       image: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Biji_Kopi.jpg',
       storeProfile: VERIFIED_UMKM_STORES['kopi-gayo'],
@@ -316,78 +337,265 @@ export default function MarketplaceStorefrontHome() {
       </section>
 
       {/* 2. HERO MARKETPLACE BANNER */}
-      <section className="bg-[#FCF0E4] border border-stone-200/60 rounded-2xl p-5 sm:p-10 lg:p-14 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
-        <div className="max-w-xl z-10 space-y-4 sm:space-y-5 w-full">
-          <div className="inline-flex items-center gap-2 bg-[#003d29] text-white text-[11px] sm:text-xs font-semibold px-3 py-1 rounded-md shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 text-white shrink-0" />
-            <span>Pasar Karya & Oleh-Oleh Nusantara</span>
-          </div>
+      <section className="bg-[#FAF9F5] border border-stone-200 rounded-2xl p-5 sm:p-8 lg:p-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          {/* Kolom Teks, Voucher, & Aksi Utama (6 Kolom) */}
+          <div className="lg:col-span-6 space-y-5">
+            <div className="space-y-2.5">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#003d29] block">
+                Official Marketplace Oleh-Oleh Nusantara
+              </span>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-stone-900 tracking-tight leading-[1.2]">
+                Oleh-Oleh Khas Daerah, Dikirim Langsung dari Toko Aslinya
+              </h1>
+              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-xl">
+                Belanja bakpia Jogja, pie susu Bali, sambal Surabaya, kopi Gayo, hingga batik & kriya langsung dari toko resmi daerah. Pasti asli, stok baru setiap hari, dan dapat <strong className="text-stone-900">Cashback NUSAVA Poin</strong> di setiap pesanan.
+              </p>
+            </div>
 
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[#003d29] tracking-tight leading-[1.18]">
-            Temukan Citarasa & Karya Otentik Langsung dari Daerah
-          </h1>
-
-          <p className="text-xs sm:text-sm text-stone-700 leading-relaxed max-w-lg">
-            Jelajahi aneka oleh-oleh khas legendaris, batik tulis, kopi single-origin, dan kriya tangan yang diproduksi dengan integritas oleh sentra UMKM terpercaya di Indonesia.
-          </p>
-
-          {/* Quick Coupon Claim Chips */}
-          <div className="pt-1 space-y-2">
-            <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-stone-500 block">
-              Voucher Diskon Siap Pakai di Checkout:
-            </span>
-            <div className="flex flex-wrap gap-1.5 sm:gap-2">
-              <div className="inline-flex items-center gap-1.5 bg-white border border-stone-300 px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-mono font-bold text-[#003d29] shadow-xs">
-                <Tag className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#003d29] shrink-0" />
-                <span>NUSANTARA (15%)</span>
+            {/* Klaim Voucher Promo & Cashback Poin */}
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-stone-800">
+                  Klaim Voucher Belanja & Gratis Ongkir:
+                </span>
+                <span className="text-[11px] font-semibold text-[#003d29]">
+                  Klik untuk salin kode
+                </span>
               </div>
-              <div className="inline-flex items-center gap-1.5 bg-white border border-stone-300 px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-mono font-bold text-[#003d29] shadow-xs">
-                <Tag className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#003d29] shrink-0" />
-                <span>ONGKIRGRATIS</span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {/* Voucher 1: NUSANTARA (15%) */}
+                <button
+                  type="button"
+                  onClick={() => handleCopyCoupon('NUSANTARA')}
+                  className="flex items-center gap-2 p-2.5 bg-white border border-stone-200 hover:border-[#003d29] rounded-lg transition-all text-left shadow-2xs group cursor-pointer"
+                  title="Klik untuk salin kode voucher"
+                >
+                  <div className="w-7 h-7 rounded bg-emerald-50 text-[#003d29] font-black text-xs flex items-center justify-center shrink-0 border border-emerald-100">
+                    %
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="font-mono font-bold text-[11px] text-[#003d29] truncate">
+                        NUSANTARA
+                      </span>
+                      <span className="text-[10px] font-semibold text-[#003d29] shrink-0">
+                        {copiedCoupon === 'NUSANTARA' ? (
+                          <span className="text-emerald-700 font-bold flex items-center gap-0.5">
+                            <Check className="w-3 h-3" /> Tersalin
+                          </span>
+                        ) : (
+                          'Klaim'
+                        )}
+                      </span>
+                    </div>
+                    <span className="block text-[10px] text-stone-500 font-medium">
+                      Diskon 15% s/d 50rb
+                    </span>
+                  </div>
+                </button>
+
+                {/* Voucher 2: ONGKIRGRATIS */}
+                <button
+                  type="button"
+                  onClick={() => handleCopyCoupon('ONGKIRGRATIS')}
+                  className="flex items-center gap-2 p-2.5 bg-white border border-stone-200 hover:border-[#003d29] rounded-lg transition-all text-left shadow-2xs group cursor-pointer"
+                  title="Klik untuk salin kode voucher"
+                >
+                  <div className="w-7 h-7 rounded bg-emerald-50 text-[#003d29] flex items-center justify-center shrink-0 border border-emerald-100">
+                    <Truck className="w-3.5 h-3.5 text-[#003d29]" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="font-mono font-bold text-[11px] text-[#003d29] truncate">
+                        ONGKIRGRATIS
+                      </span>
+                      <span className="text-[10px] font-semibold text-[#003d29] shrink-0">
+                        {copiedCoupon === 'ONGKIRGRATIS' ? (
+                          <span className="text-emerald-700 font-bold flex items-center gap-0.5">
+                            <Check className="w-3 h-3" /> Tersalin
+                          </span>
+                        ) : (
+                          'Klaim'
+                        )}
+                      </span>
+                    </div>
+                    <span className="block text-[10px] text-stone-500 font-medium">
+                      Gratis Ongkir Nasional
+                    </span>
+                  </div>
+                </button>
+
+                {/* Voucher 3: OLEHOLEH10 */}
+                <button
+                  type="button"
+                  onClick={() => handleCopyCoupon('OLEHOLEH10')}
+                  className="flex items-center gap-2 p-2.5 bg-white border border-stone-200 hover:border-[#003d29] rounded-lg transition-all text-left shadow-2xs group cursor-pointer"
+                  title="Klik untuk salin kode voucher"
+                >
+                  <div className="w-7 h-7 rounded bg-emerald-50 text-[#003d29] flex items-center justify-center shrink-0 border border-emerald-100">
+                    <Tag className="w-3.5 h-3.5 text-[#003d29]" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="font-mono font-bold text-[11px] text-[#003d29] truncate">
+                        OLEHOLEH10
+                      </span>
+                      <span className="text-[10px] font-semibold text-[#003d29] shrink-0">
+                        {copiedCoupon === 'OLEHOLEH10' ? (
+                          <span className="text-emerald-700 font-bold flex items-center gap-0.5">
+                            <Check className="w-3 h-3" /> Tersalin
+                          </span>
+                        ) : (
+                          'Klaim'
+                        )}
+                      </span>
+                    </div>
+                    <span className="block text-[10px] text-stone-500 font-medium">
+                      Potongan 10% Semua Toko
+                    </span>
+                  </div>
+                </button>
               </div>
-              <div className="inline-flex items-center gap-1.5 bg-white border border-stone-300 px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-mono font-bold text-[#003d29] shadow-xs">
-                <Tag className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#003d29] shrink-0" />
-                <span>OLEHOLEH10</span>
+            </div>
+
+            {/* Aksi CTA Utama & Info Poin Member */}
+            <div className="space-y-3 pt-1">
+              <div className="flex flex-wrap items-center gap-3">
+                <Link
+                  href="/products"
+                  className="inline-flex items-center justify-center gap-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs sm:text-sm font-bold px-6 py-3 rounded-lg transition-colors shadow-2xs"
+                >
+                  <span>Belanja Sekarang</span>
+                  <ArrowRight className="w-4 h-4 shrink-0" />
+                </Link>
+
+                <a
+                  href="#flash-sale"
+                  className="inline-flex items-center justify-center gap-2 bg-white hover:bg-stone-50 text-stone-900 border border-stone-300 text-xs sm:text-sm font-bold px-5 py-3 rounded-lg transition-colors"
+                >
+                  <Zap className="w-4 h-4 text-[#003d29]" />
+                  <span>Lihat Flash Sale</span>
+                </a>
+              </div>
+
+              <div className="flex items-center gap-2 text-xs text-stone-600">
+                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500 shrink-0" />
+                <span>
+                  Daftar member baru langsung dapat <strong className="text-[#003d29]">Bonus 25.000 NUSAVA Poin</strong> (setara Rp 25.000) untuk potongan checkout.
+                </span>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 sm:gap-3 pt-2">
-            <Link
-              href="/products"
-              className="inline-flex items-center justify-center gap-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-semibold px-4 sm:px-7 py-3 rounded-lg transition-colors shadow-xs"
-            >
-              <span>Mulai Belanja</span>
-              <ArrowRight className="w-4 h-4 shrink-0" />
-            </Link>
+          {/* Kolom Visual E-Commerce: 4 Produk Pilihan Daerah dengan Gambar Nyata (6 Kolom) */}
+          <div className="lg:col-span-6">
+            <div className="grid grid-cols-2 gap-3 sm:gap-3.5">
+              {/* Produk 1: Bakpia Jogja */}
+              <Link
+                href="/products?origin=Jogja"
+                className="group bg-white rounded-xl border border-stone-200 overflow-hidden hover:border-[#003d29] transition-all p-2.5 flex flex-col justify-between shadow-2xs hover:shadow-xs"
+              >
+                <div className="relative w-full h-24 sm:h-28 rounded-lg overflow-hidden bg-stone-100 mb-2">
+                  <Image
+                    src="https://upload.wikimedia.org/wikipedia/commons/2/27/Bakpia_pathuk.jpg"
+                    alt="Bakpia Pathok Jogja"
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 140px, 180px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <span className="absolute top-1.5 left-1.5 bg-[#003d29] text-white text-[9.5px] font-bold px-2 py-0.5 rounded">
+                    Yogyakarta
+                  </span>
+                </div>
+                <div className="space-y-0.5">
+                  <h3 className="text-xs font-bold text-stone-900 group-hover:text-[#003d29] transition-colors line-clamp-1">
+                    Bakpia Pathok 25 Asli
+                  </h3>
+                  <p className="text-[11px] font-semibold text-[#003d29]">Mulai Rp35.000</p>
+                </div>
+              </Link>
 
-            <Link
-              href="/products?category=kudapan-khas"
-              className="inline-flex items-center justify-center gap-2 bg-white hover:bg-stone-50 text-stone-800 border border-stone-300 text-xs font-semibold px-4 sm:px-6 py-3 rounded-lg transition-colors"
-            >
-              <ShoppingBag className="w-4 h-4 text-[#003d29] shrink-0" />
-              <span className="truncate">Oleh-oleh Populer</span>
-            </Link>
-          </div>
-        </div>
+              {/* Produk 2: Pie Susu Bali */}
+              <Link
+                href="/products?origin=Bali"
+                className="group bg-white rounded-xl border border-stone-200 overflow-hidden hover:border-[#003d29] transition-all p-2.5 flex flex-col justify-between shadow-2xs hover:shadow-xs"
+              >
+                <div className="relative w-full h-24 sm:h-28 rounded-lg overflow-hidden bg-stone-100 mb-2">
+                  <Image
+                    src="https://upload.wikimedia.org/wikipedia/commons/e/e3/Pie_Susu_Top_View.jpg"
+                    alt="Pie Susu Asli Bali"
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 140px, 180px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <span className="absolute top-1.5 left-1.5 bg-[#003d29] text-white text-[9.5px] font-bold px-2 py-0.5 rounded">
+                    Bali
+                  </span>
+                </div>
+                <div className="space-y-0.5">
+                  <h3 className="text-xs font-bold text-stone-900 group-hover:text-[#003d29] transition-colors line-clamp-1">
+                    Pie Susu Dhian Bali
+                  </h3>
+                  <p className="text-[11px] font-semibold text-[#003d29]">Mulai Rp38.000</p>
+                </div>
+              </Link>
 
-        {/* Hero Visual Collage */}
-        <div className="relative w-full max-w-[260px] sm:max-w-none sm:w-72 lg:w-88 aspect-square shrink-0 mx-auto md:mx-0">
-          <Image
-            src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Bakpia_pathok.jpg"
-            alt="Karya Otentik Nusantara"
-            fill
-            priority
-            sizes="(max-width: 768px) 260px, 352px"
-            className="object-cover rounded-2xl shadow-sm border border-stone-200"
-          />
-          <div className="absolute bottom-2 left-2 right-2 sm:right-auto sm:-bottom-2 sm:-left-2 bg-white p-2.5 sm:p-3.5 rounded-xl border border-stone-200 shadow-md text-xs flex items-center gap-2.5 sm:gap-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#FAF9F5] border border-stone-200 flex items-center justify-center text-[#003d29] font-bold shrink-0">
-              4.9
-            </div>
-            <div className="min-w-0">
-              <span className="font-bold text-stone-900 block text-[11px] sm:text-xs truncate">Rating Kepuasan Pembeli</span>
-              <span className="text-[10px] sm:text-xs text-stone-400 block truncate">Dari 15.000+ pesanan terkirim</span>
+              {/* Produk 3: Sambal Bu Rudy Surabaya */}
+              <Link
+                href="/products?origin=Surabaya"
+                className="group bg-white rounded-xl border border-stone-200 overflow-hidden hover:border-[#003d29] transition-all p-2.5 flex flex-col justify-between shadow-2xs hover:shadow-xs"
+              >
+                <div className="relative w-full h-24 sm:h-28 rounded-lg overflow-hidden bg-stone-100 mb-2">
+                  <Image
+                    src="https://upload.wikimedia.org/wikipedia/commons/5/5a/SAMBAL_BAWANG.jpg"
+                    alt="Sambal Bu Rudy Surabaya"
+                    fill
+                    loading="lazy"
+                    decoding="async"
+                    sizes="(max-width: 768px) 140px, 180px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <span className="absolute top-1.5 left-1.5 bg-[#003d29] text-white text-[9.5px] font-bold px-2 py-0.5 rounded">
+                    Surabaya
+                  </span>
+                </div>
+                <div className="space-y-0.5">
+                  <h3 className="text-xs font-bold text-stone-900 group-hover:text-[#003d29] transition-colors line-clamp-1">
+                    Sambal Bawang Bu Rudy
+                  </h3>
+                  <p className="text-[11px] font-semibold text-[#003d29]">Mulai Rp32.000</p>
+                </div>
+              </Link>
+
+              {/* Produk 4: Kopi Arabika Gayo */}
+              <Link
+                href="/products?category=kopi-minuman"
+                className="group bg-white rounded-xl border border-stone-200 overflow-hidden hover:border-[#003d29] transition-all p-2.5 flex flex-col justify-between shadow-2xs hover:shadow-xs"
+              >
+                <div className="relative w-full h-24 sm:h-28 rounded-lg overflow-hidden bg-stone-100 mb-2">
+                  <Image
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Biji_Kopi.jpg"
+                    alt="Kopi Arabika Gayo Aceh"
+                    fill
+                    loading="lazy"
+                    decoding="async"
+                    sizes="(max-width: 768px) 140px, 180px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <span className="absolute top-1.5 left-1.5 bg-[#003d29] text-white text-[9.5px] font-bold px-2 py-0.5 rounded">
+                    Aceh
+                  </span>
+                </div>
+                <div className="space-y-0.5">
+                  <h3 className="text-xs font-bold text-stone-900 group-hover:text-[#003d29] transition-colors line-clamp-1">
+                    Kopi Arabika Gayo
+                  </h3>
+                  <p className="text-[11px] font-semibold text-[#003d29]">Mulai Rp52.000</p>
+                </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -565,68 +773,101 @@ export default function MarketplaceStorefrontHome() {
         </div>
       </section>
 
-      {/* 5. PILIHAN SENTRA UMKM & TOKO DAERAH RESMI */}
+      {/* 5. OFFICIAL STORE & TOKO PILIHAN DAERAH (Gaya Tokopedia / Blibli Official Store) */}
       <section className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-stone-200 pb-4">
-          <div className="flex items-start sm:items-center gap-2.5">
-            <Store className="w-5 h-5 text-[#003d29] shrink-0 mt-0.5 sm:mt-0" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-200 pb-4">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#003d29] text-white flex items-center justify-center shrink-0">
+              <Store className="w-4 h-4 sm:w-5 sm:h-5" />
+            </div>
             <div>
-              <h2 className="text-lg sm:text-xl font-bold text-stone-900 tracking-tight">
-                Sentra UMKM Pilihan & Toko Resmi
-              </h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg sm:text-xl font-bold text-stone-900 tracking-tight">
+                  Official Store & Toko Pilihan Daerah
+                </h2>
+              </div>
               <p className="text-xs text-stone-500 mt-0.5">
-                Produsen oleh-oleh daerah terverifikasi dengan izin edar P-IRT dan sertifikasi halal.
+                Belanja langsung dari toko resmi produsen oleh-oleh legendaris dengan jaminan produk asli dan stok terbaru.
               </p>
             </div>
           </div>
-          <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-[#003d29] bg-[#003d29]/10 px-2.5 sm:px-3 py-1 rounded-md inline-flex items-center gap-1.5 w-fit">
-            <CheckCircle2 className="w-3.5 h-3.5 text-[#003d29]" />
-            <span>UMKM Terverifikasi</span>
-          </span>
+
+          <Link
+            href="/products"
+            className="text-xs font-bold text-[#003d29] hover:underline inline-flex items-center gap-1 shrink-0"
+          >
+            <span>Jelajahi Semua Toko</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {verifiedMakers.map((maker, idx) => (
             <div
               key={idx}
-              className="p-3 sm:p-4 bg-[#FAF9F5] border border-stone-200 rounded-xl flex flex-col justify-between hover:border-stone-300 transition-colors"
+              className="p-3.5 sm:p-4 bg-[#FAF9F5] border border-stone-200 hover:border-[#003d29] rounded-xl flex flex-col justify-between transition-all group"
             >
               <div>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2.5 sm:mb-3">
-                  <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-white overflow-hidden shrink-0 border border-stone-200">
+                {/* Store Header */}
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="relative w-12 h-12 rounded-xl bg-white overflow-hidden shrink-0 border border-stone-200">
                     <Image
                       src={maker.image}
                       alt={maker.name}
                       fill
+                      loading="lazy"
+                      decoding="async"
+                      sizes="48px"
                       className="object-cover"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-xs font-bold text-stone-900 line-clamp-1">{maker.name}</h3>
-                    <span className="text-[11px] sm:text-xs text-stone-500 flex items-center gap-1 mt-0.5">
-                      <MapPin className="w-3 h-3 text-[#003d29] shrink-0" />
-                      <span className="truncate">{maker.city}</span>
-                    </span>
+                    <div className="flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#003d29] shrink-0" />
+                      <h3 className="text-xs sm:text-sm font-bold text-stone-900 truncate group-hover:text-[#003d29] transition-colors">
+                        {maker.name}
+                      </h3>
+                    </div>
+                    <div className="flex items-center gap-2 text-[11px] text-stone-500 mt-0.5">
+                      <span className="flex items-center gap-0.5 truncate">
+                        <MapPin className="w-3 h-3 text-[#003d29] shrink-0" />
+                        <span>{maker.city}</span>
+                      </span>
+                      <span>•</span>
+                      <span className="font-bold text-stone-800 shrink-0">{maker.rating} ★</span>
+                    </div>
                   </div>
                 </div>
 
-                <span className="text-[10px] sm:text-xs font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded block border border-emerald-200/60 line-clamp-1">
-                  {maker.badge}
-                </span>
-
-                <div className="flex items-center justify-between text-[11px] sm:text-xs text-stone-500 mt-2.5 sm:mt-3 pt-2 border-t border-stone-200">
-                  <span className="font-semibold text-stone-700 truncate">{maker.sales}</span>
-                  <span className="font-bold text-[#003d29] shrink-0">{maker.rating} ★</span>
+                {/* Store Specialty & Promo Box */}
+                <div className="p-2.5 bg-white border border-stone-200/80 rounded-lg space-y-1">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-semibold text-stone-800 truncate">{maker.specialty}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] pt-1 border-t border-stone-100">
+                    <span className="font-semibold text-[#003d29]">{maker.promoInfo}</span>
+                    <span className="text-stone-400 font-medium">{maker.sales}</span>
+                  </div>
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setSelectedStore(maker.storeProfile)}
-                className="mt-3 sm:mt-4 w-full py-2 bg-white hover:bg-[#003d29] hover:text-white border border-stone-200 text-stone-800 rounded-lg text-[11px] sm:text-xs font-semibold text-center block transition-colors"
-              >
-                Lihat Toko
-              </button>
+              {/* Dual Action Buttons like Tokopedia / Blibli */}
+              <div className="mt-3.5 pt-2.5 border-t border-stone-200/80 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedStore(maker.storeProfile)}
+                  className="py-2 px-2.5 bg-white hover:bg-stone-100 border border-stone-200 text-stone-800 rounded-lg text-[11px] font-semibold text-center transition-colors"
+                >
+                  Info Toko
+                </button>
+                <Link
+                  href={`/products?origin=${maker.originQuery}`}
+                  className="py-2 px-2.5 bg-[#003d29] hover:bg-[#002b1c] text-white rounded-lg text-[11px] font-semibold text-center transition-colors flex items-center justify-center gap-1"
+                >
+                  <span>Belanja</span>
+                  <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
             </div>
           ))}
         </div>
@@ -689,7 +930,7 @@ export default function MarketplaceStorefrontHome() {
       <section className="space-y-4 sm:space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <p className="text-xs text-stone-500 font-medium">
-            Menampilkan produk pilihan terkurasi dari berbagai sentra UMKM Indonesia.
+            Menampilkan produk oleh-oleh pilihan dari berbagai kota di Indonesia.
           </p>
           <Link
             href="/products"

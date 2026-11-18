@@ -77,6 +77,8 @@ export function CartDrawer() {
                       src={item.imageUrl}
                       alt={item.productTitle}
                       fill
+                      loading="lazy"
+                      decoding="async"
                       className="object-contain p-2"
                       sizes="64px"
                     />

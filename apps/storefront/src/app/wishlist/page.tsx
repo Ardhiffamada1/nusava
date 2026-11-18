@@ -141,6 +141,8 @@ export default function WishlistPage() {
                         src={item.imageUrl}
                         alt={item.title}
                         fill
+                        loading="lazy"
+                        decoding="async"
                         className="object-contain p-2 group-hover:scale-105 transition-transform duration-200"
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                       />

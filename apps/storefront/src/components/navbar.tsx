@@ -29,16 +29,18 @@ import { useCartStore } from '../stores/cart-store';
 import { useAuthStore } from '../stores/auth-store';
 import { useLanguageStore } from '../stores/language-store';
 import { useWishlistStore } from '../stores/wishlist-store';
+import { useRewardsStore } from '../stores/rewards-store';
 import { apiRequest } from '../lib/api';
 import { formatCurrency } from '@commerceos/ui';
 import { NusavaLogo } from './nusava-logo';
 
 export function Navbar() {
   const router = useRouter();
-  const { openCart, itemCount } = useCartStore();
+  const { itemCount } = useCartStore();
   const { user, logout } = useAuthStore();
   const { language, setLanguage } = useLanguageStore();
   const { items: wishlistItems } = useWishlistStore();
+  const { points, tier } = useRewardsStore();
   const isId = language === 'id';
   const wishlistCount = wishlistItems.length;
 
@@ -151,7 +153,7 @@ export function Navbar() {
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
             <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-white/90 font-medium">
               <ShieldCheck className="w-3.5 h-3.5 text-white" />
-              <span>100% Produk UMKM Nusantara Terkurasi</span>
+              <span>100% Oleh-oleh Asli Khas Daerah</span>
             </span>
 
             <div className="text-left sm:text-center font-medium flex-1 text-[11px] sm:text-xs text-white truncate">
@@ -341,6 +343,8 @@ export function Navbar() {
                             src={prod.images[0].url}
                             alt={prod.title}
                             fill
+                            loading="lazy"
+                            decoding="async"
                             className="object-contain p-1"
                             sizes="48px"
                           />
@@ -402,10 +406,9 @@ export function Navbar() {
             <span className="hidden lg:inline">Wishlist</span>
           </Link>
 
-          {/* Keranjang */}
-          <button
-            onClick={() => openCart()}
-            type="button"
+          {/* Keranjang -> Langsung ke Halaman /cart */}
+          <Link
+            href="/cart"
             className="flex items-center gap-1.5 text-xs font-semibold text-stone-700 hover:text-[#003d29] transition-colors relative p-2 rounded-xl hover:bg-stone-50"
             title="Keranjang Belanja"
           >
@@ -418,7 +421,7 @@ export function Navbar() {
               )}
             </div>
             <span className="hidden lg:inline">Keranjang</span>
-          </button>
+          </Link>
 
           <div className="hidden sm:block h-5 w-px bg-stone-200 mx-0.5" />
 
@@ -439,7 +442,7 @@ export function Navbar() {
               </button>
 
               {accountDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-76 bg-white border border-stone-200 rounded-2xl shadow-xl p-3 z-50 space-y-2.5">
+                <div className="absolute right-0 mt-2 w-72 bg-white border border-stone-200 rounded-2xl shadow-xl p-3 z-50 space-y-2.5">
                   {/* 1. User Profile Header Card */}
                   <Link
                     href="/account?section=profile"
@@ -454,22 +457,22 @@ export function Navbar() {
                       <p className="text-[11px] text-stone-500 truncate">{userEmail}</p>
                       <span className="inline-flex items-center gap-1 text-[10px] text-[#003d29] font-bold mt-0.5">
                         <ShieldCheck className="w-3 h-3 text-[#003d29]" />
-                        <span>Member Setia NUSAVA</span>
+                        <span>{tier}</span>
                       </span>
                     </div>
                   </Link>
 
-                  {/* 2. Quick Wallet & Voucher Summary Strip */}
+                  {/* 2. Quick Poin Rewards & Voucher Summary Strip */}
                   <div className="grid grid-cols-2 gap-2">
                     <Link
-                      href="/account?section=payments"
+                      href="/account?section=vouchers"
                       onClick={() => setAccountDropdownOpen(false)}
                       className="p-2.5 rounded-xl border border-stone-200 hover:border-[#003d29] bg-white transition-colors"
                     >
-                      <span className="text-[10px] text-stone-400 font-semibold block">Pembayaran</span>
-                      <span className="text-xs font-bold text-stone-900 flex items-center gap-1 mt-0.5">
-                        <CreditCard className="w-3.5 h-3.5 text-[#003d29]" />
-                        <span className="truncate">BCA VA & GoPay</span>
+                      <span className="text-[10px] text-stone-400 font-semibold block">NUSAVA Poin</span>
+                      <span className="text-xs font-bold text-[#003d29] flex items-center gap-1 mt-0.5">
+                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500 shrink-0" />
+                        <span className="truncate">{points.toLocaleString('id-ID')} Poin</span>
                       </span>
                     </Link>
 
@@ -478,18 +481,18 @@ export function Navbar() {
                       onClick={() => setAccountDropdownOpen(false)}
                       className="p-2.5 rounded-xl border border-stone-200 hover:border-[#003d29] bg-white transition-colors"
                     >
-                      <span className="text-[10px] text-stone-400 font-semibold block">Voucher Promo</span>
+                      <span className="text-[10px] text-stone-400 font-semibold block">Voucher</span>
                       <span className="text-xs font-bold text-[#003d29] flex items-center gap-1 mt-0.5">
-                        <Tag className="w-3.5 h-3.5 text-[#003d29]" />
-                        <span>3 Kupon Aktif</span>
+                        <Tag className="w-3.5 h-3.5 text-[#003d29] shrink-0" />
+                        <span>3 Kupon</span>
                       </span>
                     </Link>
                   </div>
 
-                  {/* 3. Comprehensive Feature List */}
+                  {/* 3. Menu Aktivitas & Pesanan (Ringkas) */}
                   <div className="space-y-0.5 text-xs font-medium text-stone-700 pt-1 border-t border-stone-100">
                     <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-stone-400 block">
-                      Aktivitas & Pesanan
+                      Transaksi
                     </span>
                     <Link
                       href="/account?section=orders"
@@ -498,7 +501,7 @@ export function Navbar() {
                     >
                       <span className="flex items-center gap-2.5">
                         <Package className="w-4 h-4 text-stone-500" />
-                        <span>Daftar Transaksi & Pesanan</span>
+                        <span>Pesanan Saya</span>
                       </span>
                       <span className="text-[10px] font-bold bg-[#003d29]/10 text-[#003d29] px-1.5 py-0.5 rounded">
                         2
@@ -511,7 +514,7 @@ export function Navbar() {
                       className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
                     >
                       <Truck className="w-4 h-4 text-stone-500" />
-                      <span>Lacak Pengiriman Paket</span>
+                      <span>Lacak Paket</span>
                     </Link>
 
                     <Link
@@ -520,7 +523,7 @@ export function Navbar() {
                       className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
                     >
                       <Star className="w-4 h-4 text-stone-500" />
-                      <span>Ulasan Produk Saya</span>
+                      <span>Ulasan</span>
                     </Link>
 
                     <Link
@@ -530,7 +533,7 @@ export function Navbar() {
                     >
                       <span className="flex items-center gap-2.5">
                         <Heart className="w-4 h-4 text-stone-500" />
-                        <span>Wishlist & Produk Favorit</span>
+                        <span>Wishlist</span>
                       </span>
                       {wishlistCount > 0 && (
                         <span className="text-[10px] font-bold bg-rose-50 text-rose-600 px-1.5 py-0.5 rounded">
@@ -542,7 +545,7 @@ export function Navbar() {
 
                   <div className="space-y-0.5 text-xs font-medium text-stone-700 pt-1.5 border-t border-stone-100">
                     <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-stone-400 block">
-                      Pengaturan Akun
+                      Akun Saya
                     </span>
                     <Link
                       href="/account?section=profile"
@@ -550,7 +553,7 @@ export function Navbar() {
                       className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
                     >
                       <User className="w-4 h-4 text-stone-500" />
-                      <span>Biodata Diri (Ubah Nama & Profil)</span>
+                      <span>Profil</span>
                     </Link>
 
                     <Link
@@ -559,7 +562,7 @@ export function Navbar() {
                       className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
                     >
                       <MapPin className="w-4 h-4 text-stone-500" />
-                      <span>Daftar Alamat Pengiriman</span>
+                      <span>Alamat</span>
                     </Link>
 
                     <Link
@@ -568,7 +571,7 @@ export function Navbar() {
                       className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
                     >
                       <CreditCard className="w-4 h-4 text-stone-500" />
-                      <span>Pembayaran & Rekening Tersimpan</span>
+                      <span>Pembayaran</span>
                     </Link>
 
                     <Link
@@ -577,7 +580,7 @@ export function Navbar() {
                       className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
                     >
                       <Tag className="w-4 h-4 text-stone-500" />
-                      <span>Voucher & Kupon Promo Saya</span>
+                      <span>Voucher & Poin</span>
                     </Link>
 
                     <Link
@@ -586,7 +589,7 @@ export function Navbar() {
                       className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-[#FAF9F5] hover:text-[#003d29] transition-colors"
                     >
                       <HelpCircle className="w-4 h-4 text-stone-500" />
-                      <span>Pusat Bantuan & Komplain</span>
+                      <span>Bantuan</span>
                     </Link>
                   </div>
 
@@ -602,7 +605,7 @@ export function Navbar() {
                       className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors"
                     >
                       <LogOut className="w-4 h-4" />
-                      <span>Keluar Akun</span>
+                      <span>Keluar</span>
                     </button>
                   </div>
                 </div>
@@ -668,7 +671,7 @@ export function Navbar() {
                 className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
               >
                 <User className="w-4 h-4 text-[#003d29]" />
-                <span>Profil Saya</span>
+                <span>Profil</span>
               </Link>
               <Link
                 href="/account?section=orders"
@@ -676,7 +679,7 @@ export function Navbar() {
                 className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
               >
                 <Package className="w-4 h-4 text-[#003d29]" />
-                <span>Transaksi</span>
+                <span>Pesanan Saya</span>
               </Link>
               <Link
                 href="/account?section=addresses"
@@ -684,7 +687,7 @@ export function Navbar() {
                 className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
               >
                 <MapPin className="w-4 h-4 text-[#003d29]" />
-                <span>Daftar Alamat</span>
+                <span>Alamat</span>
               </Link>
               <Link
                 href="/account?section=payments"
@@ -700,7 +703,7 @@ export function Navbar() {
                 className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
               >
                 <Tag className="w-4 h-4 text-[#003d29]" />
-                <span>Voucher Promo</span>
+                <span>Voucher & Poin</span>
               </Link>
               <Link
                 href="/account?section=reviews"
@@ -708,7 +711,7 @@ export function Navbar() {
                 className="p-2.5 rounded-xl bg-[#FAF9F5] border border-stone-200 flex items-center gap-2"
               >
                 <Star className="w-4 h-4 text-[#003d29]" />
-                <span>Ulasan Saya</span>
+                <span>Ulasan</span>
               </Link>
             </div>
           ) : (

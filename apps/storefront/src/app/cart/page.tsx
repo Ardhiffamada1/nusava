@@ -3,8 +3,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Trash2, ArrowRight, ShoppingBag, ArrowLeft, ShieldCheck, MessageSquare, Tag, X, Check, Gift } from 'lucide-react';
+import { Trash2, ArrowRight, ShoppingBag, ArrowLeft, ShieldCheck, MessageSquare, Tag, X, Check, Gift, Star, User } from 'lucide-react';
 import { useCartStore, GIFT_WRAP_COST } from '../../stores/cart-store';
+import { useAuthStore } from '../../stores/auth-store';
+import { useRewardsStore } from '../../stores/rewards-store';
 import { formatCurrency } from '@commerceos/ui';
 import { useLanguageStore } from '../../stores/language-store';
 import { createCartWhatsAppUrl } from '../../lib/storefront-helpers';
@@ -12,8 +14,11 @@ import { AVAILABLE_COUPONS, validateAndApplyCoupon, Coupon } from '../../lib/cou
 
 export default function CartPage() {
   const { items, itemCount, subtotal, updateQuantity, removeItem, isLoading, giftDetails, setGiftDetails } = useCartStore();
+  const { user } = useAuthStore();
+  const { points, calculateEarnedPoints } = useRewardsStore();
   const { language } = useLanguageStore();
   const isId = language === 'id';
+  const earnedPoints = calculateEarnedPoints(subtotal);
 
   const [couponInput, setCouponInput] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
@@ -103,6 +108,8 @@ export default function CartPage() {
                     src={item.imageUrl}
                     alt={item.productTitle}
                     fill
+                    loading="lazy"
+                    decoding="async"
                     className="object-contain p-2"
                     sizes="96px"
                   />
@@ -380,18 +387,65 @@ export default function CartPage() {
             </div>
           </div>
 
-          <div className="mt-4 p-3 bg-white border border-stone-200 rounded-lg flex items-center gap-2.5 text-xs text-stone-600">
-            <ShieldCheck className="w-4 h-4 text-[#003d29] shrink-0" />
-            <span>{isId ? 'Bisa bayar di tempat (COD) & transfer bank aman.' : 'COD & Secure Bank Transfer available.'}</span>
-          </div>
+          {/* Info Cashback NUSAVA Poin */}
+          {earnedPoints > 0 && (
+            <div className="mt-4 p-3 bg-emerald-50/80 border border-emerald-200 rounded-lg flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2 text-stone-800">
+                <Star className="w-4 h-4 fill-amber-400 text-amber-500 shrink-0" />
+                <span>Potensi Cashback Poin (2%)</span>
+              </div>
+              <span className="font-bold text-[#003d29]">
+                +{earnedPoints.toLocaleString('id-ID')} Poin
+              </span>
+            </div>
+          )}
 
-          <Link
-            href="/checkout"
-            className="w-full mt-5 flex items-center justify-center gap-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-semibold py-3 px-4 rounded-lg transition-colors shadow-xs"
-          >
-            <span>{isId ? 'Lanjut ke Pembayaran' : 'Proceed to Checkout'}</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          {!user ? (
+            <div className="mt-4 space-y-2.5">
+              <div className="p-3 bg-white border border-stone-200 rounded-lg text-xs text-stone-600 space-y-1">
+                <p className="font-bold text-stone-900 flex items-center gap-1.5">
+                  <User className="w-3.5 h-3.5 text-[#003d29]" />
+                  <span>Wajib Daftar / Masuk Sebelum Checkout</span>
+                </p>
+                <p className="text-[11px] text-stone-500 leading-relaxed">
+                  Daftar akun baru gratis untuk melanjutkan pembayaran, melacak resi, dan klaim <strong className="text-[#003d29]">Bonus 25.000 NUSAVA Poin</strong>.
+                </p>
+              </div>
+
+              <Link
+                href="/register?redirect=/checkout"
+                className="w-full flex items-center justify-center gap-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold py-3 px-4 rounded-lg transition-colors shadow-xs"
+              >
+                <span>Daftar Akun & Lanjut Checkout</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+
+              <Link
+                href="/login?redirect=/checkout"
+                className="w-full flex items-center justify-center gap-2 bg-white hover:bg-stone-50 border border-stone-300 text-stone-800 text-xs font-semibold py-2.5 px-4 rounded-lg transition-colors"
+              >
+                <span>Sudah Punya Akun? Masuk</span>
+              </Link>
+            </div>
+          ) : (
+            <>
+              <div className="mt-3 p-3 bg-white border border-stone-200 rounded-lg flex items-center justify-between text-xs text-stone-600">
+                <span className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-[#003d29] shrink-0" />
+                  <span>Saldo Poin Anda: <strong className="text-[#003d29]">{points.toLocaleString('id-ID')} Poin</strong></span>
+                </span>
+                <span className="text-[11px] text-stone-400">Bisa ditukar di Checkout</span>
+              </div>
+
+              <Link
+                href="/checkout"
+                className="w-full mt-4 flex items-center justify-center gap-2 bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-semibold py-3 px-4 rounded-lg transition-colors shadow-xs"
+              >
+                <span>{isId ? 'Lanjut ke Pembayaran' : 'Proceed to Checkout'}</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </>
+          )}
 
           <a
             href={createCartWhatsAppUrl({

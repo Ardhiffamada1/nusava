@@ -21,7 +21,7 @@ const FAQ_ITEMS: FaqItem[] = [
     id: 'faq-2',
     question: 'Apakah seluruh produk di NUSAVA asli langsung dari UMKM dan sentra daerahnya?',
     answer:
-      'Ya, 100% otentik. NUSAVA bermitra dan mengkurasi langsung dapur sentral, bengkel kriya, dan produsen UMKM terverifikasi di berbagai sentra Nusantara (Yogyakarta, Bali, Bandung, Medan, Solo, Malang, Palembang, dan daerah lainnya). Kami tidak menjual produk tiruan atau repackaging tanpa izin resmi produsen.',
+      'Ya, 100% asli. NUSAVA bermitra langsung dengan produsen resmi, dapur sentral, dan pengrajin UMKM di berbagai kota Nusantara (Yogyakarta, Bali, Bandung, Medan, Solo, Malang, Palembang, dan daerah lainnya). Kami tidak menjual produk tiruan atau kemasan ulang tanpa izin resmi produsen.',
   },
   {
     id: 'faq-3',

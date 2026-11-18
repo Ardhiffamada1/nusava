@@ -8,8 +8,11 @@ export function JneLogo({ className = 'h-7 w-auto' }: { className?: string }) {
       <img
         src="/couriers/jne.png"
         alt="JNE Express"
+        width={80}
+        height={32}
         className="h-4 sm:h-4.5 w-auto object-contain"
         loading="lazy"
+        decoding="async"
       />
     </div>
   );
@@ -23,8 +26,11 @@ export function JntLogo({ className = 'h-7 w-auto' }: { className?: string }) {
       <img
         src="/couriers/jnt.svg"
         alt="J&T Express"
+        width={60}
+        height={24}
         className="h-3.5 sm:h-4 w-auto object-contain"
         loading="lazy"
+        decoding="async"
       />
     </div>
   );
@@ -38,8 +44,11 @@ export function SicepatLogo({ className = 'h-7 w-auto' }: { className?: string }
       <img
         src="/couriers/sicepat.png"
         alt="SiCepat Ekspres"
+        width={40}
+        height={40}
         className="h-4 sm:h-4.5 w-auto object-contain"
         loading="lazy"
+        decoding="async"
       />
     </div>
   );
@@ -53,8 +62,11 @@ export function PosLogo({ className = 'h-7 w-auto' }: { className?: string }) {
       <img
         src="/couriers/pos.png"
         alt="Pos Indonesia"
+        width={40}
+        height={40}
         className="h-4 sm:h-4.5 w-auto object-contain"
         loading="lazy"
+        decoding="async"
       />
     </div>
   );

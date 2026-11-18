@@ -57,6 +57,8 @@ export function StoreProfileModal({ store, isOpen, onClose }: StoreProfileModalP
               src={store.avatar}
               alt={store.name}
               fill
+              loading="lazy"
+              decoding="async"
               className="object-cover"
               sizes="64px"
             />

@@ -40,10 +40,10 @@ export const translations = {
       searchPlaceholder: 'Cari gerabah, kopi, batik, kayu jati...',
     },
     hero: {
-      badge: 'KURASI OLEH-OLEH NUSANTARA 2026',
+      badge: 'OLEH-OLEH ASLI NUSANTARA 2026',
       title: 'Oleh-oleh bermakna, dirawat dengan tradisi.',
       description:
-        'Karya kriya otentik dan cita rasa khas daerah yang dikurasi langsung dari bengkel dan dapur UMKM lokal Nusantara.',
+        'Karya kriya otentik dan cita rasa khas daerah langsung dari bengkel dan dapur UMKM lokal Nusantara.',
       exploreBtn: 'Jelajahi Koleksi',
       storyBtn: 'Profil Toko UMKM →',
     },
@@ -95,7 +95,7 @@ export const translations = {
     },
     assurances: [
       {
-        title: 'Kurasi Asli UMKM Daerah',
+        title: '100% Produk Asli Daerah',
         desc: '100% produk otentik terverifikasi dari daerah asal',
       },
       {

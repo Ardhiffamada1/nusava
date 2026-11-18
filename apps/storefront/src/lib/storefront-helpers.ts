@@ -396,7 +396,7 @@ export const VERIFIED_UMKM_STORES: Record<string, StoreProfile> = {
     chatResponseRate: '98%',
     chatResponseTime: '±15 menit',
     description:
-      'Kolektif kurasi UMKM binaan daerah terverifikasi, menghadirkan produk oleh-oleh kuliner, kopi, dan kerajinan otentik langsung dari pengrajin daerah.',
+      'Kolektif produsen UMKM daerah resmi, menghadirkan produk oleh-oleh kuliner, kopi, dan kerajinan khas langsung dari pengrajin daerah.',
     avatar: 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Bakpia_pathok.jpg',
     address: 'Kawasan Sentra UMKM Nusantara, Yogyakarta',
     halalCertified: true,
@@ -658,7 +658,7 @@ export const SAMPLE_REVIEWS: CustomerReview[] = [
     date: '2 minggu yang lalu',
     variant: 'Premium Pilihan',
     content:
-      'Senang banget nemu toko yang kurasi oleh-oleh Nusantara selengkap ini. Kualitas barang terjamin asli, tanggal kadaluarsanya juga masih panjang. Admin via WhatsApp-nya sangat ramah dan responsif pas nanya ongkir.',
+      'Senang banget nemu toko oleh-oleh Nusantara selengkap ini. Kualitas barang terjamin asli, tanggal kadaluarsanya juga masih panjang. Pelayanan admin via WhatsApp sangat ramah dan responsif pas nanya ongkir.',
     helpfulCount: 12,
     verified: true,
     avatarBg: 'bg-teal-700',

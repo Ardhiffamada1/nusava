@@ -17,6 +17,7 @@ import {
   Star,
   Truck,
   RotateCcw,
+  X,
 } from 'lucide-react';
 import { apiRequest } from '../../lib/api';
 import { formatCurrency } from '@commerceos/ui';
@@ -30,7 +31,7 @@ import {
 } from '../../lib/storefront-helpers';
 import { StoreProfileModal } from '../../components/store-profile-modal';
 
-function ShopcartCatalogContent() {
+function NusavaCatalogContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -42,6 +43,7 @@ function ShopcartCatalogContent() {
 
   const [addedSlug, setAddedSlug] = useState<string | null>(null);
   const [selectedStore, setSelectedStore] = useState<StoreProfile | null>(null);
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [priceRange, setPriceRange] = useState<'all' | 'under50k' | '50k-150k' | 'above150k'>('all');
   const [minRating, setMinRating] = useState<number | null>(null);
   const [freeShippingOnly, setFreeShippingOnly] = useState(false);
@@ -120,8 +122,7 @@ function ShopcartCatalogContent() {
 
     await addItem(defaultVariant.id, 1);
     setAddedSlug(product.slug);
-    setTimeout(() => setAddedSlug(null), 1200);
-    openCart();
+    setTimeout(() => setAddedSlug(null), 1500);
   };
 
   const toggleWishlist = (e: React.MouseEvent, product: any) => {
@@ -145,41 +146,140 @@ function ShopcartCatalogContent() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-6 sm:py-10 font-sans space-y-6 sm:space-y-8 overflow-x-hidden">
       {/* Top Banner / Breadcrumb */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 pb-5 border-b border-stone-200">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 pb-4 sm:pb-5 border-b border-stone-200">
         <div>
-          <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-[#003d29] font-bold block mb-1">
+          <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-[#003d29] font-bold block mb-0.5">
             KATALOG LENGKAP
           </span>
-          <h1 className="text-xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-stone-900 tracking-tight">
             {selectedCategory ? selectedCategory.name : 'Semua Pilihan Oleh-oleh'}
           </h1>
-          <p className="text-xs text-stone-500 mt-1 max-w-lg">
+          <p className="text-xs text-stone-500 mt-1 max-w-lg line-clamp-2 sm:line-clamp-none">
             {selectedCategory?.description ||
               'Koleksi lengkap aneka oleh-oleh tradisional, kopi, batik, dan kerajinan khas dari sentra UMKM daerah.'}
           </p>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3 self-start sm:self-auto">
-          <span className="text-xs text-stone-500">Urutkan:</span>
+        <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-stone-100">
+          <span className="text-xs text-stone-500 whitespace-nowrap">Urutkan:</span>
           <select
             value={sortBy}
             onChange={(e) => updateParam('sortBy', e.target.value)}
-            className="text-xs font-semibold text-stone-800 bg-white border border-stone-200 rounded-xl px-3 py-1.5 outline-none focus:border-[#003d29] cursor-pointer"
+            className="text-xs font-semibold text-stone-800 bg-white border border-stone-200 rounded-lg px-2.5 py-1.5 outline-none focus:border-[#003d29] cursor-pointer"
           >
             <option value="newest">Paling Sesuai</option>
-            <option value="price_asc">Harga: Rendah ke Tinggi</option>
-            <option value="price_desc">Harga: Tinggi ke Rendah</option>
-            <option value="popular">Paling Banyak Dibeli</option>
+            <option value="price_asc">Harga: Terendah</option>
+            <option value="price_desc">Harga: Tertinggi</option>
+            <option value="popular">Paling Populer</option>
           </select>
         </div>
       </div>
 
-      {/* Filter Pills Strip: Categories */}
-      <div className="space-y-3 pb-1">
-        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none pb-1">
+      {/* ========================================================
+          FILTER SECTION: Responsive Mobile Dropdowns + Desktop Pills
+      ======================================================== */}
+      
+      {/* 1. MOBILE FILTER BAR (Strictly optimized for smartphone screens) */}
+      <div className="block sm:hidden space-y-2 pb-1">
+        <div className="flex items-center gap-2">
+          {/* Mobile Dropdown 1: Kategori */}
+          <div className="relative flex-1">
+            <select
+              value={categorySlug}
+              onChange={(e) => updateParam('category', e.target.value || null)}
+              className="w-full appearance-none bg-white border border-stone-200 text-stone-800 font-semibold text-xs py-2.5 pl-3 pr-7 rounded-xl outline-none focus:border-[#003d29] shadow-2xs truncate cursor-pointer"
+            >
+              <option value="">Semua Kategori</option>
+              {categories?.map((cat) => (
+                <option key={cat.id} value={cat.slug}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="w-3.5 h-3.5 text-stone-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
+
+          {/* Mobile Dropdown 2: Daerah Asal */}
+          <div className="relative flex-1">
+            <select
+              value={originParam}
+              onChange={(e) => updateParam('origin', e.target.value || null)}
+              className="w-full appearance-none bg-white border border-stone-200 text-stone-800 font-semibold text-xs py-2.5 pl-3 pr-7 rounded-xl outline-none focus:border-[#003d29] shadow-2xs truncate cursor-pointer"
+            >
+              {NUSANTARA_ORIGIN_TABS.map((tab) => (
+                <option key={tab.id || 'all-origin'} value={tab.city}>
+                  {tab.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="w-3.5 h-3.5 text-stone-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
+
+          {/* Mobile Button: Buka Drawer Filter Lengkap */}
+          <button
+            type="button"
+            onClick={() => setMobileFilterOpen(true)}
+            className="p-2.5 bg-white border border-stone-200 text-stone-800 rounded-xl hover:border-[#003d29] shadow-2xs flex items-center justify-center shrink-0 cursor-pointer"
+            title="Filter Lengkap"
+            aria-label="Filter Lengkap"
+          >
+            <SlidersHorizontal className="w-4 h-4 text-[#003d29]" />
+          </button>
+        </div>
+
+        {/* Mobile Active Filter Chips & Quick Reset */}
+        {(categorySlug || originParam || hasActiveFilters) && (
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5">
+            {categorySlug && (
+              <span className="inline-flex items-center gap-1 bg-[#003d29]/10 text-[#003d29] text-[11px] font-semibold px-2.5 py-0.5 rounded-full shrink-0">
+                <span>{selectedCategory?.name || categorySlug}</span>
+                <button
+                  type="button"
+                  onClick={() => updateParam('category', null)}
+                  className="hover:text-black cursor-pointer"
+                  title="Hapus filter kategori"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+
+            {originParam && (
+              <span className="inline-flex items-center gap-1 bg-[#003d29]/10 text-[#003d29] text-[11px] font-semibold px-2.5 py-0.5 rounded-full shrink-0">
+                <span>Khas {originParam}</span>
+                <button
+                  type="button"
+                  onClick={() => updateParam('origin', null)}
+                  className="hover:text-black cursor-pointer"
+                  title="Hapus filter daerah"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+
+            <button
+              type="button"
+              onClick={() => {
+                resetFilters();
+                updateParam('category', null);
+                updateParam('origin', null);
+              }}
+              className="text-[10.5px] font-bold text-stone-500 hover:text-stone-900 underline shrink-0 ml-1 cursor-pointer"
+            >
+              Hapus Semua
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* 2. DESKTOP FILTER BAR (Spacious pills for tablet/desktop) */}
+      <div className="hidden sm:block space-y-3 pb-1">
+        {/* Categories Strip */}
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-1">
           <button
             onClick={() => updateParam('category', null)}
-            className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-semibold border whitespace-nowrap shrink-0 transition-colors ${
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap shrink-0 transition-colors ${
               !categorySlug
                 ? 'bg-[#003d29] text-white border-[#003d29]'
                 : 'bg-white text-stone-700 border-stone-200 hover:border-stone-400'
@@ -194,7 +294,7 @@ function ShopcartCatalogContent() {
               <button
                 key={cat.id}
                 onClick={() => updateParam('category', cat.slug)}
-                className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-semibold border whitespace-nowrap shrink-0 transition-colors ${
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap shrink-0 transition-colors ${
                   isSelected
                     ? 'bg-[#003d29] text-white border-[#003d29]'
                     : 'bg-white text-stone-700 border-stone-200 hover:border-stone-400'
@@ -206,8 +306,8 @@ function ShopcartCatalogContent() {
           })}
         </div>
 
-        {/* Peta Rasa Nusantara - Origin City Filter */}
-        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none pt-0.5 pb-1">
+        {/* Origin City Strip */}
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pt-0.5 pb-1">
           <span className="text-[11px] font-bold text-[#003d29] uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1">
             <Compass className="w-3.5 h-3.5 text-[#003d29]" />
             <span>Daerah:</span>
@@ -218,7 +318,7 @@ function ShopcartCatalogContent() {
               <button
                 key={tab.id || 'all-origin'}
                 onClick={() => updateParam('origin', tab.city || null)}
-                className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border shrink-0 ${
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border shrink-0 ${
                   isSelected
                     ? 'bg-[#003d29] text-white border-[#003d29] shadow-2xs'
                     : 'bg-[#FAF9F5] text-stone-700 border-stone-200 hover:border-stone-400'
@@ -230,8 +330,8 @@ function ShopcartCatalogContent() {
           })}
         </div>
 
-        {/* Filter Cepat: Rentang Harga, Rating, & Layanan (Feature 3) */}
-        <div className="bg-[#FAF9F5] border border-stone-200 rounded-xl p-2.5 sm:p-3 flex flex-wrap items-center justify-between gap-2 sm:gap-3 text-xs">
+        {/* Desktop Quick Filter Bar */}
+        <div className="bg-[#FAF9F5] border border-stone-200 rounded-xl p-2.5 sm:p-3 flex items-center justify-between gap-2 sm:gap-3 text-xs">
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <span className="text-[11px] font-bold text-stone-700 flex items-center gap-1 mr-0.5">
               <SlidersHorizontal className="w-3.5 h-3.5 text-[#003d29]" />
@@ -294,7 +394,7 @@ function ShopcartCatalogContent() {
           {hasActiveFilters && (
             <button
               onClick={resetFilters}
-              className="text-[11px] font-bold text-stone-600 hover:text-[#003d29] underline flex items-center gap-1"
+              className="text-[11px] font-bold text-stone-600 hover:text-[#003d29] underline flex items-center gap-1 shrink-0 ml-1"
             >
               <RotateCcw className="w-3 h-3" />
               <span>Reset</span>
@@ -342,7 +442,7 @@ function ShopcartCatalogContent() {
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-6">
-          {displayedProducts.map((product) => {
+          {displayedProducts.map((product, index) => {
             const defaultVariant = product.variants?.[0];
             const price = Number(defaultVariant?.priceOverride || product.basePrice || 0);
             const isFav = isInWishlist(product.id);
@@ -375,6 +475,9 @@ function ShopcartCatalogContent() {
                         src={imageUrl}
                         alt={product.title}
                         fill
+                        priority={index < 4}
+                        loading={index < 4 ? undefined : 'lazy'}
+                        decoding="async"
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                         className="object-contain group-hover:scale-105 transition-transform duration-200"
                       />
@@ -415,32 +518,30 @@ function ShopcartCatalogContent() {
                   {/* Title & Price (Stacked cleanly for mobile 2-col responsiveness) */}
                   <Link
                     href={`/products/${product.slug}`}
-                    className="text-xs font-bold text-stone-900 group-hover:text-[#003d29] line-clamp-2 transition-colors block leading-snug"
+                    className="text-xs font-bold text-stone-900 group-hover:text-[#003d29] line-clamp-2 transition-colors block leading-snug h-8 sm:h-9"
                   >
                     {product.title}
                   </Link>
 
                   <div className="mt-1">
-                    <span className="text-sm sm:text-base font-extrabold text-[#003d29] block">
+                    <span className="text-xs sm:text-base font-extrabold text-[#003d29] block">
                       {formatCurrency(price)}
                     </span>
                   </div>
 
                   {/* Rating */}
-                  <div className="flex items-center gap-1 mt-1 text-[11px] sm:text-xs text-stone-500">
+                  <div className="flex items-center gap-1 mt-1 text-[10px] sm:text-xs text-stone-500">
                     <span className="font-bold text-stone-800">4.9</span>
-                    <div className="flex text-amber-500 text-[10px] sm:text-xs">
-                      {'★'.repeat(5)}
-                    </div>
-                    <span className="text-stone-400">(121)</span>
+                    <span className="text-amber-500 text-xs">★</span>
+                    <span className="text-stone-400 text-[10px]">(121)</span>
                   </div>
                 </div>
 
                 {/* Add to Cart Button */}
-                <div className="pt-2.5 sm:pt-3 border-t border-stone-100 mt-2.5">
+                <div className="pt-2 sm:pt-3 border-t border-stone-100 mt-2">
                   <button
                     onClick={(e) => handleQuickAdd(e, product)}
-                    className={`w-full py-2 px-2 sm:px-3 rounded-lg text-[11px] sm:text-xs font-semibold border transition-colors flex items-center justify-center gap-1 ${
+                    className={`w-full py-1.5 sm:py-2 px-2 sm:px-3 rounded-lg text-[11px] sm:text-xs font-semibold border transition-colors flex items-center justify-center gap-1 ${
                       addedSlug === product.slug
                         ? 'bg-[#003d29] text-white border-[#003d29]'
                         : 'border-stone-300 text-stone-800 hover:bg-[#003d29] hover:text-white hover:border-[#003d29]'
@@ -468,6 +569,160 @@ function ShopcartCatalogContent() {
         isOpen={!!selectedStore}
         onClose={() => setSelectedStore(null)}
       />
+
+      {/* 3. MOBILE FILTER BOTTOM SHEET DRAWER (Sliding panel for mobile) */}
+      {mobileFilterOpen && (
+        <div className="fixed inset-0 z-50 flex flex-col justify-end sm:hidden">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
+            onClick={() => setMobileFilterOpen(false)}
+          />
+
+          {/* Sheet Container */}
+          <div className="relative bg-white rounded-t-2xl max-h-[85vh] flex flex-col shadow-2xl z-10 overflow-hidden">
+            {/* Header */}
+            <div className="p-4 border-b border-stone-200 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-stone-900">Filter Pilihan Oleh-oleh</h3>
+                <p className="text-[11px] text-stone-500">Pilih kategori dan kota asal khas daerah</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMobileFilterOpen(false)}
+                className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 hover:text-black cursor-pointer"
+                title="Tutup"
+                aria-label="Tutup Filter"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-4 overflow-y-auto space-y-5 text-xs">
+              {/* Kategori */}
+              <div>
+                <span className="font-bold text-stone-900 block mb-2">Kategori Produk:</span>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => updateParam('category', null)}
+                    className={`p-2.5 rounded-xl border text-left font-semibold transition-colors ${
+                      !categorySlug
+                        ? 'bg-[#003d29] text-white border-[#003d29]'
+                        : 'bg-[#FAF9F5] text-stone-700 border-stone-200'
+                    }`}
+                  >
+                    Semua Kategori
+                  </button>
+                  {categories?.map((cat) => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => updateParam('category', cat.slug)}
+                      className={`p-2.5 rounded-xl border text-left font-semibold transition-colors truncate ${
+                        categorySlug === cat.slug
+                          ? 'bg-[#003d29] text-white border-[#003d29]'
+                          : 'bg-[#FAF9F5] text-stone-700 border-stone-200'
+                      }`}
+                    >
+                      {cat.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Daerah Asal */}
+              <div>
+                <span className="font-bold text-stone-900 block mb-2">Daerah Asal:</span>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {NUSANTARA_ORIGIN_TABS.map((tab) => (
+                    <button
+                      key={tab.id || 'all-origin'}
+                      type="button"
+                      onClick={() => updateParam('origin', tab.city || null)}
+                      className={`py-2 px-2 rounded-lg border text-center font-semibold text-[11px] transition-colors truncate ${
+                        originParam === tab.city
+                          ? 'bg-[#003d29] text-white border-[#003d29]'
+                          : 'bg-[#FAF9F5] text-stone-700 border-stone-200'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Filter Tambahan */}
+              <div className="pt-2 border-t border-stone-100 space-y-2">
+                <span className="font-bold text-stone-900 block mb-1">Filter Tambahan:</span>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setMinRating(minRating === 4.5 ? null : 4.5)}
+                    className={`px-3 py-1.5 rounded-lg font-semibold border flex items-center gap-1 ${
+                      minRating === 4.5
+                        ? 'bg-[#003d29] text-white border-[#003d29]'
+                        : 'bg-white text-stone-700 border-stone-200'
+                    }`}
+                  >
+                    <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                    <span>Rating 4.5+</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setFreeShippingOnly(!freeShippingOnly)}
+                    className={`px-3 py-1.5 rounded-lg font-semibold border flex items-center gap-1 ${
+                      freeShippingOnly
+                        ? 'bg-[#003d29] text-white border-[#003d29]'
+                        : 'bg-white text-stone-700 border-stone-200'
+                    }`}
+                  >
+                    <Truck className="w-3.5 h-3.5 text-[#003d29]" />
+                    <span>Bebas Ongkir</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setInStockOnly(!inStockOnly)}
+                    className={`px-3 py-1.5 rounded-lg font-semibold border flex items-center gap-1 ${
+                      inStockOnly
+                        ? 'bg-[#003d29] text-white border-[#003d29]'
+                        : 'bg-white text-stone-700 border-stone-200'
+                    }`}
+                  >
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Ready Stock</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-3.5 bg-stone-50 border-t border-stone-200 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  resetFilters();
+                  updateParam('category', null);
+                  updateParam('origin', null);
+                }}
+                className="w-1/3 py-2.5 bg-white border border-stone-300 text-stone-700 font-bold rounded-xl text-center text-xs cursor-pointer"
+              >
+                Reset
+              </button>
+              <button
+                type="button"
+                onClick={() => setMobileFilterOpen(false)}
+                className="flex-1 py-2.5 bg-[#003d29] text-white font-bold rounded-xl text-center text-xs shadow-xs cursor-pointer"
+              >
+                Terapkan Filter
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -481,7 +736,7 @@ export default function ProductsPage() {
         </div>
       }
     >
-      <ShopcartCatalogContent />
+      <NusavaCatalogContent />
     </Suspense>
   );
 }
