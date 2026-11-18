@@ -423,7 +423,7 @@ export function Navbar() {
             <span className="hidden lg:inline">Keranjang</span>
           </Link>
 
-          <div className="hidden sm:block h-5 w-px bg-stone-200 mx-0.5" />
+          <div className="hidden lg:block h-5 w-px bg-stone-200 mx-0.5" />
 
           {/* Profile Button & Expanded Marketplace Profile Dropdown (ONLY when user is logged in) */}
           {user ? (
@@ -612,7 +612,7 @@ export function Navbar() {
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-2">
               <Link
                 href="/login"
                 className="px-3.5 py-2 rounded-xl border border-[#003d29] text-[#003d29] hover:bg-[#FAF9F5] text-xs font-bold transition-colors"
@@ -621,7 +621,7 @@ export function Navbar() {
               </Link>
               <Link
                 href="/register"
-                className="hidden sm:inline-flex px-3.5 py-2 rounded-xl bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold transition-colors"
+                className="inline-flex px-3.5 py-2 rounded-xl bg-[#003d29] hover:bg-[#002b1c] text-white text-xs font-bold transition-colors"
               >
                 Daftar
               </Link>
@@ -632,10 +632,10 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-1.5 text-stone-600 hover:text-black rounded-lg"
+            className="lg:hidden p-1.5 text-stone-700 hover:text-[#003d29] rounded-lg"
             aria-label="Menu navigasi"
           >
-            <Menu className="w-5 h-5" />
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
